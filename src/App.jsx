@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import './App.css'
 
 function App() {
@@ -7,26 +7,61 @@ function App() {
   const [reply, setReply] = useState('')
   const [loading, setLoading] = useState(false)
   const [listening, setListening] = useState(false)
+  const [voiceList, setVoiceList] = useState([])
 
+const recognitionRef = useRef(null)
+const conversationModeRef = useRef(false)
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000)
     return () => clearInterval(timer)
   }, [])
 
-  const speak = (text) => {
+useEffect(() => {
+  const loadVoices = () => {
+    const turkishVoices = window.speechSynthesis
+      .getVoices()
+      .filter((voice) =>
+        voice.lang.toLowerCase().startsWith('tr')
+      )
+
+    setVoiceList(turkishVoices)
+  }
+
+  loadVoices()
+  window.speechSynthesis.onvoiceschanged = loadVoices
+
+  return () => {
+  window.speechSynthesis.onvoiceschanged = null
+}
+}, [])
+const speak = (text) => {
     if (!('speechSynthesis' in window)) return
 
     window.speechSynthesis.cancel()
 
     const speech = new SpeechSynthesisUtterance(text)
+    speech.onend = () => {
+  if (conversationModeRef.current) {
+    setTimeout(() => {
+      recognitionRef.current?.start()
+    }, 500)
+  }
+}
 
     speech.lang = 'tr-TR'
-    speech.rate = 0.95
+    speech.rate = 1.6
     speech.pitch = 0.9
     speech.volume = 1
 
     const voices = window.speechSynthesis.getVoices()
-
+console.log(
+  voices
+    .filter(voice => voice.lang.toLowerCase().startsWith('tr'))
+    .map(voice => ({
+      name: voice.name,
+      lang: voice.lang
+    }))
+)
     const turkishVoice = voices.find((voice) =>
       voice.lang.toLowerCase().startsWith('tr')
     )
@@ -34,10 +69,55 @@ function App() {
     if (turkishVoice) {
       speech.voice = turkishVoice
     }
-
+speech.onend = () => {
+  if (conversationModeRef.current) {
+    setTimeout(() => {
+      startConversation()
+    }, 500)
+  }
+}
     window.speechSynthesis.speak(speech)
   }
+const startConversation = () => {
+  const SpeechRecognition =
+    window.SpeechRecognition || window.webkitSpeechRecognition
 
+  if (!SpeechRecognition) {
+    setReply('Bu tarayıcı sesli konuşma modunu desteklemiyor.')
+    return
+  }
+
+  const recognition = new SpeechRecognition()
+
+  recognition.lang = 'tr-TR'
+  recognition.continuous = false
+  recognition.interimResults = false
+
+  recognition.onstart = () => {
+    setListening(true)
+  }
+
+  recognition.onend = () => {
+    setListening(false)
+  }
+
+  recognition.onerror = (event) => {
+    console.error('Mikrofon hatası:', event.error)
+    setListening(false)
+  }
+
+  recognition.onresult = (event) => {
+    const transcript = event.results[0][0].transcript
+
+    setCommand(transcript)
+    conversationModeRef.current = true
+    askJarvis(transcript)
+  }
+
+  recognitionRef.current = recognition
+  conversationModeRef.current = true
+  recognition.start()
+}
   const askJarvis = async (messageOverride = null) => {
     const message =
       typeof messageOverride === 'string'
@@ -200,7 +280,7 @@ function App() {
 
           <button
             className="mic"
-            onClick={startListening}
+            onClick={startConversation}
             disabled={loading || listening}
           >
             {listening ? '🔴' : '🎙️'}
