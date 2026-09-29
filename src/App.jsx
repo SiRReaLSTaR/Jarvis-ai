@@ -49,7 +49,7 @@ const speak = (text) => {
 }
 
     speech.lang = 'tr-TR'
-    speech.rate = 1.6
+    speech.rate = 1.4
     speech.pitch = 0.9
     speech.volume = 1
 
@@ -215,6 +215,17 @@ const startConversation = () => {
 
   return (
     <main className="jarvis">
+    
+    <div className="voiceDebug">
+  <strong>Türkçe Sesler:</strong>
+  {voiceList.length === 0
+    ? ' Türkçe ses bulunamadı'
+    : voiceList.map((voice, index) => (
+        <div key={index}>
+          {index + 1}. {voice.name} ({voice.lang})
+        </div>
+      ))}
+</div>
       <header>
         <div className="logo">J.A.R.V.I.S</div>
 
