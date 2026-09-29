@@ -27,8 +27,10 @@ const ai = new GoogleGenAI({
                                         const response = await ai.models.generateContent({
                                               model: "gemini-3.5-flash-lite",
                                                     contents: message,
-                                                          config: {
-                                                                  systemInstruction: `
+                                                          
+                                                            config: {
+                                                                tools: [{ googleSearch: {} }],
+                                                                systemInstruction: `
                                                                   Sen JARVIS adında Mustafa'nın kişisel yapay zeka asistanısın.
                                                                   Her zaman Türkçe konuş.
                                                                   Doğal, zeki ve gerektiğinde ince esprili cevaplar ver.
