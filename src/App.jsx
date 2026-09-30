@@ -1,19 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import './App.css'
 
-const THEMES = [
-  { id:'jarvis', name:'JARVIS', sub:'Premium' },
-  { id:'future', name:'Kırmızı Beyaz', sub:'Crimson Ice' },
-  { id:'military', name:'Sarı Siyah', sub:'Black Gold' },
-  { id:'hacker', name:'Kırmızı Siyah', sub:'Red Core' },
-  { id:'cyberpunk', name:'Sarı Kırmızı', sub:'Solar Flare' },
-  { id:'space', name:'Altın Gece', sub:'Dark Luxury' },
-  { id:'stealth', name:'Stealth', sub:'Black' },
-  { id:'quantum', name:'Quantum', sub:'Glass' },
-  { id:'nature', name:'Doğa', sub:'Bio Tech' },
-  { id:'minimal', name:'Minimal', sub:'Zero' },
-]
-
 const SITE_ACTIONS = [
   { names:['youtube'], label:'YouTube', web:'https://www.youtube.com', ios:'youtube://', android:'vnd.youtube://' },
   { names:['google'], label:'Google', web:'https://www.google.com', ios:'google://', android:'googlechrome://' },
@@ -350,8 +337,6 @@ function App(){
   const [loading,setLoading] = useState(false)
   const [listening,setListening] = useState(false)
   const [speaking,setSpeaking] = useState(false)
-  const [theme,setTheme] = useState(()=>localStorage.getItem('jarvis-theme') || 'jarvis')
-  const [themeOpen,setThemeOpen] = useState(false)
   const recognitionRef = useRef(null)
   const conversationModeRef = useRef(false)
 
@@ -360,11 +345,7 @@ function App(){
     return()=>clearInterval(t)
   },[])
 
-  useEffect(()=>{
-    localStorage.setItem('jarvis-theme',theme)
-  },[theme])
 
-  const currentTheme = THEMES.find(t=>t.id===theme) || THEMES[0]
   const dateText = time.toLocaleDateString('tr-TR',{day:'2-digit',month:'long',year:'numeric',weekday:'long'})
   const timeText = time.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'})
 
@@ -705,7 +686,7 @@ function speak(text, speaker = 'jarvis'){
   const stateLabel = listening ? 'DİNLİYORUM' : loading ? 'DÜŞÜNÜYORUM' : speaking ? 'KONUŞUYORUM' : 'ONLINE'
 
   return (
-    <main className={`jarvis theme-${theme} state-${state}`}>
+    <main className={`jarvis theme-hacker state-${state}`}>
       <div className="spaceBackdrop" aria-hidden="true">
         <div className="nebula nebulaA"/><div className="nebula nebulaB"/><div className="nebula nebulaC"/>
         <div className="stars starsFar"/><div className="stars starsMid"/><div className="stars starsNear"/>
@@ -716,22 +697,8 @@ function speak(text, speaker = 'jarvis'){
       <header className="topbar glass">
         <div className="brand"><span className="brandMark">J</span><div><b>JARVIS</b><small>AI PERSONAL ASSISTANT</small></div></div>
         <div className="topStatus"><i/> CORE ONLINE <span>•</span> TR-TR <span>•</span> V4.8.0</div>
-        <div className="themeWrap">
-          <button className="themeTrigger" onClick={()=>setThemeOpen(v=>!v)}>
-            <span>◈</span><div><b>{currentTheme.name}</b><small>{currentTheme.sub}</small></div><em>⌄</em>
-          </button>
-
-        </div>
       </header>
 
-      {themeOpen && <div className="themeMenu themeMenuGlobal glass">
-        <div className="themeTitle">ARAYÜZ PROFİLİ <button onClick={()=>setThemeOpen(false)}>×</button></div>
-        <div className="themeGrid">
-          {THEMES.map(t=><button key={t.id} className={theme===t.id?'active':''} onClick={()=>{setTheme(t.id);setThemeOpen(false)}}>
-            <span className="themeDot"/><b>{t.name}</b><small>{t.sub}</small>
-          </button>)}
-        </div>
-      </div>}
 
       <aside className="leftRail glass">
         <h3>KOMUTLAR <span>⌕</span></h3>
@@ -750,29 +717,22 @@ function speak(text, speaker = 'jarvis'){
       <section className="stage glass">
         <div className="stageSpace" aria-hidden="true">
           <div className="themeWorld" aria-hidden="true">
-            <div className="worldLayer worldBack"/><div className="worldLayer worldMid"/><div className="worldLayer worldFront"/>
+            <div className="worldLayer worldBack"/>
+            <div className="worldLayer worldMid"/>
+            <div className="worldLayer worldFront"/>
             <div className="worldGlyphs"/>
             <div className="sceneArt">
-              <div className="labWall"/><div className="labTower t1"/><div className="labTower t2"/>
-              <div className="serverRack r1"/><div className="serverRack r2"/><div className="codeCurtain"/>
-              <div className="citySkyline"/><div className="cityRoad"/>
-              <div className="radarDish"/><div className="tacticalMap"/>
-              <div className="hangarDoor"/><div className="laserScan"/>
-              <div className="quantumTunnel"/><div className="dnaHelix"/>
-              <div className="holoPanel hp1"/><div className="holoPanel hp2"/>
+              <div className="serverRack r1"/>
+              <div className="serverRack r2"/>
+              <div className="codeCurtain"/>
+              <div className="holoPanel hp1"/>
+              <div className="holoPanel hp2"/>
             </div>
           </div>
-          <div className="galaxyCloud gc1"/><div className="galaxyCloud gc2"/>
-          <div className="stageStars layer1"/><div className="stageStars layer2"/><div className="stageStars layer3"/>
-          <div className="planet planetA"><i/></div>
-          <div className="planet planetB"><i/></div>
-          <div className="planet planetC"><i/></div>
-          <div className="meteor meteor1"/><div className="meteor meteor2"/><div className="meteor meteor3"/>
-          <div className="spaceHorizon"/>
           <div className="stageDust">{Array.from({length:22},(_,i)=><i key={i} style={{'--i':i}}/>)}</div>
         </div>
         <div className="corner c1"/><div className="corner c2"/><div className="corner c3"/><div className="corner c4"/>
-        <div className="stageTitle"><b>{currentTheme.name.toUpperCase()}</b><small>{currentTheme.sub.toUpperCase()}</small></div>
+        <div className="stageTitle"><b>KIRMIZI SİYAH</b><small>RED CORE</small></div>
         <div className="telemetry leftT">01 // CORE<br/>SIGNAL STABLE</div>
         <div className="telemetry rightT">NEURAL LINK<br/>98.7% SECURE</div>
 
