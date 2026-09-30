@@ -327,3 +327,898 @@
  100%{opacity:0}
 }
 @media(max-width:760px){.themeMenuGlobal{top:66px!important;right:8px!important;width:min(370px,calc(100vw - 16px))!important}.planetA{width:110px;height:110px}}
+
+/* ===== V4.3.1 THEME PANEL UNIFORMITY FIX =====
+   Tema seçici bütün profillerde aynı geometri ve yerleşimde kalır.
+   Yalnızca tema renk değişkenleri (--a, --line, --soft vb.) değişir.
+*/
+.jarvis .themeWrap{
+  position:relative!important;
+  z-index:2147482990!important;
+  isolation:isolate!important;
+  transform:none!important;
+  filter:none!important;
+  clip-path:none!important;
+  overflow:visible!important;
+}
+
+.jarvis .themeMenuGlobal{
+  position:fixed!important;
+  top:76px!important;
+  right:16px!important;
+  width:370px!important;
+  max-width:calc(100vw - 32px)!important;
+  max-height:calc(100dvh - 92px)!important;
+  padding:10px!important;
+  margin:0!important;
+  display:block!important;
+  visibility:visible!important;
+  opacity:1!important;
+  overflow:auto!important;
+  pointer-events:auto!important;
+  z-index:2147483000!important;
+  transform:none!important;
+  filter:none!important;
+  clip-path:none!important;
+  border:1px solid var(--a)!important;
+  border-radius:12px!important;
+  background:linear-gradient(145deg,rgba(5,14,29,.985),rgba(2,7,16,.985))!important;
+  box-shadow:0 20px 70px rgba(0,0,0,.88),0 0 34px var(--soft),inset 0 0 24px var(--soft)!important;
+  backdrop-filter:blur(18px)!important;
+}
+
+.jarvis .themeMenuGlobal .themeTitle{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  min-height:22px!important;
+  margin:0 2px 8px!important;
+  color:var(--a)!important;
+  font-size:9px!important;
+  letter-spacing:2px!important;
+  text-transform:uppercase!important;
+}
+
+.jarvis .themeMenuGlobal .themeTitle button{
+  border:0!important;
+  background:transparent!important;
+  color:var(--text)!important;
+  font-size:20px!important;
+  line-height:1!important;
+  padding:0 3px!important;
+  cursor:pointer!important;
+  transform:none!important;
+  filter:none!important;
+  clip-path:none!important;
+}
+
+.jarvis .themeMenuGlobal .themeGrid{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  grid-auto-rows:52px!important;
+  gap:6px!important;
+  width:100%!important;
+}
+
+.jarvis .themeMenuGlobal .themeGrid button{
+  position:relative!important;
+  width:100%!important;
+  min-width:0!important;
+  min-height:52px!important;
+  height:52px!important;
+  margin:0!important;
+  padding:7px 8px 7px 28px!important;
+  display:block!important;
+  text-align:left!important;
+  border:1px solid var(--line)!important;
+  border-radius:8px!important;
+  background:rgba(0,0,0,.24)!important;
+  color:var(--text)!important;
+  box-shadow:none!important;
+  clip-path:none!important;
+  transform:none!important;
+  filter:none!important;
+  opacity:1!important;
+  overflow:hidden!important;
+  cursor:pointer!important;
+}
+
+.jarvis .themeMenuGlobal .themeGrid button:hover{
+  border-color:var(--a)!important;
+  background:var(--soft)!important;
+  box-shadow:inset 0 0 18px var(--soft),0 0 10px var(--soft)!important;
+}
+
+.jarvis .themeMenuGlobal .themeGrid button.active{
+  border-color:var(--a)!important;
+  background:var(--soft)!important;
+  box-shadow:inset 0 0 18px var(--soft),0 0 12px var(--soft)!important;
+}
+
+.jarvis .themeMenuGlobal .themeGrid b{
+  display:block!important;
+  margin:0!important;
+  font-size:10px!important;
+  line-height:15px!important;
+  font-weight:600!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+}
+
+.jarvis .themeMenuGlobal .themeGrid small{
+  display:block!important;
+  margin:0!important;
+  font-size:7px!important;
+  line-height:12px!important;
+  color:var(--muted)!important;
+  text-transform:uppercase!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+}
+
+.jarvis .themeMenuGlobal .themeDot{
+  position:absolute!important;
+  left:10px!important;
+  top:21px!important;
+  width:7px!important;
+  height:7px!important;
+  border-radius:50%!important;
+  background:var(--a)!important;
+  box-shadow:0 0 10px var(--a)!important;
+}
+
+/* Tema karakterleri menünün şeklini değiştiremez. */
+.theme-military .themeMenuGlobal .themeGrid button,
+.theme-hacker .themeMenuGlobal .themeGrid button,
+.theme-cyberpunk .themeMenuGlobal .themeGrid button,
+.theme-space .themeMenuGlobal .themeGrid button,
+.theme-stealth .themeMenuGlobal .themeGrid button,
+.theme-quantum .themeMenuGlobal .themeGrid button,
+.theme-nature .themeMenuGlobal .themeGrid button,
+.theme-minimal .themeMenuGlobal .themeGrid button,
+.theme-future .themeMenuGlobal .themeGrid button{
+  border-radius:8px!important;
+  clip-path:none!important;
+  transform:none!important;
+}
+
+@media(max-width:760px){
+  .jarvis .themeMenuGlobal{
+    top:66px!important;
+    right:8px!important;
+    width:min(370px,calc(100vw - 16px))!important;
+    max-width:calc(100vw - 16px)!important;
+  }
+  .jarvis .themeMenuGlobal .themeGrid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+}
+
+
+/* =========================================================
+   JARVIS V4.3.2 // DISTINCT THEME VISUAL ENGINE
+   Strong theme separation + cinematic center-stage atmosphere
+   ========================================================= */
+
+/* Theme identities: deliberately separated palettes */
+.theme-future{
+  --a:#ff304f;--a2:#7d0017;--hot:#ffffff;
+  --line:rgba(255,48,79,.50);--soft:rgba(255,48,79,.14);
+}
+.theme-military{
+  --a:#ffd400;--a2:#ff8a00;--hot:#fff3a3;
+  --line:rgba(255,212,0,.52);--soft:rgba(255,212,0,.13);
+  --font:'JetBrains Mono',monospace;
+}
+.theme-hacker{
+  --a:#ff2448;--a2:#080808;--hot:#ffb1bd;
+  --line:rgba(255,36,72,.48);--soft:rgba(255,36,72,.12);
+  --font:'JetBrains Mono',monospace;
+}
+.theme-cyberpunk{
+  --a:#ffd500;--a2:#e51b23;--hot:#fff4a6;
+  --line:rgba(255,213,0,.50);--soft:rgba(229,27,35,.15);
+}
+.theme-space{
+  --a:#ffea00;--a2:#111111;--hot:#ffffff;
+  --line:rgba(255,234,0,.48);--soft:rgba(255,234,0,.12);
+}
+.theme-stealth{
+  --a:#ff1744;--a2:#ffffff;--hot:#ffffff;
+  --line:rgba(255,255,255,.34);--soft:rgba(255,23,68,.12);
+}
+.theme-quantum{
+  --a:#00eaff;--a2:#4c35ff;--hot:#e8ffff;
+  --line:rgba(0,234,255,.42);--soft:rgba(76,53,255,.12);
+}
+.theme-nature{
+  --a:#66ff75;--a2:#006b45;--hot:#e7ffe9;
+  --line:rgba(102,255,117,.40);--soft:rgba(102,255,117,.10);
+}
+.theme-minimal{
+  --a:#f5f7fa;--a2:#6f7780;--hot:#ffffff;
+  --line:rgba(255,255,255,.26);--soft:rgba(255,255,255,.055);
+}
+
+/* Center viewport gains a stronger theme-specific cinematic field */
+.stageSpace{
+  transition:background .55s ease,filter .55s ease;
+}
+.stageSpace:before{
+  content:"";position:absolute;inset:-12%;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(circle at 50% 44%,var(--soft) 0,transparent 27%),
+    radial-gradient(ellipse at 18% 70%,color-mix(in srgb,var(--a) 16%,transparent),transparent 34%),
+    radial-gradient(ellipse at 82% 25%,color-mix(in srgb,var(--a2) 19%,transparent),transparent 32%);
+  filter:blur(18px);opacity:.9;animation:themeAura 10s ease-in-out infinite alternate;
+}
+.stageSpace:after{z-index:1}
+.galaxyCloud,.stageStars,.spaceHorizon,.stageDust,.planet,.meteor{z-index:1}
+
+/* RED + WHITE */
+.theme-future .stageSpace{
+  background:
+    radial-gradient(ellipse at 50% 43%,rgba(255,40,72,.25),transparent 31%),
+    radial-gradient(ellipse at 78% 23%,rgba(255,255,255,.08),transparent 26%),
+    radial-gradient(ellipse at 18% 72%,rgba(110,0,20,.26),transparent 31%),
+    linear-gradient(180deg,#070207 0%,#17040a 49%,#030204 100%)!important;
+}
+.theme-future .galaxyCloud{filter:hue-rotate(305deg) saturate(1.7) blur(46px)!important}
+
+/* YELLOW + BLACK */
+.theme-military .stageSpace{
+  background:
+    radial-gradient(ellipse at 50% 43%,rgba(255,210,0,.23),transparent 30%),
+    radial-gradient(ellipse at 82% 26%,rgba(255,128,0,.13),transparent 28%),
+    radial-gradient(ellipse at 16% 72%,rgba(120,88,0,.17),transparent 31%),
+    linear-gradient(180deg,#030300 0%,#0e0d02 49%,#020200 100%)!important;
+}
+.theme-military .galaxyCloud{filter:sepia(1) saturate(2.2) hue-rotate(350deg) blur(46px)!important}
+.theme-military .planet{filter:sepia(1) saturate(1.8) brightness(.88)!important}
+
+/* RED + BLACK */
+.theme-hacker .stageSpace{
+  background:
+    radial-gradient(ellipse at 50% 43%,rgba(255,25,58,.24),transparent 30%),
+    radial-gradient(ellipse at 77% 24%,rgba(110,0,18,.23),transparent 27%),
+    radial-gradient(ellipse at 18% 72%,rgba(55,0,8,.28),transparent 31%),
+    linear-gradient(180deg,#030000 0%,#100104 49%,#010000 100%)!important;
+}
+.theme-hacker .galaxyCloud{filter:hue-rotate(300deg) saturate(2.2) brightness(.92) blur(46px)!important}
+.theme-hacker .planet{filter:hue-rotate(300deg) saturate(2)!important}
+
+/* YELLOW + RED */
+.theme-cyberpunk .stageSpace{
+  background:
+    radial-gradient(ellipse at 50% 43%,rgba(255,205,0,.23),transparent 29%),
+    radial-gradient(ellipse at 78% 24%,rgba(235,24,40,.25),transparent 28%),
+    radial-gradient(ellipse at 18% 72%,rgba(145,12,18,.20),transparent 31%),
+    linear-gradient(180deg,#080100 0%,#180704 49%,#030100 100%)!important;
+}
+.theme-cyberpunk .galaxyCloud{filter:hue-rotate(320deg) saturate(2) blur(46px)!important}
+
+/* BLACK + YELLOW, darker luxury variant */
+.theme-space .stageSpace{
+  background:
+    radial-gradient(ellipse at 50% 42%,rgba(255,235,0,.18),transparent 28%),
+    radial-gradient(ellipse at 74% 27%,rgba(255,168,0,.10),transparent 25%),
+    radial-gradient(ellipse at 18% 70%,rgba(255,225,0,.08),transparent 27%),
+    linear-gradient(180deg,#010101,#080802 48%,#000 100%)!important;
+}
+.theme-space .galaxyCloud{filter:sepia(.9) saturate(2.4) brightness(.72) blur(48px)!important}
+
+/* RED + WHITE, bright command-center variant */
+.theme-stealth .stageSpace{
+  background:
+    radial-gradient(ellipse at 50% 43%,rgba(255,20,55,.20),transparent 29%),
+    radial-gradient(ellipse at 80% 24%,rgba(255,255,255,.12),transparent 26%),
+    radial-gradient(ellipse at 17% 72%,rgba(180,180,190,.09),transparent 29%),
+    linear-gradient(180deg,#09090b 0%,#151519 49%,#050506 100%)!important;
+}
+.theme-stealth .galaxyCloud{filter:grayscale(.7) sepia(.15) saturate(1.4) brightness(.8) blur(46px)!important}
+
+/* Keep the remaining profiles visually unique */
+.theme-quantum .stageSpace{
+  background:
+    radial-gradient(ellipse at 50% 43%,rgba(0,234,255,.24),transparent 30%),
+    radial-gradient(ellipse at 78% 24%,rgba(92,58,255,.23),transparent 28%),
+    linear-gradient(180deg,#00040b,#040720 49%,#01030a 100%)!important;
+}
+.theme-nature .stageSpace{
+  background:
+    radial-gradient(ellipse at 50% 43%,rgba(80,255,115,.20),transparent 30%),
+    radial-gradient(ellipse at 78% 24%,rgba(0,120,72,.22),transparent 28%),
+    linear-gradient(180deg,#000603,#03130b 49%,#000402 100%)!important;
+}
+.theme-minimal .stageSpace{
+  background:
+    radial-gradient(ellipse at 50% 43%,rgba(255,255,255,.10),transparent 28%),
+    linear-gradient(180deg,#050607,#101318 49%,#030405 100%)!important;
+}
+
+/* Stronger arc/reactor presence, using each theme's palette */
+.energy{
+  filter:drop-shadow(0 0 18px var(--a)) drop-shadow(0 0 34px var(--soft))!important;
+}
+.h2{border-color:var(--a)!important;border-left-color:transparent!important;border-bottom-color:transparent!important}
+.h3{border-color:var(--hot)!important}
+.energyTrails i{opacity:.46!important}
+.core{
+  background:
+    radial-gradient(circle at 42% 38%,#fff 0 4%,var(--hot) 8%,var(--a) 20%,var(--a2) 46%,rgba(0,0,0,.86) 72%)!important;
+  box-shadow:0 0 20px var(--hot),0 0 48px var(--a),0 0 80px var(--soft),inset 0 0 22px #fff!important;
+}
+.theme-military .core,.theme-space .core{
+  box-shadow:0 0 20px #fff6b0,0 0 52px var(--a),0 0 92px rgba(255,210,0,.18),inset 0 0 22px #fff!important;
+}
+.theme-hacker .core{
+  box-shadow:0 0 18px #ff9aac,0 0 50px #ff2448,0 0 88px rgba(255,0,40,.18),inset 0 0 22px #fff!important;
+}
+.theme-cyberpunk .core{
+  box-shadow:0 0 20px #fff0a0,0 0 46px #ffd500,0 0 80px rgba(229,27,35,.22),inset 0 0 22px #fff!important;
+}
+
+/* HUD glass follows the chosen profile without losing readability */
+.jarvis .glass{
+  border-color:var(--line);
+  box-shadow:inset 0 0 28px rgba(0,0,0,.30),0 0 18px rgba(0,0,0,.30),0 0 9px var(--soft);
+}
+.theme-military .glass,.theme-space .glass{
+  background:linear-gradient(135deg,rgba(12,11,2,.70),rgba(2,2,1,.54))!important;
+}
+.theme-hacker .glass{
+  background:linear-gradient(135deg,rgba(15,2,5,.72),rgba(2,1,1,.55))!important;
+}
+.theme-cyberpunk .glass{
+  background:linear-gradient(135deg,rgba(20,7,2,.70),rgba(9,1,2,.55))!important;
+}
+.theme-future .glass{
+  background:linear-gradient(135deg,rgba(18,3,8,.69),rgba(4,2,4,.54))!important;
+}
+
+/* Theme selector remains instant and geometrically identical in every profile */
+.jarvis .themeMenuGlobal,
+.jarvis .themeMenuGlobal *,
+.jarvis .themeMenuGlobal *:before,
+.jarvis .themeMenuGlobal *:after{
+  animation-delay:0s!important;
+}
+.jarvis .themeMenuGlobal{
+  transition:none!important;
+  animation:none!important;
+}
+.jarvis .themeMenuGlobal .themeGrid button{
+  transition:border-color .14s ease,background .14s ease,box-shadow .14s ease!important;
+}
+
+/* Slightly richer star response to profile color */
+.layer2{
+  background-image:
+    radial-gradient(circle,#fff 0 1.25px,transparent 1.7px),
+    radial-gradient(circle,var(--a) 0 1px,transparent 1.45px)!important;
+}
+.layer3{
+  background-image:
+    radial-gradient(circle,#fff 0 1.6px,transparent 2.1px),
+    radial-gradient(circle,var(--hot) 0 1.15px,transparent 1.7px)!important;
+}
+
+@keyframes themeAura{
+  from{transform:translate3d(-2%,-1%,0) scale(1);opacity:.72}
+  to{transform:translate3d(3%,2%,0) scale(1.08);opacity:1}
+}
+
+
+
+/* =========================================================
+   JARVIS V4.4.0 // THEME WORLDS + FIXED SELECTOR
+   Each profile now changes the whole cinematic world, not
+   merely the reactor/HUD accent.
+   ========================================================= */
+
+/* Selector: fixed viewport overlay, immediate, always above HUD */
+.jarvis .themeMenuGlobal{
+  position:fixed!important;
+  top:76px!important;
+  right:16px!important;
+  width:min(390px,calc(100vw - 32px))!important;
+  max-height:calc(100dvh - 92px)!important;
+  overflow:auto!important;
+  z-index:2147483000!important;
+  display:block!important;
+  visibility:visible!important;
+  opacity:1!important;
+  transform:none!important;
+  animation:none!important;
+  transition:none!important;
+  isolation:isolate!important;
+  border:1px solid var(--a)!important;
+  background:linear-gradient(145deg,rgba(4,7,13,.985),rgba(1,3,7,.985))!important;
+  box-shadow:0 22px 70px rgba(0,0,0,.82),0 0 32px var(--soft)!important;
+  backdrop-filter:blur(20px) saturate(135%)!important;
+}
+.jarvis .themeMenuGlobal .themeGrid{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:8px!important;
+}
+.jarvis .themeMenuGlobal .themeGrid button{
+  display:block!important;
+  visibility:visible!important;
+  opacity:1!important;
+  min-height:58px!important;
+}
+
+/* Give the center scene room to look like an actual world */
+.stageSpace{opacity:1!important;filter:none!important}
+.stageSpace:before{opacity:1!important}
+.planet{opacity:.34!important}
+.planetA{width:170px!important;height:170px!important}
+.planetB{width:96px!important;height:96px!important}
+.planetC{width:58px!important;height:58px!important}
+.galaxyCloud{opacity:.68!important}
+.meteor{opacity:.58!important}
+.spaceHorizon{opacity:.34!important}
+
+/* 1. KIRMIZI + BEYAZ : crimson nebula, silver planets, white ice light */
+.theme-future{
+  --a:#ff284b;--a2:#d80028;--hot:#ffffff;
+  --line:rgba(255,55,83,.56);--soft:rgba(255,35,70,.15);
+}
+.theme-future .stageSpace{
+  background:
+    radial-gradient(ellipse at 20% 27%,rgba(255,255,255,.13),transparent 18%),
+    radial-gradient(ellipse at 77% 65%,rgba(255,20,58,.36),transparent 35%),
+    radial-gradient(ellipse at 43% 44%,rgba(185,0,34,.31),transparent 34%),
+    linear-gradient(135deg,#020204 0%,#180209 45%,#050509 100%)!important;
+}
+.theme-future .gc1{background:radial-gradient(ellipse,rgba(255,35,75,.72),rgba(105,0,25,.22) 48%,transparent 72%)!important}
+.theme-future .gc2{background:radial-gradient(ellipse,rgba(255,255,255,.22),rgba(255,40,72,.10) 48%,transparent 74%)!important}
+.theme-future .planetA{background:radial-gradient(circle at 34% 30%,#fff,#b9bec8 20%,#3b1019 58%,#090208 76%)!important;box-shadow:-18px 9px 38px rgba(255,255,255,.12),0 0 42px rgba(255,25,65,.18)}
+.theme-future .planetB{background:radial-gradient(circle at 32% 30%,#ffd6dd,#ad1731 28%,#28030a 70%)!important}
+.theme-future .planetC{background:radial-gradient(circle,#fff,#ff3155 35%,#22030a 72%)!important}
+
+/* 2. SARI + SİYAH : near-black void, golden gas giant, amber dust */
+.theme-military{
+  --a:#ffd900;--a2:#ff9d00;--hot:#fff7bd;
+  --line:rgba(255,217,0,.58);--soft:rgba(255,210,0,.14);
+}
+.theme-military .stageSpace{
+  background:
+    radial-gradient(ellipse at 72% 27%,rgba(255,194,0,.17),transparent 25%),
+    radial-gradient(ellipse at 25% 73%,rgba(255,221,0,.10),transparent 28%),
+    radial-gradient(ellipse at 50% 45%,rgba(255,190,0,.12),transparent 27%),
+    linear-gradient(180deg,#000 0%,#080702 48%,#010100 100%)!important;
+}
+.theme-military .gc1{background:radial-gradient(ellipse,rgba(255,191,0,.44),rgba(78,52,0,.18) 50%,transparent 73%)!important}
+.theme-military .gc2{background:radial-gradient(ellipse,rgba(255,230,65,.24),transparent 70%)!important}
+.theme-military .planetA{background:repeating-linear-gradient(8deg,#171100 0 9px,#6c4b00 10px 18px,#d99e00 19px 25px,#211700 26px 34px)!important;box-shadow:-22px 8px 45px rgba(255,205,0,.22)}
+.theme-military .planetB{background:radial-gradient(circle at 32% 28%,#ffe66a,#9c6b00 35%,#100d00 72%)!important}
+.theme-military .planetC{background:radial-gradient(circle,#fff2a0,#ffbd00 32%,#171000 72%)!important}
+
+/* 3. KIRMIZI + SİYAH : black void, red storm clouds, dark red planets */
+.theme-hacker{
+  --a:#ff163f;--a2:#710014;--hot:#ffd7df;
+  --line:rgba(255,25,63,.56);--soft:rgba(255,0,45,.14);
+}
+.theme-hacker .stageSpace{
+  background:
+    radial-gradient(ellipse at 17% 28%,rgba(95,0,16,.28),transparent 28%),
+    radial-gradient(ellipse at 80% 68%,rgba(255,0,40,.22),transparent 33%),
+    radial-gradient(ellipse at 50% 44%,rgba(125,0,22,.19),transparent 28%),
+    linear-gradient(180deg,#000 0%,#0c0003 48%,#010000 100%)!important;
+}
+.theme-hacker .gc1{background:radial-gradient(ellipse,rgba(255,0,48,.55),rgba(75,0,15,.24) 48%,transparent 72%)!important}
+.theme-hacker .gc2{background:radial-gradient(ellipse,rgba(112,0,22,.50),transparent 72%)!important}
+.theme-hacker .planetA{background:radial-gradient(circle at 34% 30%,#b41a36,#43000c 38%,#070001 72%)!important;box-shadow:-20px 8px 44px rgba(255,0,45,.20)}
+.theme-hacker .planetB{background:radial-gradient(circle at 30% 28%,#ff4967,#5a0010 36%,#080001 72%)!important}
+.theme-hacker .planetC{background:radial-gradient(circle,#c00b2b,#260006 62%,#000 75%)!important}
+
+/* 4. SARI + KIRMIZI : solar eruption world, split red/gold nebula */
+.theme-cyberpunk{
+  --a:#ffd500;--a2:#ef1835;--hot:#fff6b0;
+  --line:rgba(255,208,0,.56);--soft:rgba(239,24,53,.16);
+}
+.theme-cyberpunk .stageSpace{
+  background:
+    radial-gradient(ellipse at 20% 32%,rgba(255,205,0,.24),transparent 30%),
+    radial-gradient(ellipse at 82% 64%,rgba(238,15,48,.34),transparent 35%),
+    linear-gradient(125deg,#100500 0%,#3b1300 39%,#350008 68%,#070001 100%)!important;
+}
+.theme-cyberpunk .gc1{background:radial-gradient(ellipse,rgba(255,199,0,.58),rgba(155,70,0,.20) 48%,transparent 72%)!important}
+.theme-cyberpunk .gc2{background:radial-gradient(ellipse,rgba(255,25,48,.58),rgba(120,0,20,.18) 48%,transparent 72%)!important}
+.theme-cyberpunk .planetA{background:linear-gradient(135deg,#ffdd38,#e75b00 45%,#9a001c 72%,#190004)!important;box-shadow:-18px 8px 44px rgba(255,197,0,.18),14px -8px 42px rgba(255,20,50,.16)}
+.theme-cyberpunk .planetB{background:radial-gradient(circle at 30% 30%,#ffe86c,#e94500 42%,#56000d 72%)!important}
+.theme-cyberpunk .planetC{background:radial-gradient(circle,#fff0a1,#ffbd00 25%,#e31332 58%,#250005 75%)!important}
+
+/* 5. ALTIN GECE : luxury black/gold with visible orbital worlds */
+.theme-space{
+  --a:#ffe600;--a2:#b78300;--hot:#ffffff;
+  --line:rgba(255,230,0,.52);--soft:rgba(255,218,0,.12);
+}
+.theme-space .stageSpace{
+  background:
+    radial-gradient(ellipse at 50% 44%,rgba(255,215,0,.14),transparent 26%),
+    radial-gradient(ellipse at 78% 25%,rgba(120,88,0,.17),transparent 27%),
+    radial-gradient(ellipse at 18% 73%,rgba(90,70,0,.16),transparent 28%),
+    linear-gradient(180deg,#000 0%,#060604 50%,#000 100%)!important;
+}
+.theme-space .planetA{background:radial-gradient(circle at 34% 30%,#ffe777,#6c5300 38%,#0b0900 72%)!important;opacity:.42!important}
+.theme-space .planetB{background:radial-gradient(circle at 30% 30%,#fff0a0,#725600 42%,#090700 72%)!important;opacity:.34!important}
+
+/* Keep blue/cyan, green and monochrome worlds clearly separate too */
+.theme-quantum .planetA{background:radial-gradient(circle at 34% 30%,#bfffff,#225cff 35%,#09082c 72%)!important}
+.theme-nature .planetA{background:radial-gradient(circle at 34% 30%,#caffc7,#149c55 36%,#032414 72%)!important}
+.theme-minimal .planetA{background:radial-gradient(circle at 34% 30%,#fff,#7e8791 36%,#121519 72%)!important}
+
+/* The global outer backdrop now follows the selected identity as well */
+.theme-future .spaceBackdrop{filter:hue-rotate(300deg) saturate(1.35) brightness(.82)!important}
+.theme-military .spaceBackdrop{filter:sepia(1) saturate(1.8) brightness(.62)!important}
+.theme-hacker .spaceBackdrop{filter:hue-rotate(300deg) saturate(1.7) brightness(.55)!important}
+.theme-cyberpunk .spaceBackdrop{filter:sepia(.55) saturate(2) hue-rotate(335deg) brightness(.78)!important}
+.theme-space .spaceBackdrop{filter:sepia(1) saturate(1.35) brightness(.52)!important}
+.theme-stealth .spaceBackdrop{filter:grayscale(.7) sepia(.15) saturate(1.4) brightness(.70)!important}
+.theme-quantum .spaceBackdrop{filter:hue-rotate(120deg) saturate(1.25) brightness(.9)!important}
+.theme-nature .spaceBackdrop{filter:hue-rotate(55deg) saturate(1.2) brightness(.78)!important}
+.theme-minimal .spaceBackdrop{filter:grayscale(1) brightness(.58)!important}
+
+/* Preserve the reactor geometry the user liked */
+.energy{z-index:4!important}
+.reply,.quickRow,.commandBar,.stageTitle,.telemetry,.corner{z-index:6!important}
+
+@media(max-width:760px){
+  .jarvis .themeMenuGlobal{
+    top:66px!important;right:8px!important;
+    width:calc(100vw - 16px)!important;
+    max-height:calc(100dvh - 76px)!important;
+  }
+  .jarvis .themeMenuGlobal .themeGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .planetA{width:122px!important;height:122px!important}
+}
+
+/* =========================================================
+   JARVIS V4.5 // MULTIVERSE THEME ENGINE
+   Every profile is a different visual world, not a recolored space skin.
+   Reactor geometry is intentionally untouched.
+   ========================================================= */
+.themeWorld{position:absolute;inset:0;z-index:1;overflow:hidden;pointer-events:none;transition:opacity .45s ease}
+.worldLayer,.worldGlyphs{position:absolute;inset:0;pointer-events:none}
+.stageSpace>.galaxyCloud,.stageSpace>.stageStars,.stageSpace>.planet,.stageSpace>.meteor,.stageSpace>.spaceHorizon,.stageSpace>.stageDust{transition:opacity .45s ease,filter .45s ease}
+
+/* DEFAULT JARVIS: blue orbital command chamber */
+.theme-jarvis .themeWorld{background:radial-gradient(circle at 50% 44%,rgba(53,207,255,.10),transparent 28%)}
+.theme-jarvis .worldBack{background:linear-gradient(90deg,transparent 49.8%,rgba(53,207,255,.08) 50%,transparent 50.2%),linear-gradient(transparent 49.8%,rgba(53,207,255,.06) 50%,transparent 50.2%);background-size:110px 110px;opacity:.3;transform:perspective(420px) rotateX(67deg) scale(1.8);transform-origin:center bottom}
+
+/* RED + WHITE: clean futuristic reactor laboratory */
+.theme-future .stageStars,.theme-future .planetB,.theme-future .planetC,.theme-future .meteor{opacity:.18!important}
+.theme-future .themeWorld{background:linear-gradient(90deg,rgba(255,255,255,.025),transparent 20%,transparent 80%,rgba(255,255,255,.025))}
+.theme-future .worldBack{inset:8% 5% 14%;border:1px solid rgba(255,255,255,.12);clip-path:polygon(5% 0,95% 0,100% 10%,100% 90%,95% 100%,5% 100%,0 90%,0 10%);box-shadow:inset 0 0 70px rgba(255,30,70,.09)}
+.theme-future .worldMid{background:repeating-linear-gradient(90deg,transparent 0 8.5%,rgba(255,255,255,.075) 8.6% 8.75%,transparent 8.85% 17%),linear-gradient(180deg,transparent 64%,rgba(255,35,70,.08));mask-image:linear-gradient(to bottom,transparent 4%,#000 30%,#000 85%,transparent)}
+.theme-future .worldFront:before,.theme-future .worldFront:after{content:"";position:absolute;top:18%;bottom:18%;width:17%;border:1px solid rgba(255,255,255,.14);background:linear-gradient(135deg,rgba(255,255,255,.04),transparent 45%,rgba(255,35,70,.07));clip-path:polygon(15% 0,100% 0,86% 100%,0 100%)}
+.theme-future .worldFront:before{left:4%}.theme-future .worldFront:after{right:4%;transform:scaleX(-1)}
+.theme-future .worldGlyphs:after{content:"CRIMSON LAB  //  REACTOR CHAMBER 07";position:absolute;right:6%;bottom:15%;font:600 7px var(--mono);letter-spacing:2px;color:#fff;opacity:.35}
+
+/* YELLOW + BLACK: tactical command bunker / radar room */
+.theme-military .galaxyCloud,.theme-military .planet,.theme-military .meteor{opacity:.06!important}.theme-military .stageStars{opacity:.12!important}
+.theme-military .stageSpace{background:radial-gradient(circle at 50% 45%,rgba(255,215,0,.10),transparent 26%),linear-gradient(180deg,#020300,#080900 54%,#010200)!important}
+.theme-military .worldBack{background:linear-gradient(rgba(255,217,0,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(255,217,0,.07) 1px,transparent 1px);background-size:36px 36px;transform:perspective(500px) rotateX(63deg) scale(1.55);transform-origin:center bottom;opacity:.62}
+.theme-military .worldMid:before{content:"";position:absolute;width:62vh;height:62vh;max-width:68%;max-height:82%;left:50%;top:48%;transform:translate(-50%,-50%);border-radius:50%;border:1px solid rgba(255,217,0,.14);background:repeating-radial-gradient(circle,transparent 0 13%,rgba(255,217,0,.10) 13.2% 13.6%,transparent 13.8% 26%),conic-gradient(from 15deg,transparent 0 22%,rgba(255,217,0,.07) 22.5%,transparent 23% 47%,rgba(255,217,0,.06) 47.5%,transparent 48%);animation:radarSweep 9s linear infinite}
+.theme-military .worldFront{background:linear-gradient(90deg,rgba(255,217,0,.11),transparent 1px) 8% 12%/1px 76% no-repeat,linear-gradient(90deg,rgba(255,217,0,.11),transparent 1px) 92% 12%/1px 76% no-repeat}
+.theme-military .worldGlyphs:after{content:"TACTICAL GRID  //  SECTOR 09  //  CLEAR";position:absolute;right:6%;bottom:15%;font:600 7px var(--mono);letter-spacing:2px;color:#ffd900;opacity:.52}
+
+/* RED + BLACK: hacker terminal world, matrix rain + server corridor */
+.theme-hacker .galaxyCloud,.theme-hacker .planet,.theme-hacker .meteor,.theme-hacker .spaceHorizon{opacity:0!important}.theme-hacker .stageStars{opacity:.08!important}
+.theme-hacker .stageSpace{background:radial-gradient(ellipse at 50% 46%,rgba(255,0,48,.12),transparent 31%),linear-gradient(180deg,#000,#080002 52%,#000)!important}
+.theme-hacker .worldBack{background:repeating-linear-gradient(90deg,transparent 0 31px,rgba(255,20,58,.055) 32px,transparent 33px),repeating-linear-gradient(0deg,transparent 0 31px,rgba(255,20,58,.04) 32px,transparent 33px);transform:perspective(480px) rotateX(65deg) scale(1.65);transform-origin:center bottom}
+.theme-hacker .worldMid{opacity:.55;background:repeating-linear-gradient(90deg,transparent 0 6%,rgba(255,22,63,.09) 6.1% 6.4%,transparent 6.5% 12%);mask-image:linear-gradient(to bottom,#000,transparent 78%);animation:hackerRain 7s linear infinite}
+.theme-hacker .worldMid:after{content:"01  101  00  1101  010  111  0010  01  1001  011  110  001  1010  0101";position:absolute;inset:-15% 4%;font:600 10px/3.1 var(--mono);word-spacing:22px;color:#ff163f;opacity:.20;transform:skewY(-5deg);animation:codeFall 8s linear infinite}
+.theme-hacker .worldFront:before,.theme-hacker .worldFront:after{content:"";position:absolute;top:8%;bottom:10%;width:13%;border:1px solid rgba(255,22,63,.17);background:repeating-linear-gradient(180deg,rgba(255,22,63,.09) 0 3px,transparent 3px 18px),linear-gradient(90deg,rgba(255,22,63,.06),transparent)}
+.theme-hacker .worldFront:before{left:2%}.theme-hacker .worldFront:after{right:2%}
+.theme-hacker .worldGlyphs:after{content:"ROOT://JARVIS  ACCESS GRANTED  ███████";position:absolute;left:5%;bottom:15%;font:600 7px var(--mono);letter-spacing:1.5px;color:#ff163f;text-shadow:0 0 8px #ff163f;opacity:.65}
+
+/* YELLOW + RED: cyberpunk megacity, warm neon skyline */
+.theme-cyberpunk .planet,.theme-cyberpunk .galaxyCloud{opacity:.12!important}.theme-cyberpunk .stageStars{opacity:.26!important}
+.theme-cyberpunk .worldBack{background:linear-gradient(180deg,transparent 28%,rgba(255,190,0,.04) 55%,rgba(255,0,42,.09) 100%)}
+.theme-cyberpunk .worldMid{top:38%;background:linear-gradient(90deg,transparent 0 2%,#180006 2% 8%,transparent 8% 10%,#250008 10% 17%,transparent 17% 19%,#150003 19% 28%,transparent 28% 31%,#2b0900 31% 38%,transparent 38% 61%,#2b0900 61% 68%,transparent 68% 71%,#150003 71% 80%,transparent 80% 83%,#250008 83% 90%,transparent 90% 92%,#180006 92% 98%,transparent 98%);clip-path:polygon(0 35%,6% 35%,6% 17%,9% 17%,9% 40%,14% 40%,14% 7%,18% 7%,18% 48%,25% 48%,25% 25%,30% 25%,30% 60%,40% 60%,40% 40%,46% 40%,46% 100%,54% 100%,54% 38%,60% 38%,60% 60%,70% 60%,70% 24%,75% 24%,75% 48%,82% 48%,82% 8%,86% 8%,86% 40%,91% 40%,91% 17%,94% 17%,94% 35%,100% 35%,100% 100%,0 100%);filter:drop-shadow(0 -1px 5px rgba(255,210,0,.28))}
+.theme-cyberpunk .worldFront{background:linear-gradient(90deg,transparent 49.8%,rgba(255,210,0,.18) 50%,transparent 50.2%);transform:perspective(420px) rotateX(70deg) scale(2.2);transform-origin:center bottom;top:58%;border-top:1px solid rgba(255,35,55,.25)}
+.theme-cyberpunk .worldGlyphs:after{content:"NEO DISTRICT  //  SOLAR CITY";position:absolute;right:6%;bottom:15%;font:600 7px var(--mono);letter-spacing:2px;color:#ffd500;opacity:.58}
+
+/* DEEP SPACE / GOLD NIGHT: keep the actual cosmos, make it grander */
+.theme-space .themeWorld{background:radial-gradient(ellipse at 50% 105%,rgba(255,218,0,.10),transparent 38%)}
+.theme-space .worldBack:after{content:"";position:absolute;left:-15%;right:-15%;bottom:-30%;height:58%;border-radius:50%;border-top:2px solid rgba(255,230,0,.20);box-shadow:0 -12px 45px rgba(255,210,0,.10);transform:rotate(-5deg)}
+.theme-space .worldGlyphs:after{content:"DEEP ORBIT  //  CELESTIAL NAVIGATION";position:absolute;right:6%;bottom:15%;font:600 7px var(--mono);letter-spacing:2px;color:#ffe600;opacity:.45}
+
+/* STEALTH: monochrome covert hangar */
+.theme-stealth .galaxyCloud,.theme-stealth .planet,.theme-stealth .meteor{opacity:.04!important}.theme-stealth .stageStars{opacity:.10!important}
+.theme-stealth .stageSpace{background:linear-gradient(180deg,#030303,#0a0a0b 52%,#020202)!important}
+.theme-stealth .worldBack{background:repeating-linear-gradient(90deg,transparent 0 12%,rgba(255,255,255,.045) 12.1% 12.3%,transparent 12.4% 24%);clip-path:polygon(0 0,100% 0,88% 100%,12% 100%)}
+.theme-stealth .worldMid{inset:14% 8%;border:1px solid rgba(255,255,255,.08);box-shadow:inset 0 0 60px #000}
+
+/* QUANTUM: cyan-violet glass dimension */
+.theme-quantum .planet{opacity:.12!important}
+.theme-quantum .worldBack{background:repeating-conic-gradient(from 0deg at 50% 45%,rgba(0,234,255,.05) 0 4deg,transparent 4deg 18deg);animation:quantumSpin 28s linear infinite}
+.theme-quantum .worldMid{inset:13% 11%;border:1px solid rgba(0,234,255,.12);transform:rotate(45deg) scale(.72);box-shadow:0 0 40px rgba(76,53,255,.13),inset 0 0 40px rgba(0,234,255,.08)}
+
+/* BIO TECH: organic bioluminescent chamber */
+.theme-nature .planet,.theme-nature .meteor{opacity:.04!important}.theme-nature .stageStars{opacity:.13!important}
+.theme-nature .stageSpace{background:radial-gradient(ellipse at 50% 46%,rgba(30,255,100,.11),transparent 29%),linear-gradient(180deg,#001007,#021b0f 53%,#000b05)!important}
+.theme-nature .worldBack{background:radial-gradient(ellipse at 15% 60%,transparent 0 13%,rgba(102,255,117,.08) 13.5% 14%,transparent 14.5%),radial-gradient(ellipse at 85% 35%,transparent 0 16%,rgba(102,255,117,.07) 16.5% 17%,transparent 17.5%);filter:blur(.2px)}
+.theme-nature .worldMid:before,.theme-nature .worldMid:after{content:"";position:absolute;width:42%;height:70%;top:15%;border:1px solid rgba(102,255,117,.10);border-radius:50%;filter:drop-shadow(0 0 9px rgba(102,255,117,.10))}
+.theme-nature .worldMid:before{left:-15%;transform:rotate(22deg)}.theme-nature .worldMid:after{right:-15%;transform:rotate(-22deg)}
+
+/* MINIMAL: quiet white holographic studio */
+.theme-minimal .galaxyCloud,.theme-minimal .planet,.theme-minimal .meteor,.theme-minimal .spaceHorizon{opacity:0!important}.theme-minimal .stageStars{opacity:.055!important}
+.theme-minimal .stageSpace{background:linear-gradient(180deg,#080a0d,#101419 52%,#060709)!important}
+.theme-minimal .worldBack{inset:12%;border:1px solid rgba(255,255,255,.07);border-radius:2px}.theme-minimal .worldMid{background:linear-gradient(90deg,transparent 49.9%,rgba(255,255,255,.07) 50%,transparent 50.1%),linear-gradient(transparent 49.9%,rgba(255,255,255,.05) 50%,transparent 50.1%)}
+
+/* Menu: guaranteed above the universe */
+.jarvis .themeMenuGlobal{position:fixed!important;z-index:2147483646!important;display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;isolation:isolate!important}
+
+@keyframes radarSweep{to{transform:translate(-50%,-50%) rotate(360deg)}}
+@keyframes hackerRain{to{background-position:180px 0,0 220px}}
+@keyframes codeFall{to{transform:translateY(22%) skewY(-5deg)}}
+@keyframes quantumSpin{to{transform:rotate(360deg)}}
+
+
+/* =========================================================
+   JARVIS V5.0 WORLD ENGINE
+   Each theme is a different PLACE, not a recolored space scene.
+   ========================================================= */
+.sceneArt,.sceneArt>*{position:absolute;pointer-events:none;box-sizing:border-box}
+.sceneArt{inset:0;z-index:2;overflow:hidden}
+.sceneArt>*{display:none}
+
+/* Stop space leaking into non-space worlds */
+.theme-jarvis .galaxyCloud,.theme-jarvis .planet,.theme-jarvis .meteor,
+.theme-future .galaxyCloud,.theme-future .planet,.theme-future .meteor,
+.theme-military .galaxyCloud,.theme-military .planet,.theme-military .meteor,
+.theme-hacker .galaxyCloud,.theme-hacker .planet,.theme-hacker .meteor,
+.theme-cyberpunk .galaxyCloud,.theme-cyberpunk .planet,.theme-cyberpunk .meteor,
+.theme-stealth .galaxyCloud,.theme-stealth .planet,.theme-stealth .meteor,
+.theme-quantum .galaxyCloud,.theme-quantum .planet,.theme-quantum .meteor,
+.theme-nature .galaxyCloud,.theme-nature .planet,.theme-nature .meteor,
+.theme-minimal .galaxyCloud,.theme-minimal .planet,.theme-minimal .meteor{opacity:0!important}
+.theme-jarvis .spaceHorizon,.theme-future .spaceHorizon,.theme-military .spaceHorizon,
+.theme-hacker .spaceHorizon,.theme-cyberpunk .spaceHorizon,.theme-stealth .spaceHorizon,
+.theme-quantum .spaceHorizon,.theme-nature .spaceHorizon,.theme-minimal .spaceHorizon{opacity:0!important}
+
+/* 01 JARVIS: blue holographic AI laboratory */
+.theme-jarvis .stageSpace{background:
+ radial-gradient(circle at 50% 48%,rgba(0,210,255,.18),transparent 25%),
+ linear-gradient(180deg,#020b16 0%,#03182a 55%,#01060d 100%)!important}
+.theme-jarvis .labWall,.theme-jarvis .holoPanel{display:block}
+.theme-jarvis .labWall{inset:7% 5% 9%;border:1px solid rgba(75,221,255,.18);
+ background:linear-gradient(90deg,transparent 0 16%,rgba(62,220,255,.055) 16.2% 16.5%,transparent 16.7% 83%,rgba(62,220,255,.055) 83.2% 83.5%,transparent 83.7%),
+ linear-gradient(0deg,rgba(0,212,255,.04),transparent 42%);clip-path:polygon(4% 0,96% 0,100% 9%,100% 91%,96% 100%,4% 100%,0 91%,0 9%)}
+.theme-jarvis .holoPanel{width:22%;height:27%;top:22%;border:1px solid rgba(81,224,255,.22);background:repeating-linear-gradient(0deg,rgba(50,215,255,.08) 0 1px,transparent 1px 13px);box-shadow:0 0 35px rgba(0,190,255,.08)}
+.theme-jarvis .hp1{left:7%;transform:perspective(450px) rotateY(17deg)} .theme-jarvis .hp2{right:7%;transform:perspective(450px) rotateY(-17deg)}
+
+/* 02 CRIMSON ICE: white/red future reactor laboratory */
+.theme-future .stageStars{opacity:.025!important}
+.theme-future .stageSpace{background:linear-gradient(180deg,#12070a 0%,#251016 48%,#08090c 100%)!important}
+.theme-future .labWall,.theme-future .labTower,.theme-future .holoPanel{display:block}
+.theme-future .labWall{inset:6% 4% 7%;background:
+ linear-gradient(90deg,rgba(255,255,255,.08),transparent 14% 86%,rgba(255,255,255,.08)),
+ repeating-linear-gradient(90deg,transparent 0 11%,rgba(255,255,255,.045) 11.2% 11.5%,transparent 11.7% 22%);
+ border-top:1px solid rgba(255,255,255,.28);border-bottom:1px solid rgba(255,40,75,.30)}
+.theme-future .labTower{display:block;bottom:8%;width:11%;height:66%;background:linear-gradient(90deg,#e9eef4 0 8%,#331018 9% 88%,#fff 89%);opacity:.26;box-shadow:0 0 25px rgba(255,255,255,.08)}
+.theme-future .t1{left:5%;clip-path:polygon(0 12%,100% 0,100% 100%,0 88%)} .theme-future .t2{right:5%;clip-path:polygon(0 0,100% 12%,100% 88%,0 100%)}
+.theme-future .holoPanel{display:block;bottom:15%;width:19%;height:18%;border:1px solid rgba(255,255,255,.28);background:repeating-linear-gradient(0deg,rgba(255,42,74,.14) 0 2px,transparent 2px 12px)}
+.theme-future .hp1{left:18%}.theme-future .hp2{right:18%}
+
+/* 03 BLACK GOLD: tactical command bunker */
+.theme-military .stageStars{opacity:.015!important}
+.theme-military .stageSpace{background:linear-gradient(180deg,#050504,#101008 56%,#020202)!important}
+.theme-military .tacticalMap,.theme-military .radarDish{display:block}
+.theme-military .tacticalMap{inset:7% 5% 9%;background:
+ linear-gradient(rgba(255,215,0,.075) 1px,transparent 1px),
+ linear-gradient(90deg,rgba(255,215,0,.075) 1px,transparent 1px);
+ background-size:34px 34px;transform:perspective(520px) rotateX(61deg) scale(1.5);transform-origin:center bottom;opacity:.8}
+.theme-military .radarDish{width:360px;height:360px;left:50%;top:48%;transform:translate(-50%,-50%);border:1px solid rgba(255,220,0,.18);border-radius:50%;
+ background:repeating-radial-gradient(circle,transparent 0 43px,rgba(255,220,0,.13) 44px 45px,transparent 46px 78px),conic-gradient(from 20deg,rgba(255,220,0,.20),transparent 16% 100%);animation:radarSweep 10s linear infinite}
+
+/* 04 RED CORE: hacker server vault */
+.theme-hacker .stageStars{opacity:0!important}
+.theme-hacker .stageSpace{background:linear-gradient(180deg,#020202,#090104 55%,#000)!important}
+.theme-hacker .serverRack,.theme-hacker .codeCurtain{display:block}
+.theme-hacker .serverRack{top:8%;bottom:8%;width:22%;border:1px solid rgba(255,24,62,.20);
+ background:repeating-linear-gradient(0deg,#060607 0 17px,rgba(255,22,58,.26) 18px 19px,#020203 20px 29px);box-shadow:inset 0 0 40px #000,0 0 25px rgba(255,0,45,.07)}
+.theme-hacker .r1{left:3%;transform:perspective(500px) rotateY(13deg)}.theme-hacker .r2{right:3%;transform:perspective(500px) rotateY(-13deg)}
+.theme-hacker .codeCurtain{left:27%;right:27%;top:5%;bottom:5%;opacity:.38;
+ background:repeating-linear-gradient(90deg,transparent 0 22px,rgba(255,28,62,.12) 23px,transparent 24px),
+ repeating-linear-gradient(0deg,transparent 0 15px,rgba(255,28,62,.14) 16px,transparent 17px);
+ mask-image:linear-gradient(180deg,transparent,#000 16%,#000 82%,transparent);animation:hackerRain 9s linear infinite}
+
+/* 05 SOLAR FLARE: yellow/red cyberpunk megacity */
+.theme-cyberpunk .stageStars{opacity:.02!important}
+.theme-cyberpunk .stageSpace{background:linear-gradient(180deg,#100006 0%,#27000a 45%,#090104 100%)!important}
+.theme-cyberpunk .citySkyline,.theme-cyberpunk .cityRoad{display:block}
+.theme-cyberpunk .citySkyline{left:0;right:0;bottom:18%;height:48%;opacity:.58;
+ background:
+ linear-gradient(90deg,transparent 0 4%,#26040b 4% 11%,transparent 11% 13%,#180208 13% 20%,transparent 20% 23%,#2c0710 23% 31%,transparent 31% 68%,#28050c 68% 75%,transparent 75% 79%,#190207 79% 87%,transparent 87% 90%,#2b050d 90% 97%,transparent 97%),
+ repeating-linear-gradient(90deg,transparent 0 16px,rgba(255,215,0,.38) 17px 19px,transparent 20px 31px);
+ filter:drop-shadow(0 0 12px rgba(255,25,45,.20))}
+.theme-cyberpunk .cityRoad{left:22%;right:22%;bottom:-20%;height:58%;clip-path:polygon(43% 0,57% 0,100% 100%,0 100%);
+ background:repeating-linear-gradient(90deg,transparent 0 48%,rgba(255,215,0,.55) 49% 51%,transparent 52% 100%),linear-gradient(180deg,rgba(255,20,45,.04),rgba(255,20,45,.25));box-shadow:0 -25px 60px rgba(255,25,45,.18)}
+
+/* 06 DARK LUXURY: the ONLY true outer-space world */
+.theme-space .stageStars{opacity:.95!important}.theme-space .galaxyCloud{opacity:.78!important}
+.theme-space .planetA{opacity:.48!important}.theme-space .planetB{opacity:.32!important}.theme-space .planetC{opacity:.22!important}
+.theme-space .meteor{opacity:.72!important}.theme-space .spaceHorizon{opacity:.26!important}
+.theme-space .stageSpace{background:radial-gradient(ellipse at 50% 50%,#141007 0%,#07080c 46%,#010203 100%)!important}
+
+/* 07 STEALTH: black classified aircraft hangar */
+.theme-stealth .stageStars{opacity:0!important}
+.theme-stealth .stageSpace{background:linear-gradient(180deg,#050607,#0a0b0c 58%,#010101)!important}
+.theme-stealth .hangarDoor,.theme-stealth .laserScan{display:block}
+.theme-stealth .hangarDoor{inset:5% 4% 6%;clip-path:polygon(10% 0,90% 0,100% 18%,92% 100%,8% 100%,0 18%);
+ background:repeating-linear-gradient(90deg,#080a0c 0 9%,#121519 9.2% 9.7%,#050607 9.9% 18%);border-top:1px solid rgba(255,255,255,.08)}
+.theme-stealth .laserScan{left:9%;right:9%;top:48%;height:1px;background:#ff173d;box-shadow:0 0 16px #ff173d,0 0 35px rgba(255,23,61,.35);animation:stealthScan 5s ease-in-out infinite}
+
+/* 08 QUANTUM: particle accelerator chamber */
+.theme-quantum .stageStars{opacity:.04!important}
+.theme-quantum .stageSpace{background:radial-gradient(circle at 50% 48%,#071b35 0%,#050916 42%,#010207 100%)!important}
+.theme-quantum .quantumTunnel{display:block;width:720px;height:720px;left:50%;top:48%;transform:translate(-50%,-50%);border-radius:50%;
+ background:repeating-radial-gradient(circle,transparent 0 42px,rgba(53,219,255,.10) 43px 45px,transparent 46px 76px),
+ repeating-conic-gradient(from 0deg,rgba(98,225,255,.14) 0 2deg,transparent 2deg 14deg);filter:drop-shadow(0 0 18px rgba(40,190,255,.14));animation:quantumWorldSpin 28s linear infinite}
+
+/* 09 BIO TECH: living biotech chamber */
+.theme-nature .stageStars{opacity:0!important}
+.theme-nature .stageSpace{background:radial-gradient(circle at 50% 50%,#073b25 0%,#021a10 45%,#000704 100%)!important}
+.theme-nature .dnaHelix,.theme-nature .holoPanel{display:block}
+.theme-nature .dnaHelix{left:7%;top:9%;width:18%;height:76%;opacity:.55;
+ background:radial-gradient(ellipse at 30% 50%,transparent 0 42%,rgba(93,255,148,.22) 43% 45%,transparent 46%),
+ radial-gradient(ellipse at 70% 50%,transparent 0 42%,rgba(93,255,148,.22) 43% 45%,transparent 46%);
+ transform:rotate(-8deg);filter:drop-shadow(0 0 12px rgba(70,255,130,.18))}
+.theme-nature .holoPanel{right:6%;width:22%;height:25%;border:1px solid rgba(89,255,145,.20);background:repeating-linear-gradient(0deg,rgba(89,255,145,.09) 0 1px,transparent 1px 12px)}
+.theme-nature .hp1{top:16%}.theme-nature .hp2{bottom:16%}
+
+/* 10 ZERO: deliberately empty premium AI studio */
+.theme-minimal .stageStars{opacity:.015!important}
+.theme-minimal .stageSpace{background:radial-gradient(circle at 50% 50%,#15191e,#080a0d 50%,#020303)!important}
+.theme-minimal .worldBack{inset:9%;border:1px solid rgba(255,255,255,.055)!important;background:none!important}
+.theme-minimal .worldMid{opacity:.25}
+
+/* Theme menu must open instantly and above every world */
+.jarvis .themeMenuGlobal{display:block!important;position:fixed!important;z-index:2147483647!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;transform:none!important;animation:none!important}
+.jarvis .themeMenuGlobal[hidden]{display:none!important}
+
+@keyframes stealthScan{0%,100%{top:22%;opacity:.25}50%{top:78%;opacity:.9}}
+@keyframes quantumWorldSpin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+
+/* =========================================================
+   JARVIS V4.7 // CINEMATIC WORLD REBUILD
+   Concrete environments instead of abstract HUD geometry.
+   Reactor mechanics preserved.
+   ========================================================= */
+.sceneArt{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:2}
+.sceneArt>div{position:absolute;display:none;box-sizing:border-box}
+.themeWorld{z-index:1}
+.themeWorld .worldLayer,.themeWorld .worldGlyphs{z-index:1}
+.sceneArt{z-index:3}
+
+/* Keep non-space worlds clean. Their depth now comes from the environment. */
+.theme-jarvis .stageStars,.theme-future .stageStars,.theme-military .stageStars,.theme-hacker .stageStars,
+.theme-cyberpunk .stageStars,.theme-stealth .stageStars,.theme-quantum .stageStars,.theme-nature .stageStars,.theme-minimal .stageStars{opacity:0!important}
+.theme-jarvis .galaxyCloud,.theme-future .galaxyCloud,.theme-military .galaxyCloud,.theme-hacker .galaxyCloud,
+.theme-cyberpunk .galaxyCloud,.theme-stealth .galaxyCloud,.theme-quantum .galaxyCloud,.theme-nature .galaxyCloud,.theme-minimal .galaxyCloud,
+.theme-jarvis .planet,.theme-future .planet,.theme-military .planet,.theme-hacker .planet,
+.theme-cyberpunk .planet,.theme-stealth .planet,.theme-quantum .planet,.theme-nature .planet,.theme-minimal .planet,
+.theme-jarvis .meteor,.theme-future .meteor,.theme-military .meteor,.theme-hacker .meteor,
+.theme-cyberpunk .meteor,.theme-stealth .meteor,.theme-quantum .meteor,.theme-nature .meteor,.theme-minimal .meteor{opacity:0!important}
+
+/* JARVIS // blue holographic command deck */
+.theme-jarvis .stageSpace{background:linear-gradient(180deg,#020812 0%,#061728 56%,#01050a 100%)!important}
+.theme-jarvis .labWall,.theme-jarvis .labTower,.theme-jarvis .holoPanel{display:block}
+.theme-jarvis .labWall{inset:4% 3% 5%;clip-path:polygon(7% 0,93% 0,100% 17%,100% 100%,0 100%,0 17%);background:linear-gradient(90deg,rgba(0,205,255,.08),transparent 18% 82%,rgba(0,205,255,.08)),repeating-linear-gradient(90deg,transparent 0 9.8%,rgba(81,222,255,.07) 10%,transparent 10.2% 20%);border-top:1px solid rgba(121,235,255,.25);box-shadow:inset 0 -90px 110px rgba(0,127,180,.08)}
+.theme-jarvis .labTower{display:block;bottom:6%;width:13%;height:70%;background:linear-gradient(90deg,#07121e,#10293c 45%,#06111c);border:1px solid rgba(74,218,255,.14);box-shadow:inset 0 0 30px #000,0 0 25px rgba(0,200,255,.06)}
+.theme-jarvis .t1{left:3%;transform:perspective(600px) rotateY(18deg)}.theme-jarvis .t2{right:3%;transform:perspective(600px) rotateY(-18deg)}
+.theme-jarvis .holoPanel{display:block;top:18%;width:21%;height:29%;border:1px solid rgba(99,231,255,.32);background:linear-gradient(135deg,rgba(0,191,255,.09),transparent),repeating-linear-gradient(0deg,transparent 0 12px,rgba(100,230,255,.11) 13px,transparent 14px);box-shadow:0 0 24px rgba(0,204,255,.12),inset 0 0 20px rgba(0,204,255,.05)}
+.theme-jarvis .hp1{left:18%;transform:perspective(500px) rotateY(10deg)}.theme-jarvis .hp2{right:18%;transform:perspective(500px) rotateY(-10deg)}
+.theme-jarvis .worldFront{display:block;top:67%;background:repeating-linear-gradient(90deg,transparent 0 59px,rgba(78,221,255,.10) 60px,transparent 61px),linear-gradient(rgba(78,221,255,.09) 1px,transparent 1px);background-size:auto,100% 28px;transform:perspective(360px) rotateX(68deg) scale(1.5);transform-origin:center bottom}
+
+/* RED + WHITE // bright reactor laboratory */
+.theme-future .stageSpace{background:linear-gradient(180deg,#0a0b0e 0%,#17191e 48%,#07080b 100%)!important}
+.theme-future .labWall,.theme-future .labTower,.theme-future .holoPanel{display:block}
+.theme-future .labWall{inset:4% 2.5% 5%;background:linear-gradient(90deg,rgba(245,248,255,.18) 0 3%,transparent 3% 97%,rgba(245,248,255,.18) 97%),linear-gradient(180deg,rgba(255,255,255,.08),transparent 28% 70%,rgba(255,30,65,.07));clip-path:polygon(8% 0,92% 0,100% 16%,100% 100%,0 100%,0 16%);border-top:2px solid rgba(255,255,255,.35);box-shadow:inset 0 0 80px rgba(255,255,255,.04)}
+.theme-future .labTower{display:block;bottom:5%;height:74%;width:16%;background:linear-gradient(90deg,#f1f3f6 0 8%,#20242a 9% 48%,#5c0b18 49% 53%,#1c2026 54% 91%,#fff 92%);opacity:.62;box-shadow:0 0 22px rgba(255,255,255,.09),inset 0 0 30px #000}
+.theme-future .t1{left:2%;clip-path:polygon(0 10%,100% 0,88% 100%,0 90%)}.theme-future .t2{right:2%;clip-path:polygon(0 0,100% 10%,100% 90%,12% 100%)}
+.theme-future .holoPanel{display:block;bottom:13%;width:18%;height:24%;background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,31,66,.06));border:1px solid rgba(255,255,255,.34);box-shadow:inset 0 0 24px rgba(255,33,67,.10)}
+.theme-future .hp1{left:20%;transform:perspective(500px) rotateY(11deg)}.theme-future .hp2{right:20%;transform:perspective(500px) rotateY(-11deg)}
+.theme-future .worldMid{display:block;left:31%;right:31%;top:6%;bottom:7%;background:linear-gradient(90deg,transparent,rgba(255,30,65,.08),transparent);border-left:1px solid rgba(255,255,255,.09);border-right:1px solid rgba(255,255,255,.09)}
+
+/* YELLOW + BLACK // underground tactical war room */
+.theme-military .stageSpace{background:linear-gradient(180deg,#020302 0%,#090a05 52%,#010101 100%)!important}
+.theme-military .tacticalMap,.theme-military .radarDish,.theme-military .holoPanel{display:block}
+.theme-military .tacticalMap{inset:8% 5% 4%;background:linear-gradient(rgba(255,216,0,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(255,216,0,.08) 1px,transparent 1px);background-size:34px 34px;transform:perspective(420px) rotateX(64deg) scale(1.55);transform-origin:center bottom;opacity:.55;box-shadow:inset 0 0 80px #000}
+.theme-military .radarDish{display:block;width:52vh;height:52vh;max-width:62%;max-height:78%;left:50%;top:48%;transform:translate(-50%,-50%);border-radius:50%;border:1px solid rgba(255,220,0,.20);background:repeating-radial-gradient(circle,transparent 0 14%,rgba(255,220,0,.12) 14.3% 14.7%,transparent 15% 28%),conic-gradient(from 0deg,rgba(255,220,0,.25),transparent 13% 100%);filter:drop-shadow(0 0 18px rgba(255,215,0,.08));animation:radarSweep 10s linear infinite}
+.theme-military .holoPanel{display:block;top:14%;width:20%;height:34%;background:#060703;border:1px solid rgba(255,220,0,.25);box-shadow:inset 0 0 28px #000,0 0 18px rgba(255,220,0,.05)}
+.theme-military .holoPanel:before{content:"TACTICAL\A 37.061 N\A 35.322 E\A TARGET: LOCKED";white-space:pre;position:absolute;inset:12%;font:600 8px/2 var(--mono);letter-spacing:1px;color:#ffe100;opacity:.55}
+.theme-military .hp1{left:5%;transform:perspective(500px) rotateY(13deg)}.theme-military .hp2{right:5%;transform:perspective(500px) rotateY(-13deg)}
+.theme-military .worldFront{display:block;left:4%;right:4%;bottom:2%;height:19%;background:linear-gradient(180deg,rgba(255,220,0,.05),#030300);border-top:1px solid rgba(255,220,0,.17);clip-path:polygon(6% 0,94% 0,100% 100%,0 100%)}
+
+/* RED + BLACK // actual hacker server bunker */
+.theme-hacker .stageSpace{background:radial-gradient(ellipse at 50% 46%,rgba(255,0,43,.10),transparent 28%),linear-gradient(180deg,#010101,#080003 52%,#000)!important}
+.theme-hacker .serverRack,.theme-hacker .codeCurtain,.theme-hacker .holoPanel{display:block}
+.theme-hacker .serverRack{display:block;top:4%;bottom:5%;width:25%;background:repeating-linear-gradient(180deg,#050506 0 13px,#0b0c0e 14px 23px,rgba(255,15,52,.35) 24px 25px,#020203 26px 32px);border:1px solid rgba(255,22,58,.20);box-shadow:inset 0 0 45px #000,0 0 30px rgba(255,0,40,.08)}
+.theme-hacker .serverRack:after{content:"";position:absolute;inset:4%;background:radial-gradient(circle at 15% 10%,#ff153c 0 1px,transparent 2px);background-size:18px 32px;opacity:.75}
+.theme-hacker .r1{left:1%;transform:perspective(520px) rotateY(16deg)}.theme-hacker .r2{right:1%;transform:perspective(520px) rotateY(-16deg)}
+.theme-hacker .codeCurtain{display:block;left:27%;right:27%;top:3%;bottom:3%;overflow:hidden;mask-image:linear-gradient(180deg,transparent,#000 12%,#000 88%,transparent)}
+.theme-hacker .codeCurtain:before,.theme-hacker .codeCurtain:after{content:"01001101  ROOT  10110  ACCESS  001011  JARVIS  11001  /SYS  011010  AUTH  101001  01011  KERNEL  110101  00101  ENCRYPT  10011  01001";position:absolute;left:0;right:0;font:600 9px/2.6 var(--mono);word-spacing:16px;color:#ff173f;text-shadow:0 0 8px rgba(255,23,63,.55);opacity:.45;animation:codeFall 8s linear infinite}
+.theme-hacker .codeCurtain:after{top:-45%;opacity:.22;animation-duration:13s;animation-direction:reverse}
+.theme-hacker .holoPanel{display:block;bottom:10%;width:18%;height:20%;border:1px solid rgba(255,23,63,.24);background:repeating-linear-gradient(0deg,rgba(255,23,63,.09) 0 1px,transparent 1px 10px)}
+.theme-hacker .hp1{left:28%;transform:skewY(2deg)}.theme-hacker .hp2{right:28%;transform:skewY(-2deg)}
+
+/* YELLOW + RED // neon megacity through a panoramic window */
+.theme-cyberpunk .stageSpace{background:linear-gradient(180deg,#07030b 0%,#1c0610 42%,#080204 100%)!important}
+.theme-cyberpunk .citySkyline,.theme-cyberpunk .cityRoad{display:block}
+.theme-cyberpunk .citySkyline{display:block;left:-2%;right:-2%;bottom:18%;height:60%;opacity:.95;background:linear-gradient(90deg,transparent 0 3%,#12030a 3% 9%,transparent 9% 11%,#23030b 11% 18%,transparent 18% 20%,#150208 20% 28%,transparent 28% 31%,#2b0610 31% 39%,transparent 39% 61%,#2b0610 61% 69%,transparent 69% 72%,#150208 72% 80%,transparent 80% 82%,#23030b 82% 89%,transparent 89% 91%,#12030a 91% 97%,transparent 97%),repeating-linear-gradient(90deg,transparent 0 13px,rgba(255,220,0,.72) 14px 15px,transparent 16px 29px);clip-path:polygon(0 35%,5% 35%,5% 15%,9% 15%,9% 47%,14% 47%,14% 4%,19% 4%,19% 58%,25% 58%,25% 28%,31% 28%,31% 66%,38% 66%,38% 42%,44% 42%,44% 100%,56% 100%,56% 43%,62% 43%,62% 66%,69% 66%,69% 27%,75% 27%,75% 58%,81% 58%,81% 5%,86% 5%,86% 47%,91% 47%,91% 15%,95% 15%,95% 35%,100% 35%,100% 100%,0 100%);filter:drop-shadow(0 -3px 8px rgba(255,35,52,.34))}
+.theme-cyberpunk .citySkyline:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 31px,rgba(255,35,55,.55) 32px 34px,transparent 35px 62px);mix-blend-mode:screen;opacity:.35}
+.theme-cyberpunk .cityRoad{display:block;left:22%;right:22%;bottom:-24%;height:67%;clip-path:polygon(42% 0,58% 0,100% 100%,0 100%);background:repeating-linear-gradient(90deg,transparent 0 48.5%,rgba(255,222,0,.78) 49% 51%,transparent 51.5%),linear-gradient(180deg,rgba(255,31,50,.03),rgba(255,31,50,.28));box-shadow:0 -30px 80px rgba(255,20,45,.22)}
+.theme-cyberpunk .worldBack{display:block;background:radial-gradient(circle at 50% 39%,rgba(255,207,0,.16),transparent 18%),linear-gradient(180deg,rgba(255,25,55,.05),transparent 60%)}
+
+/* DEEP SPACE // preserve and enrich actual cosmos */
+.theme-space .stageStars{opacity:1!important}.theme-space .galaxyCloud{opacity:.9!important}.theme-space .planetA{opacity:.58!important}.theme-space .planetB{opacity:.40!important}.theme-space .planetC{opacity:.30!important}.theme-space .meteor{opacity:.75!important}.theme-space .spaceHorizon{opacity:.30!important}
+.theme-space .stageSpace{background:radial-gradient(ellipse at 50% 48%,rgba(255,214,0,.06),transparent 25%),radial-gradient(ellipse at 50% 110%,#1a1202,#05060a 48%,#010203 76%)!important}
+
+/* STEALTH // classified aircraft hangar */
+.theme-stealth .stageSpace{background:linear-gradient(180deg,#030405,#090b0d 58%,#010101)!important}
+.theme-stealth .hangarDoor,.theme-stealth .laserScan{display:block}
+.theme-stealth .hangarDoor{display:block;inset:3% 2% 4%;clip-path:polygon(11% 0,89% 0,100% 22%,94% 100%,6% 100%,0 22%);background:repeating-linear-gradient(90deg,#050607 0 8.8%,#15191d 9% 9.5%,#080a0c 9.7% 18%);border-top:1px solid rgba(255,255,255,.09);box-shadow:inset 0 -100px 120px #000}
+.theme-stealth .hangarDoor:after{content:"CLASSIFIED // HANGAR 07";position:absolute;top:10%;left:50%;transform:translateX(-50%);font:600 8px var(--mono);letter-spacing:4px;color:#fff;opacity:.16}
+.theme-stealth .laserScan{display:block;left:8%;right:8%;height:1px;top:30%;background:#ff183f;box-shadow:0 0 14px #ff183f,0 0 38px rgba(255,24,63,.35);animation:stealthScan 5s ease-in-out infinite}
+
+/* QUANTUM // particle accelerator tunnel */
+.theme-quantum .stageSpace{background:radial-gradient(circle at 50% 48%,#0b2443 0%,#050a18 43%,#010207 100%)!important}
+.theme-quantum .quantumTunnel,.theme-quantum .holoPanel{display:block}
+.theme-quantum .quantumTunnel{display:block;width:88vh;height:88vh;max-width:96%;max-height:118%;left:50%;top:49%;transform:translate(-50%,-50%);border-radius:50%;background:repeating-radial-gradient(circle,transparent 0 7%,rgba(80,222,255,.15) 7.2% 7.6%,transparent 7.8% 14%),repeating-conic-gradient(from 0deg,rgba(80,222,255,.16) 0 1.5deg,transparent 1.5deg 12deg);filter:drop-shadow(0 0 25px rgba(0,190,255,.18));animation:quantumWorldSpin 32s linear infinite}
+.theme-quantum .holoPanel{display:block;top:16%;width:18%;height:25%;border:1px solid rgba(93,225,255,.24);background:linear-gradient(135deg,rgba(69,217,255,.09),rgba(126,82,255,.04));box-shadow:0 0 25px rgba(0,190,255,.08)}
+.theme-quantum .hp1{left:5%;transform:perspective(500px) rotateY(15deg)}.theme-quantum .hp2{right:5%;transform:perspective(500px) rotateY(-15deg)}
+
+/* BIO TECH // greenhouse laboratory, not green space */
+.theme-nature .stageSpace{background:linear-gradient(180deg,#001009 0%,#032419 50%,#000805 100%)!important}
+.theme-nature .dnaHelix,.theme-nature .holoPanel,.theme-nature .labTower{display:block}
+.theme-nature .dnaHelix{display:block;left:8%;top:7%;width:20%;height:82%;opacity:.7;background:radial-gradient(ellipse at 30% 50%,transparent 0 42%,rgba(92,255,148,.34) 43% 45%,transparent 46%),radial-gradient(ellipse at 70% 50%,transparent 0 42%,rgba(92,255,148,.34) 43% 45%,transparent 46%);filter:drop-shadow(0 0 12px rgba(67,255,132,.24));transform:rotate(-8deg)}
+.theme-nature .labTower{display:block;bottom:5%;width:16%;height:72%;border:1px solid rgba(100,255,160,.16);background:linear-gradient(90deg,rgba(11,64,40,.75),rgba(5,27,19,.88));box-shadow:inset 0 0 35px #00150b}
+.theme-nature .labTower:before{content:"";position:absolute;left:18%;right:18%;top:8%;bottom:8%;border-radius:48% 48% 22% 22%;border:1px solid rgba(123,255,176,.22);background:radial-gradient(circle at 50% 70%,rgba(61,255,128,.22),transparent 35%)}
+.theme-nature .t1{left:30%}.theme-nature .t2{right:6%}
+.theme-nature .holoPanel{display:block;right:28%;width:19%;height:23%;border:1px solid rgba(95,255,151,.22);background:repeating-linear-gradient(0deg,rgba(95,255,151,.08) 0 1px,transparent 1px 11px)}
+.theme-nature .hp1{top:13%}.theme-nature .hp2{bottom:13%}
+
+/* ZERO // quiet premium black/white AI chamber */
+.theme-minimal .stageSpace{background:radial-gradient(ellipse at 50% 46%,#1b2027 0%,#080a0d 50%,#010203 100%)!important}
+.theme-minimal .labWall{display:block;inset:8% 7%;border:1px solid rgba(255,255,255,.07);background:linear-gradient(90deg,transparent 49.9%,rgba(255,255,255,.055) 50%,transparent 50.1%),linear-gradient(180deg,rgba(255,255,255,.02),transparent);clip-path:polygon(8% 0,92% 0,100% 15%,100% 85%,92% 100%,8% 100%,0 85%,0 15%)}
+
+/* readable environment captions */
+.themeWorld .worldGlyphs:after{bottom:11%!important;right:5%!important;font-size:7px!important;letter-spacing:2px!important;opacity:.46!important}
+
+@media(max-width:900px){
+ .theme-military .radarDish{width:46vh;height:46vh}
+ .theme-quantum .quantumTunnel{width:72vh;height:72vh}
+ .theme-jarvis .holoPanel,.theme-future .holoPanel,.theme-military .holoPanel,.theme-quantum .holoPanel{opacity:.72}
+}
+
+/* =========================================================
+   JARVIS V4.8 // CINEMATIC IMAGE WORLD 01
+   HACKER theme: real generated environment + live reactor overlay.
+   ========================================================= */
+.theme-hacker .stageSpace{
+  background:
+    linear-gradient(180deg,rgba(0,0,0,.08),rgba(0,0,0,.28)),
+    url('/hacker-bg.png') center center / cover no-repeat!important;
+}
+.theme-hacker .themeWorld{opacity:.24!important;mix-blend-mode:screen}
+.theme-hacker .sceneArt{opacity:.12!important}
+.theme-hacker .serverRack,.theme-hacker .codeCurtain,.theme-hacker .holoPanel{opacity:.18!important}
+.theme-hacker .worldBack,.theme-hacker .worldMid,.theme-hacker .worldFront{opacity:.08!important}
+.theme-hacker .stageSpace:after{
+  content:"";position:absolute;inset:0;z-index:4;pointer-events:none;
+  background:
+    radial-gradient(circle at 50% 43%,transparent 0 15%,rgba(0,0,0,.06) 26%,rgba(0,0,0,.32) 78%,rgba(0,0,0,.52) 100%),
+    linear-gradient(90deg,rgba(0,0,0,.20),transparent 22% 78%,rgba(0,0,0,.20));
+}
+.theme-hacker .energy{z-index:6!important;top:43%!important;filter:drop-shadow(0 0 18px #ff173f) drop-shadow(0 0 34px rgba(255,0,45,.32))!important}
+.theme-hacker .stageTitle,.theme-hacker .telemetry{z-index:7!important}
+.theme-hacker .reply,.theme-hacker .quickRow,.theme-hacker .commandBar{z-index:8!important}

@@ -3,11 +3,11 @@ import './App.css'
 
 const THEMES = [
   { id:'jarvis', name:'JARVIS', sub:'Premium' },
-  { id:'future', name:'Fütüristik', sub:'Tech' },
-  { id:'military', name:'Askeri', sub:'Tactical' },
-  { id:'hacker', name:'Hacker', sub:'Terminal' },
-  { id:'cyberpunk', name:'Cyberpunk', sub:'Neon' },
-  { id:'space', name:'Deep Space', sub:'Orbital' },
+  { id:'future', name:'Kırmızı Beyaz', sub:'Crimson Ice' },
+  { id:'military', name:'Sarı Siyah', sub:'Black Gold' },
+  { id:'hacker', name:'Kırmızı Siyah', sub:'Red Core' },
+  { id:'cyberpunk', name:'Sarı Kırmızı', sub:'Solar Flare' },
+  { id:'space', name:'Altın Gece', sub:'Dark Luxury' },
   { id:'stealth', name:'Stealth', sub:'Black' },
   { id:'quantum', name:'Quantum', sub:'Glass' },
   { id:'nature', name:'Doğa', sub:'Bio Tech' },
@@ -70,7 +70,7 @@ function cleanForSpeech(text=''){
 const JARVIS_MEMORY_KEY='jarvis-v4-memory'
 
 function emptyJarvisMemory(){
-  return {memories:[],ideas:[],tasks:[]}
+  return {memories:[],projects:[],ideas:[],tasks:[],preferences:[]}
 }
 
 function loadJarvisMemory(){
@@ -80,8 +80,10 @@ function loadJarvisMemory(){
     const data=JSON.parse(raw)
     return {
       memories:Array.isArray(data.memories)?data.memories:[],
+      projects:Array.isArray(data.projects)?data.projects:[],
       ideas:Array.isArray(data.ideas)?data.ideas:[],
-      tasks:Array.isArray(data.tasks)?data.tasks:[]
+      tasks:Array.isArray(data.tasks)?data.tasks:[],
+      preferences:Array.isArray(data.preferences)?data.preferences:[]
     }
   }catch(e){
     console.error('Memory read error:',e)
@@ -92,48 +94,144 @@ function loadJarvisMemory(){
 function saveJarvisMemory(data){
   try{
     window.localStorage.setItem(JARVIS_MEMORY_KEY,JSON.stringify(data))
-    const verify=window.localStorage.getItem(JARVIS_MEMORY_KEY)
-    return !!verify
+    return !!window.localStorage.getItem(JARVIS_MEMORY_KEY)
   }catch(e){
     console.error('Memory write error:',e)
     return false
   }
 }
 
+function memoryBucket(type='memory'){
+  return {
+    memory:'memories',
+    project:'projects',
+    idea:'ideas',
+    task:'tasks',
+    preference:'preferences'
+  }[type] || 'memories'
+}
+
 function addJarvisMemory(text,type='memory'){
   const value=String(text||'').trim()
-  if(!value) return false
+  if(!value) return {ok:false,duplicate:false}
+
   const data=loadJarvisMemory()
-  const bucket=type==='idea'?'ideas':type==='task'?'tasks':'memories'
+  const bucket=memoryBucket(type)
+  const normalizedValue=commandText(value)
+
+  // V4.2: exact/near duplicate protection.
+  const duplicate=data[bucket].some(x=>commandText(x.text)===normalizedValue)
+  if(duplicate) return {ok:true,duplicate:true}
+
   data[bucket].unshift({
     id:`${Date.now()}-${Math.random().toString(36).slice(2,8)}`,
     text:value,
-    createdAt:new Date().toISOString()
+    type,
+    createdAt:new Date().toISOString(),
+    updatedAt:new Date().toISOString()
   })
-  if(!saveJarvisMemory(data)) return false
+
+  if(!saveJarvisMemory(data)) return {ok:false,duplicate:false}
   const check=loadJarvisMemory()
-  return check[bucket].some(x=>x.text===value)
+  return {ok:check[bucket].some(x=>commandText(x.text)===normalizedValue),duplicate:false}
+}
+
+const MEMORY_STOP_WORDS=new Set([
+  'jarvis','bunu','şunu','sunu','bu','şu','su','bir','ve','ile','için','icin',
+  'kaydı','kaydi','kaydını','kaydini','kayıt','kayit','hafıza','hafiza',
+  'sil','unut','taşı','tasi','aktar','bölümüne','bolumune'
+])
+
+function memoryTokens(text=''){
+  return commandText(text)
+    .replace(/['’]/g,'')
+    .split(/\s+/)
+    .map(x=>x.trim())
+    .filter(x=>x.length>2 && !MEMORY_STOP_WORDS.has(x))
+}
+
+function memoryMatchScore(recordText,query){
+  const record=commandText(recordText)
+  const needle=commandText(query)
+  if(!record || !needle) return 0
+  if(record.includes(needle) || needle.includes(record)) return 100
+
+  const qTokens=memoryTokens(needle)
+  const rTokens=new Set(memoryTokens(record))
+  if(!qTokens.length) return 0
+
+  const hits=qTokens.filter(t=>rTokens.has(t)).length
+  return hits/qTokens.length
+}
+
+function findBestMemoryMatch(data,term){
+  let best=null
+  for(const key of ['memories','projects','ideas','tasks','preferences']){
+    data[key].forEach((item,index)=>{
+      const score=memoryMatchScore(item.text,term)
+      if(!best || score>best.score) best={key,index,item,score}
+    })
+  }
+  // Require either direct containment (100) or at least half of meaningful query tokens.
+  return best && (best.score===100 || best.score>=0.5) ? best : null
 }
 
 function removeJarvisMemory(term){
   const data=loadJarvisMemory()
-  const needle=normalize(term)
-  let removed=0
-  for(const key of ['memories','ideas','tasks']){
-    const before=data[key].length
-    data[key]=data[key].filter(x=>!normalize(x.text).includes(needle))
-    removed+=before-data[key].length
+  const match=findBestMemoryMatch(data,term)
+  if(!match) return 0
+  data[match.key].splice(match.index,1)
+  return saveJarvisMemory(data) ? 1 : 0
+}
+
+function moveJarvisMemory(term,targetType='memory'){
+  const data=loadJarvisMemory()
+  const target=memoryBucket(targetType)
+  const match=findBestMemoryMatch(data,term)
+
+  if(!match) return false
+
+  const moved=data[match.key].splice(match.index,1)[0]
+  const exists=data[target].some(x=>commandText(x.text)===commandText(moved.text))
+
+  if(!exists){
+    data[target].unshift({
+      ...moved,
+      type:targetType,
+      updatedAt:new Date().toISOString()
+    })
   }
-  saveJarvisMemory(data)
-  return removed
+
+  return saveJarvisMemory(data)
+}
+
+function detectMemoryType(text=''){
+  const q=commandText(text)
+  if(/\b(proje|projem|projesi|project)\b/i.test(q)) return 'project'
+  if(/\b(fikir|fikrim|fikirler)\b/i.test(q)) return 'idea'
+  if(/\b(görev|gorev|yapılacak|yapilacak|yapmam gerek|hatırlatılacak|hatirlatilacak|gerekiyor|gerekli|lazım|lazim|yapmalıyım|yapmaliyim|etmeliyim|bakmalıyım|bakmaliyim|kontrol etmeliyim|test etmeliyim|unutmamalıyım|unutmamaliyim)\b/i.test(q)) return 'task'
+  if(/\b(tercih|tercihim|seviyorum|sevmiyorum|hoşuma gidiyor|hosuma gidiyor|favorim|isterim|istemem)\b/i.test(q)) return 'preference'
+  return 'memory'
+}
+
+function typeLabel(type='memory'){
+  return {
+    memory:'Bilgiyi',
+    project:'Projeyi',
+    idea:'Fikri',
+    task:'Görevi',
+    preference:'Tercihi'
+  }[type] || 'Bilgiyi'
 }
 
 function jarvisMemoryContext(){
   const data=loadJarvisMemory()
   return [
     ...data.memories.slice(0,20).map(x=>`HAFIZA: ${x.text}`),
+    ...data.projects.slice(0,20).map(x=>`PROJE: ${x.text}`),
     ...data.ideas.slice(0,20).map(x=>`FIKIR: ${x.text}`),
-    ...data.tasks.slice(0,20).map(x=>`GOREV: ${x.text}`)
+    ...data.tasks.slice(0,20).map(x=>`GOREV: ${x.text}`),
+    ...data.preferences.slice(0,20).map(x=>`TERCIH: ${x.text}`)
   ].join('\n')
 }
 
@@ -144,8 +242,10 @@ function jarvisMemoryReport(){
     : `${title}: kayıt yok.`
   return [
     section('Hafıza',data.memories),
+    section('Projeler',data.projects),
     section('Fikirler',data.ideas),
-    section('Görevler',data.tasks)
+    section('Görevler',data.tasks),
+    section('Tercihler',data.preferences)
   ].join('\n\n')
 }
 
@@ -233,11 +333,28 @@ function App(){
     const cq=commandText(raw)
     if(!q) return true
 
-    // MEMORY CORE V4.0.3 — command may place "hatırla/kaydet" before OR after the fact.
+    // MEMORY CORE V4.2 — categorized, duplicate-safe, natural Turkish commands.
     const memoryCue=/(?:\bhatırla\b|\bhatirla\b|\bkaydet\b|hafızana\s+(?:al|kaydet)|hafizana\s+(?:al|kaydet)|\bunutma\b)/i
-    const isIdea=/\b(fikir|fikrim)\b/i.test(cq)
-    const isTask=/\b(görev|gorev|yapılacak|yapilacak)\b/i.test(cq)
     const isForget=/(?:\bunut\b|\bsil\b)/i.test(cq) && !/\bunutma\b/i.test(cq)
+
+    // V4.2.1: move an existing record between memory categories.
+    const moveMatch=cq.match(/(?:kaydını|kaydi|bunu|şunu|sunu)?\s*(.+?)\s+(?:kaydını\s+|kaydi\s+)?(?:görevlere|gorevlere|projelere|fikirlere|tercihlere|hafızaya|hafizaya)\s+(?:taşı|tasi|aktar)$/i)
+    if(moveMatch?.[1]){
+      const phrase=moveMatch[1]
+        .replace(/^jarvis\s*/i,'')
+        .replace(/^(?:kaydını|kaydi|bunu|şunu|sunu)\s*/i,'')
+        .trim()
+      const target=/görev|gorev/.test(cq)?'task'
+        :/proje/.test(cq)?'project'
+        :/fikir/.test(cq)?'idea'
+        :/tercih/.test(cq)?'preference'
+        :'memory'
+      const ok=moveJarvisMemory(phrase,target)
+      const x=ok
+        ? `Kaydı ${target==='task'?'Görevler':target==='project'?'Projeler':target==='idea'?'Fikirler':target==='preference'?'Tercihler':'Hafıza'} bölümüne taşıdım Mustafa.`
+        : 'Taşımak istediğin kaydı bulamadım Mustafa.'
+      setReply(x); speak(x); return true
+    }
 
     if(isForget){
       let value=cq
@@ -259,36 +376,35 @@ function App(){
         .replace(/\b(hatırla|hatirla|kaydet|unutma)\b/ig,'')
         .replace(/hafızana\s+(?:al|kaydet)/ig,'')
         .replace(/hafizana\s+(?:al|kaydet)/ig,'')
-        .replace(/^(fikir|fikrim|görev|gorev|yapılacak|yapilacak)\s*/i,'')
         .trim()
 
       if(value){
-        const type=isIdea?'idea':isTask?'task':'memory'
-        const ok=addJarvisMemory(value,type)
-        const x=ok
-          ? (type==='idea'?'Fikri kaydettim Mustafa. Hafızaya yazıldığını doğruladım.'
-            :type==='task'?'Görevi kaydettim Mustafa. Hafızaya yazıldığını doğruladım.'
-            :'Kaydettim Mustafa. Hafızaya yazıldığını doğruladım.')
-          : 'Hafızaya yazamadım Mustafa. Tarayıcı depolamasını kontrol etmemiz gerekiyor.'
+        const type=detectMemoryType(value)
+        const result=addJarvisMemory(value,type)
+        const x=!result.ok
+          ? 'Hafızaya yazamadım Mustafa. Tarayıcı depolamasını kontrol etmemiz gerekiyor.'
+          : result.duplicate
+            ? `${typeLabel(type)} zaten hafızamda Mustafa. Tekrar kaydetmedim.`
+            : `${typeLabel(type)} kaydettim Mustafa. ${type==='memory'?'Hafıza':type==='project'?'Projeler':type==='idea'?'Fikirler':type==='task'?'Görevler':'Tercihler'} bölümüne işlendi.`
         setReply(x); speak(x); return true
       }
     }
 
-    // Short explicit forms: "fikir: ...", "görev: ..."
-    const idea=raw.match(/^(?:jarvis[,.]?\s*)?(?:fikir|fikrim)\s*[:,-]?\s*(.+)$/i)
-    if(idea?.[1]){
-      const ok=addJarvisMemory(idea[1],'idea')
-      const x=ok?'Fikri kaydettim Mustafa. Hafızaya yazıldığını doğruladım.':'Fikri hafızaya yazamadım.'
-      setReply(x); speak(x); return true
-    }
-    const task=raw.match(/^(?:jarvis[,.]?\s*)?(?:görev|gorev|yapılacak|yapilacak)\s*[:,-]?\s*(.+)$/i)
-    if(task?.[1]){
-      const ok=addJarvisMemory(task[1],'task')
-      const x=ok?'Görevi kaydettim Mustafa. Hafızaya yazıldığını doğruladım.':'Görevi hafızaya yazamadım.'
+    // Short explicit forms: "proje: ...", "fikir: ...", "görev: ...", "tercih: ..."
+    const explicit=raw.match(/^(?:jarvis[,.]?\s*)?(proje|projem|fikir|fikrim|görev|gorev|yapılacak|yapilacak|tercih|tercihim)\s*[:,-]?\s*(.+)$/i)
+    if(explicit?.[2]){
+      const head=commandText(explicit[1])
+      const type=/proje/.test(head)?'project':/fikir/.test(head)?'idea':/(görev|gorev|yapılacak|yapilacak)/.test(head)?'task':'preference'
+      const result=addJarvisMemory(explicit[2],type)
+      const x=!result.ok
+        ? `${typeLabel(type)} hafızaya yazamadım.`
+        : result.duplicate
+          ? `${typeLabel(type)} zaten hafızamda Mustafa.`
+          : `${typeLabel(type)} kaydettim Mustafa.`
       setReply(x); speak(x); return true
     }
 
-    if(/neleri hatırlıyorsun|neleri hatirliyorsun|ne hatırlıyorsun|ne hatirliyorsun|hafızanda ne var|hafizanda ne var|hafızayı göster|hafizayi goster|fikirlerim neler|görevlerim neler|gorevlerim neler/.test(cq)){
+    if(/neleri hatırlıyorsun|neleri hatirliyorsun|ne hatırlıyorsun|ne hatirliyorsun|hafızanda ne var|hafizanda ne var|hafızayı göster|hafizayi goster|projelerim neler|fikirlerim neler|görevlerim neler|gorevlerim neler|tercihlerim neler/.test(cq)){
       const x=jarvisMemoryReport()
       setReply(x); speak(x); return true
     }
@@ -414,7 +530,7 @@ function App(){
       <div className="bg-grid"/><div className="scan"/><div className="noise"/>
       <header className="topbar glass">
         <div className="brand"><span className="brandMark">J</span><div><b>JARVIS</b><small>AI PERSONAL ASSISTANT</small></div></div>
-        <div className="topStatus"><i/> CORE ONLINE <span>•</span> TR-TR <span>•</span> V4.0.3</div>
+        <div className="topStatus"><i/> CORE ONLINE <span>•</span> TR-TR <span>•</span> V4.8.0</div>
         <div className="themeWrap">
           <button className="themeTrigger" onClick={()=>setThemeOpen(v=>!v)}>
             <span>◈</span><div><b>{currentTheme.name}</b><small>{currentTheme.sub}</small></div><em>⌄</em>
@@ -448,6 +564,19 @@ function App(){
 
       <section className="stage glass">
         <div className="stageSpace" aria-hidden="true">
+          <div className="themeWorld" aria-hidden="true">
+            <div className="worldLayer worldBack"/><div className="worldLayer worldMid"/><div className="worldLayer worldFront"/>
+            <div className="worldGlyphs"/>
+            <div className="sceneArt">
+              <div className="labWall"/><div className="labTower t1"/><div className="labTower t2"/>
+              <div className="serverRack r1"/><div className="serverRack r2"/><div className="codeCurtain"/>
+              <div className="citySkyline"/><div className="cityRoad"/>
+              <div className="radarDish"/><div className="tacticalMap"/>
+              <div className="hangarDoor"/><div className="laserScan"/>
+              <div className="quantumTunnel"/><div className="dnaHelix"/>
+              <div className="holoPanel hp1"/><div className="holoPanel hp2"/>
+            </div>
+          </div>
           <div className="galaxyCloud gc1"/><div className="galaxyCloud gc2"/>
           <div className="stageStars layer1"/><div className="stageStars layer2"/><div className="stageStars layer3"/>
           <div className="planet planetA"><i/></div>
