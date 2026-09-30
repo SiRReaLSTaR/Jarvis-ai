@@ -15,17 +15,17 @@ const THEMES = [
 ]
 
 const SITE_ACTIONS = [
-  { names:['youtube'], url:'https://www.youtube.com', label:'YouTube' },
-  { names:['google'], url:'https://www.google.com', label:'Google' },
-  { names:['spotify'], url:'https://open.spotify.com', label:'Spotify' },
-  { names:['instagram'], url:'https://www.instagram.com', label:'Instagram' },
-  { names:['facebook'], url:'https://www.facebook.com', label:'Facebook' },
-  { names:['twitter','x.com'], url:'https://x.com', label:'X' },
-  { names:['github'], url:'https://github.com', label:'GitHub' },
-  { names:['gmail'], url:'https://mail.google.com', label:'Gmail' },
-  { names:['google maps','haritalar','harita'], url:'https://maps.google.com', label:'Google Maps' },
-  { names:['google drive','drive'], url:'https://drive.google.com', label:'Google Drive' },
-  { names:['google takvim','takvim'], url:'https://calendar.google.com', label:'Google Takvim' },
+  { names:['youtube'], label:'YouTube', web:'https://www.youtube.com', ios:'youtube://', android:'vnd.youtube://' },
+  { names:['google'], label:'Google', web:'https://www.google.com', ios:'google://', android:'googlechrome://' },
+  { names:['spotify'], label:'Spotify', web:'https://open.spotify.com', ios:'spotify://', android:'spotify://' },
+  { names:['instagram'], label:'Instagram', web:'https://www.instagram.com', ios:'instagram://app', android:'instagram://app' },
+  { names:['facebook'], label:'Facebook', web:'https://www.facebook.com', ios:'fb://', android:'fb://' },
+  { names:['twitter','x.com'], label:'X', web:'https://x.com', ios:'twitter://', android:'twitter://' },
+  { names:['github'], label:'GitHub', web:'https://github.com' },
+  { names:['gmail'], label:'Gmail', web:'https://mail.google.com', ios:'googlegmail://', android:'googlegmail://' },
+  { names:['google maps','haritalar','harita'], label:'Google Maps', web:'https://maps.google.com', ios:'comgooglemaps://', android:'geo:0,0?q=' },
+  { names:['google drive','drive'], label:'Google Drive', web:'https://drive.google.com', ios:'googledrive://', android:'googledrive://' },
+  { names:['google takvim','takvim'], label:'Google Takvim', web:'https://calendar.google.com' },
 ]
 
 const QUICK = [
@@ -38,6 +38,14 @@ const QUICK = [
 ]
 
 const normalize = (s='') => s.toLocaleLowerCase('tr-TR').trim()
+
+const commandText = (s='') => normalize(s)
+  .replace(/[’‘`´]/g,"'")
+  .replace(/[.,!?;]+/g,' ')
+  .replace(/\s+/g,' ')
+  .trim()
+
+const hasOpenIntent = (s='') => /\b(aç|ac|açar mısın|acar misin|açarmısın|acarmisin|uygulamasını aç|uygulamasini ac)\b/i.test(commandText(s))
 const stripAction = (s='') => s
   .replace(/\s+(ara|arar mısın|arar misin|bul|bulur musun|aç|ac|açar mısın|acar misin)\s*$/i,'')
   .trim()
@@ -56,6 +64,89 @@ function cleanForSpeech(text=''){
     .replace(/\s*\/\s*/g,' ')
     .replace(/\s+/g,' ')
     .trim()
+}
+
+
+const JARVIS_MEMORY_KEY='jarvis-v4-memory'
+
+function emptyJarvisMemory(){
+  return {memories:[],ideas:[],tasks:[]}
+}
+
+function loadJarvisMemory(){
+  try{
+    const raw=window.localStorage.getItem(JARVIS_MEMORY_KEY)
+    if(!raw) return emptyJarvisMemory()
+    const data=JSON.parse(raw)
+    return {
+      memories:Array.isArray(data.memories)?data.memories:[],
+      ideas:Array.isArray(data.ideas)?data.ideas:[],
+      tasks:Array.isArray(data.tasks)?data.tasks:[]
+    }
+  }catch(e){
+    console.error('Memory read error:',e)
+    return emptyJarvisMemory()
+  }
+}
+
+function saveJarvisMemory(data){
+  try{
+    window.localStorage.setItem(JARVIS_MEMORY_KEY,JSON.stringify(data))
+    const verify=window.localStorage.getItem(JARVIS_MEMORY_KEY)
+    return !!verify
+  }catch(e){
+    console.error('Memory write error:',e)
+    return false
+  }
+}
+
+function addJarvisMemory(text,type='memory'){
+  const value=String(text||'').trim()
+  if(!value) return false
+  const data=loadJarvisMemory()
+  const bucket=type==='idea'?'ideas':type==='task'?'tasks':'memories'
+  data[bucket].unshift({
+    id:`${Date.now()}-${Math.random().toString(36).slice(2,8)}`,
+    text:value,
+    createdAt:new Date().toISOString()
+  })
+  if(!saveJarvisMemory(data)) return false
+  const check=loadJarvisMemory()
+  return check[bucket].some(x=>x.text===value)
+}
+
+function removeJarvisMemory(term){
+  const data=loadJarvisMemory()
+  const needle=normalize(term)
+  let removed=0
+  for(const key of ['memories','ideas','tasks']){
+    const before=data[key].length
+    data[key]=data[key].filter(x=>!normalize(x.text).includes(needle))
+    removed+=before-data[key].length
+  }
+  saveJarvisMemory(data)
+  return removed
+}
+
+function jarvisMemoryContext(){
+  const data=loadJarvisMemory()
+  return [
+    ...data.memories.slice(0,20).map(x=>`HAFIZA: ${x.text}`),
+    ...data.ideas.slice(0,20).map(x=>`FIKIR: ${x.text}`),
+    ...data.tasks.slice(0,20).map(x=>`GOREV: ${x.text}`)
+  ].join('\n')
+}
+
+function jarvisMemoryReport(){
+  const data=loadJarvisMemory()
+  const section=(title,arr)=>arr.length
+    ? `${title}:\n${arr.slice(0,10).map((x,i)=>`${i+1}. ${x.text}`).join('\n')}`
+    : `${title}: kayıt yok.`
+  return [
+    section('Hafıza',data.memories),
+    section('Fikirler',data.ideas),
+    section('Görevler',data.tasks)
+  ].join('\n\n')
 }
 
 function App(){
@@ -84,8 +175,38 @@ function App(){
   const timeText = time.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'})
 
   function openExternal(url){
-    const w=window.open(url,'_blank')
-    if(w) w.opener=null
+    const w=window.open(url,'_blank','noopener,noreferrer')
+    if(!w) window.location.href=url
+  }
+
+  function launchApp(app, fallbackUrl){
+    const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent) ||
+      (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1)
+    const isAndroid=/Android/i.test(navigator.userAgent)
+    const deepLink=isIOS ? app?.ios : isAndroid ? app?.android : null
+    const web=fallbackUrl || app?.web
+
+    if(!deepLink){
+      if(web) openExternal(web)
+      return
+    }
+
+    let leftPage=false
+    const markHidden=()=>{ if(document.hidden) leftPage=true }
+    document.addEventListener('visibilitychange',markHidden,{once:true})
+
+    // Deep links work best directly inside the user's click/voice-result event.
+    window.location.href=deepLink
+
+    // If no native app handled the link, fall back to the website.
+    setTimeout(()=>{
+      if(!leftPage && document.visibilityState==='visible' && web) openExternal(web)
+    },1300)
+  }
+
+  function appByName(name){
+    const q=normalize(name)
+    return SITE_ACTIONS.find(s=>s.names.some(n=>q.includes(n)))
   }
 
   function speak(text){
@@ -109,7 +230,81 @@ function App(){
 
   function localAction(raw){
     const q=normalize(raw)
+    const cq=commandText(raw)
     if(!q) return true
+
+    // MEMORY CORE V4.0.3 — command may place "hatırla/kaydet" before OR after the fact.
+    const memoryCue=/(?:\bhatırla\b|\bhatirla\b|\bkaydet\b|hafızana\s+(?:al|kaydet)|hafizana\s+(?:al|kaydet)|\bunutma\b)/i
+    const isIdea=/\b(fikir|fikrim)\b/i.test(cq)
+    const isTask=/\b(görev|gorev|yapılacak|yapilacak)\b/i.test(cq)
+    const isForget=/(?:\bunut\b|\bsil\b)/i.test(cq) && !/\bunutma\b/i.test(cq)
+
+    if(isForget){
+      let value=cq
+        .replace(/^jarvis\s*/i,'')
+        .replace(/\b(unut|sil)\b/ig,'')
+        .replace(/\b(bunu|şunu|sunu)\b/ig,'')
+        .trim()
+      if(value){
+        const n=removeJarvisMemory(value)
+        const x=n ? `${n} kayıt hafızadan silindi.` : 'Bu ifadeyle eşleşen bir kayıt bulamadım.'
+        setReply(x); speak(x); return true
+      }
+    }
+
+    if(memoryCue.test(cq)){
+      let value=cq
+        .replace(/^jarvis\s*/i,'')
+        .replace(/\b(bunu|şunu|sunu)\b/ig,'')
+        .replace(/\b(hatırla|hatirla|kaydet|unutma)\b/ig,'')
+        .replace(/hafızana\s+(?:al|kaydet)/ig,'')
+        .replace(/hafizana\s+(?:al|kaydet)/ig,'')
+        .replace(/^(fikir|fikrim|görev|gorev|yapılacak|yapilacak)\s*/i,'')
+        .trim()
+
+      if(value){
+        const type=isIdea?'idea':isTask?'task':'memory'
+        const ok=addJarvisMemory(value,type)
+        const x=ok
+          ? (type==='idea'?'Fikri kaydettim Mustafa. Hafızaya yazıldığını doğruladım.'
+            :type==='task'?'Görevi kaydettim Mustafa. Hafızaya yazıldığını doğruladım.'
+            :'Kaydettim Mustafa. Hafızaya yazıldığını doğruladım.')
+          : 'Hafızaya yazamadım Mustafa. Tarayıcı depolamasını kontrol etmemiz gerekiyor.'
+        setReply(x); speak(x); return true
+      }
+    }
+
+    // Short explicit forms: "fikir: ...", "görev: ..."
+    const idea=raw.match(/^(?:jarvis[,.]?\s*)?(?:fikir|fikrim)\s*[:,-]?\s*(.+)$/i)
+    if(idea?.[1]){
+      const ok=addJarvisMemory(idea[1],'idea')
+      const x=ok?'Fikri kaydettim Mustafa. Hafızaya yazıldığını doğruladım.':'Fikri hafızaya yazamadım.'
+      setReply(x); speak(x); return true
+    }
+    const task=raw.match(/^(?:jarvis[,.]?\s*)?(?:görev|gorev|yapılacak|yapilacak)\s*[:,-]?\s*(.+)$/i)
+    if(task?.[1]){
+      const ok=addJarvisMemory(task[1],'task')
+      const x=ok?'Görevi kaydettim Mustafa. Hafızaya yazıldığını doğruladım.':'Görevi hafızaya yazamadım.'
+      setReply(x); speak(x); return true
+    }
+
+    if(/neleri hatırlıyorsun|neleri hatirliyorsun|ne hatırlıyorsun|ne hatirliyorsun|hafızanda ne var|hafizanda ne var|hafızayı göster|hafizayi goster|fikirlerim neler|görevlerim neler|gorevlerim neler/.test(cq)){
+      const x=jarvisMemoryReport()
+      setReply(x); speak(x); return true
+    }
+
+    // APP LAUNCHER V4.0.3 — Turkish suffix tolerant: YouTube'u, Instagram'ı, Spotify'ı...
+    if(hasOpenIntent(cq)){
+      const site=SITE_ACTIONS.find(s=>s.names.some(n=>{
+        const name=normalize(n)
+        return cq.includes(name) || cq.replace(/['’]/g,'').includes(name)
+      }))
+      if(site){
+        launchApp(site)
+        const x=`${site.label} uygulaması açılıyor.`
+        setReply(x); speak(x); return true
+      }
+    }
 
     if(/saat kaç|saati söyle|saat nedir/.test(q)){
       const x=`Saat ${time.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'})}.`
@@ -120,7 +315,7 @@ function App(){
       setReply(x); speak(x); return true
     }
 
-    const yt=q.match(/(?:youtube(?:'da|da)?\s+)(.+?)(?:\s+(?:ara|bul|aç|ac))?$/i)
+    const yt=cq.match(/(?:youtube(?:'?(?:da|de))?\s+)(.+?)(?:\s+(?:ara|bul|aç|ac))?$/i)
     if(yt?.[1]){
       const term=stripAction(yt[1])
       openExternal(`https://www.youtube.com/results?search_query=${encodeURIComponent(term)}`)
@@ -145,11 +340,6 @@ function App(){
       setReply(`Haritalarda “${term}” aranıyor.`); return true
     }
 
-    if(/\b(aç|ac|açar mısın|acar misin)\b/i.test(q)){
-      const site=SITE_ACTIONS.find(s=>s.names.some(n=>q.includes(n)))
-      if(site){ openExternal(site.url); setReply(`${site.label} açılıyor.`); return true }
-    }
-
     const domain=raw.match(/\b((?:https?:\/\/)?(?:www\.)?[a-z0-9-]+\.(?:com|net|org|io|ai|dev|app)(?:\/\S*)?)\b/i)
     if(domain && /\b(aç|ac)\b/i.test(q)){
       const url=/^https?:\/\//i.test(domain[1])?domain[1]:`https://${domain[1]}`
@@ -169,7 +359,10 @@ function App(){
       const r=await fetch('/api/chat',{
         method:'POST',
         headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({message:clean})
+        body:JSON.stringify({
+          message:clean,
+          memory:jarvisMemoryContext()
+        })
       })
       const data=await r.json()
       if(!r.ok) throw new Error(data?.error || 'API hatası')
@@ -221,7 +414,7 @@ function App(){
       <div className="bg-grid"/><div className="scan"/><div className="noise"/>
       <header className="topbar glass">
         <div className="brand"><span className="brandMark">J</span><div><b>JARVIS</b><small>AI PERSONAL ASSISTANT</small></div></div>
-        <div className="topStatus"><i/> CORE ONLINE <span>•</span> TR-TR <span>•</span> V3.4.1</div>
+        <div className="topStatus"><i/> CORE ONLINE <span>•</span> TR-TR <span>•</span> V4.0.3</div>
         <div className="themeWrap">
           <button className="themeTrigger" onClick={()=>setThemeOpen(v=>!v)}>
             <span>◈</span><div><b>{currentTheme.name}</b><small>{currentTheme.sub}</small></div><em>⌄</em>
@@ -243,12 +436,12 @@ function App(){
         <h3>KOMUTLAR <span>⌕</span></h3>
         {[
           ['●','Sohbet Et',()=>document.querySelector('.commandInput')?.focus()],
-          ['G','Google Ara',()=>openExternal('https://www.google.com')],
-          ['▶','YouTube Aç',()=>openExternal('https://www.youtube.com')],
-          ['♫','Spotify Çal',()=>openExternal('https://open.spotify.com')],
-          ['✦','Harita Ara',()=>openExternal('https://maps.google.com')],
+          ['G','Google Ara',()=>launchApp(appByName('google'),'https://www.google.com')],
+          ['▶','YouTube Aç',()=>launchApp(appByName('youtube'),'https://www.youtube.com')],
+          ['♫','Spotify Çal',()=>launchApp(appByName('spotify'),'https://open.spotify.com')],
+          ['✦','Harita Ara',()=>launchApp(appByName('harita'),'https://maps.google.com')],
           ['◉','Saat / Tarih',()=>{const x=`Saat ${timeText}. ${dateText}.`;setReply(x);speak(x)}],
-          ['✉','E-posta Aç',()=>openExternal('https://mail.google.com')],
+          ['✉','E-posta Aç',()=>launchApp(appByName('gmail'),'https://mail.google.com')],
           ['▣','Takvim Aç',()=>openExternal('https://calendar.google.com')],
         ].map(([ic,tx,fn])=><button key={tx} className="hudButton" onClick={fn}><span>{ic}</span><b>{tx}</b><i/></button>)}
       </aside>
@@ -288,7 +481,7 @@ function App(){
         </div>
 
         <div className="quickRow">
-          {QUICK.slice(0,5).map(([ic,n,u])=><button key={n} className="quickButton" onClick={()=>openExternal(u)}><span>{ic}</span><b>{n}</b><i/></button>)}
+          {QUICK.slice(0,5).map(([ic,n,u])=><button key={n} className="quickButton" onClick={()=>{const a=appByName(n);a?launchApp(a,u):openExternal(u)}}><span>{ic}</span><b>{n}</b><i/></button>)}
         </div>
 
         <form className="commandBar glass" onSubmit={e=>{e.preventDefault();askJarvis(command)}}>
@@ -305,7 +498,7 @@ function App(){
           <p><i/>API Link <b>Bağlı</b></p><p><i/>Ses Motoru <b>{speaking?'Aktif':'Hazır'}</b></p>
         </div>
         <div className="accessCard glass"><h3>HIZLI ERİŞİM</h3><div>
-          {QUICK.map(([ic,n,u])=><button key={n} className="accessButton" onClick={()=>openExternal(u)}><span>{ic}</span><small>{n}</small><i/></button>)}
+          {QUICK.map(([ic,n,u])=><button key={n} className="accessButton" onClick={()=>{const a=appByName(n);a?launchApp(a,u):openExternal(u)}}><span>{ic}</span><small>{n}</small><i/></button>)}
         </div></div>
       </aside>
     </main>
