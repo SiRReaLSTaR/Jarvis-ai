@@ -534,6 +534,146 @@ async function askNexus(message, memory = "") {
   }
 }
 
+async function createMultiSpeakerTurns(message, memory = "") {
+  const normalized = String(message)
+    .toLocaleLowerCase("tr-TR")
+    .trim();
+
+  console.log("⚡ MULTI-SPEAKER FAST ROUTER");
+
+  const requestedAgents = [
+    {
+      speaker: "nexus",
+      name: "VERA",
+      aliases: ["vera", "nexus"],
+    },
+    {
+      speaker: "atlas",
+      name: "LARA",
+      aliases: ["lara", "atlas"],
+    },
+    {
+      speaker: "jarvis",
+      name: "DİLAN",
+      aliases: ["dilan", "jarvis"],
+    },
+  ]
+    .map((agent) => {
+      let position = Infinity;
+
+      for (const alias of agent.aliases) {
+        const index = normalized.indexOf(alias);
+
+        if (index !== -1 && index < position) {
+          position = index;
+        }
+      }
+
+      return { ...agent, position };
+    })
+    .filter((agent) => agent.position !== Infinity)
+    .sort((a, b) => a.position - b.position);
+
+  // ⚡ HIZLI KİMLİK MODU
+  // API'ye gitmez, anında cevap verir.
+  const identityIntent =
+    normalized.includes("ben vera") ||
+    normalized.includes("ben nexus") ||
+    normalized.includes("ben lara") ||
+    normalized.includes("ben atlas") ||
+    normalized.includes("ben dilan") ||
+    normalized.includes("ben jarvis") ||
+    normalized.includes("kendini tanıt") ||
+    normalized.includes("kendinizi tanıt");
+
+  if (identityIntent && requestedAgents.length >= 2) {
+    console.log(
+      `⚡ FAST IDENTITY → ${requestedAgents
+        .map((agent) => agent.name)
+        .join(" → ")}`
+    );
+
+    return requestedAgents.map((agent) => ({
+      speaker: agent.speaker,
+      name: agent.name,
+      text: `Ben ${agent.name}'ım.`,
+    }));
+  }
+
+  // ⚡ HIZLI SELAMLAMA MODU
+  const greetingIntent =
+    normalized.includes("merhaba deyin") ||
+    normalized.includes("selam verin") ||
+    normalized.includes("selam söyleyin");
+
+  if (greetingIntent && requestedAgents.length >= 2) {
+    return requestedAgents.map((agent) => ({
+      speaker: agent.speaker,
+      name: agent.name,
+      text: `Merhaba Mustafa, ben ${agent.name}.`,
+    }));
+  }
+
+  // 🧠 NORMAL MULTI-SPEAKER
+  const agentsToRun = requestedAgents;
+
+  const promises = agentsToRun.map((agent) => {
+    const instruction = `
+Mustafa çoklu konuşmacı modunu açtı.
+
+Mustafa'nın komutu:
+
+${message}
+
+Sen ${agent.name}'sın.
+
+Yalnızca kendi adına konuş.
+Diğer ajanlar adına cevap verme.
+Cevabın kısa, doğal ve doğrudan olsun.
+Gereksiz açıklama yapma.
+`;
+
+    if (agent.speaker === "nexus") {
+      return askNexus(instruction, memory);
+    }
+
+    if (agent.speaker === "atlas") {
+      return askAtlas(instruction, memory);
+    }
+
+    return askJarvis(instruction, memory);
+  });
+
+  const results = await Promise.allSettled(promises);
+
+  const turns = [];
+
+  results.forEach((result, index) => {
+    const agent = agentsToRun[index];
+
+    if (result.status === "fulfilled") {
+      turns.push({
+        speaker: agent.speaker,
+        name: agent.name,
+        text: result.value,
+      });
+    } else {
+      console.error(
+        `${agent.name} MULTI-SPEAKER ERROR:`,
+        result.reason
+      );
+    }
+  });
+
+  console.log(
+    `🎭 MULTI-SPEAKER READY → ${turns
+      .map((turn) => turn.name)
+      .join(" → ")}`
+  );
+
+  return turns;
+}
+
 /* =========================================================
    JARVIS SYNTHESIS
    ========================================================= */
@@ -1038,55 +1178,41 @@ app.post("/api/chat", async (req, res) => {
    SERVER
    ========================================================= */
 
-app.listen(3001, () => {
+const PORT = Number(process.env.PORT) || 3001;
+
+const server = app.listen(PORT, "0.0.0.0", () => {
   console.log("");
-  console.log(
-    "════════════════════════════════"
-  );
+  console.log("════════════════════════════════");
+  console.log("🧠 DİLAN V5.3.2 MULTI-AGENT SYSTEM");
+  console.log("════════════════════════════════");
+
+  console.log("🔴 DİLAN // COMMAND CORE // HAZIR");
 
   console.log(
-    "🤖 JARVIS V5.1.1 MULTI-AGENT SYSTEM"
-  );
-
-  console.log(
-    "════════════════════════════════"
-  );
-
-  console.log(
-    "🔴 JARVIS // COMMAND CORE // HAZIR"
-  );
-
-  console.log(
-    `🔵 ATLAS // RESEARCH CORE // ${
-      process.env.GEMINI_API_KEY
-        ? "HAZIR"
-        : "YOK"
+    `🔵 LARA // RESEARCH CORE // ${
+      process.env.GEMINI_API_KEY ? "HAZIR" : "YOK"
     }`
   );
 
   console.log(
-    `🟣 NEXUS // ENGINEERING CORE // ${
-      process.env.OPENROUTER_API_KEY
-        ? "HAZIR"
-        : "YOK"
+    `🟣 VERA // ENGINEERING CORE // ${
+      process.env.OPENROUTER_API_KEY ? "HAZIR" : "YOK"
     }`
   );
 
-  console.log(
-    `🧠 ATLAS MODEL: ${GEMINI_MODEL}`
-  );
+  console.log(`🧠 LARA MODEL: ${GEMINI_MODEL}`);
+  console.log(`🧠 VERA MODEL: ${OPENROUTER_MODEL}`);
 
-  console.log(
-    `🧠 NEXUS MODEL: ${OPENROUTER_MODEL}`
-  );
+  console.log("🎙️ MULTI-SPEAKER CORE // HAZIR");
+  console.log("⚡ FAST IDENTITY MODE // HAZIR");
 
-  console.log(
-    "🌐 SERVER: http://localhost:3001"
-  );
+  console.log(`🌐 SERVER: http://localhost:${PORT}`);
+  console.log("🛡️ STABLE SERVER CORE // AKTİF");
 
-  console.log(
-    "════════════════════════════════"
-  );
-
+  console.log("════════════════════════════════");
   console.log("");
+});
+
+server.on("error", (error) => {
+  console.error("❌ SERVER ERROR:", error);
 });

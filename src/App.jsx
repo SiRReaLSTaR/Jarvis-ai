@@ -248,7 +248,101 @@ function jarvisMemoryReport(){
     section('Tercihler',data.preferences)
   ].join('\n\n')
 }
+// ======================================================
+// JARVIS V5.2 // MULTI-AGENT VOICE CORE
+// DİLAN = COMMAND
+// LARA  = RESEARCH
+// VERA  = ENGINEERING
+// ======================================================
 
+const AGENT_PROFILES = {
+  jarvis: {
+      id: 'jarvis',
+          name: 'DİLAN',
+              role: 'COMMAND CORE',
+
+                  // Dilan: daha tok, sakin ve otoriter
+                      rate: 1.02,
+                          pitch: 0.88,
+                              volume: 1,
+
+                                  voiceIndex: 0
+                                    },
+
+                                      atlas: {
+                                          id: 'atlas',
+                                              name: 'LARA',
+                                                  role: 'RESEARCH CORE',
+
+                                                      // Lara: daha sakin, berrak ve yumuşak
+                                                          rate: 0.96,
+                                                              pitch: 1.08,
+                                                                  volume: 1,
+
+                                                                      voiceIndex: 1
+                                                                        },
+
+                                                                          nexus: {
+                                                                              id: 'nexus',
+                                                                                  name: 'VERA',
+                                                                                      role: 'ENGINEERING CORE',
+
+                                                                                          // Vera: daha enerjik ve hızlı
+                                                                                              rate: 1.12,
+                                                                                                  pitch: 1.18,
+                                                                                                      volume: 1,
+
+                                                                                                          voiceIndex: 2
+                                                                                                            }
+                                                                                                            }
+
+
+                                                                                                            function getAgentProfile(speaker = 'jarvis') {
+                                                                                                              const id = String(speaker || 'jarvis').toLowerCase()
+
+                                                                                                                return AGENT_PROFILES[id] || AGENT_PROFILES.jarvis
+                                                                                                                }
+
+
+                                                                                                                function getTurkishVoices() {
+                                                                                                                  if (!('speechSynthesis' in window)) return []
+
+                                                                                                                    const voices = window.speechSynthesis.getVoices()
+
+                                                                                                                      const turkish = voices.filter(voice => {
+                                                                                                                          const lang = String(voice.lang || '').toLowerCase()
+                                                                                                                              const name = String(voice.name || '').toLowerCase()
+
+                                                                                                                                  return (
+                                                                                                                                        lang.startsWith('tr') ||
+                                                                                                                                              name.includes('turkish') ||
+                                                                                                                                                    name.includes('türk')
+                                                                                                                                                        )
+                                                                                                                                                          })
+
+                                                                                                                                                            return turkish.length ? turkish : voices
+                                                                                                                                                            }
+
+
+                                                                                                                                                            function selectAgentVoice(agent) {
+                                                                                                                                                              const voices = getTurkishVoices()
+
+                                                                                                                                                                if (!voices.length) return null
+
+                                                                                                                                                                  /*
+                                                                                                                                                                      Cihazda birden fazla Türkçe ses varsa:
+                                                                                                                                                                          Dilan -> 1. ses
+                                                                                                                                                                              Lara  -> 2. ses
+                                                                                                                                                                                  Vera  -> 3. ses
+
+                                                                                                                                                                                      Yeterli Türkçe ses yoksa mevcut sesler
+                                                                                                                                                                                          arasında güvenli şekilde döner.
+                                                                                                                                                                                            */
+
+                                                                                                                                                                                              const index = agent.voiceIndex % voices.length
+
+                                                                                                                                                                                                return voices[index] || voices[0]
+                                                                                                                                                                                                }
 function App(){
   const [time,setTime] = useState(new Date())
   const [command,setCommand] = useState('')
@@ -309,23 +403,99 @@ function App(){
     return SITE_ACTIONS.find(s=>s.names.some(n=>q.includes(n)))
   }
 
-  function speak(text){
-    if(!('speechSynthesis' in window) || !text) return
+function speak(text, speaker = 'jarvis'){
+  if(!('speechSynthesis' in window) || !text) return
+
+  window.speechSynthesis.cancel()
+
+  const spokenText = cleanForSpeech(text)
+  if(!spokenText) return
+
+  const agent = getAgentProfile(speaker)
+  const voice = selectAgentVoice(agent)
+
+  const speech = new SpeechSynthesisUtterance(spokenText)
+
+  if(voice){
+    speech.voice = voice
+    speech.lang = voice.lang || 'tr-TR'
+  }else{
+    speech.lang = 'tr-TR'
+  }
+
+  speech.rate = agent.rate
+  speech.pitch = agent.pitch
+  speech.volume = agent.volume
+
+  speech.onstart = () => {
+    console.log(
+      `🎙️ ${agent.name} konuşuyor`,
+      voice ? `// ${voice.name}` : '// Varsayılan ses'
+    )
+    setSpeaking(true)
+  }
+
+  speech.onend = () => {
+    setSpeaking(false)
+
+    if(conversationModeRef.current){
+      setTimeout(startConversation,450)
+    }
+  }
+
+  speech.onerror = (event) => {
+    console.error(`${agent.name} Voice Core hatası:`,event)
+    setSpeaking(false)
+  }
+
+  window.speechSynthesis.speak(speech)
+}
+
+  async function speakTurns(turns=[]){
+    if(!('speechSynthesis' in window) || !Array.isArray(turns) || !turns.length) return
+
     window.speechSynthesis.cancel()
-    const spokenText=cleanForSpeech(text)
-    if(!spokenText) return
-    const speech=new SpeechSynthesisUtterance(spokenText)
-    speech.lang='tr-TR'
-    speech.rate=1.4
-    speech.pitch=.9
-    speech.volume=1
-    speech.onstart=()=>setSpeaking(true)
-    speech.onend=()=>{
+    setSpeaking(true)
+
+    try{
+      for(const turn of turns){
+        const text=String(turn?.text || turn?.reply || '').trim()
+        if(!text) continue
+
+        const speaker=String(turn?.speaker || 'jarvis').toLowerCase()
+        const agent=getAgentProfile(speaker)
+        const voice=selectAgentVoice(agent)
+        const spokenText=cleanForSpeech(text)
+        if(!spokenText) continue
+
+        await new Promise((resolve)=>{
+          const speech=new SpeechSynthesisUtterance(spokenText)
+
+          if(voice){
+            speech.voice=voice
+            speech.lang=voice.lang || 'tr-TR'
+          }else{
+            speech.lang='tr-TR'
+          }
+
+          speech.rate=agent.rate
+          speech.pitch=agent.pitch
+          speech.volume=agent.volume
+
+          speech.onstart=()=>console.log(`🎙️ ${agent.name} konuşuyor`)
+          speech.onend=resolve
+          speech.onerror=(event)=>{
+            console.error(`${agent.name} Voice Core hatası:`,event)
+            resolve()
+          }
+
+          window.speechSynthesis.speak(speech)
+        })
+      }
+    }finally{
       setSpeaking(false)
       if(conversationModeRef.current) setTimeout(startConversation,450)
     }
-    speech.onerror=()=>setSpeaking(false)
-    window.speechSynthesis.speak(speech)
   }
 
   function localAction(raw){
@@ -482,9 +652,24 @@ function App(){
       })
       const data=await r.json()
       if(!r.ok) throw new Error(data?.error || 'API hatası')
-      const answer=data.reply || data.message || data.text || 'Yanıt alınamadı.'
-      setReply(answer)
-      speak(answer)
+      if(Array.isArray(data.turns) && data.turns.length){
+        const visibleNames={jarvis:'DİLAN',atlas:'LARA',nexus:'VERA'}
+        const transcript=data.turns
+          .map(turn=>`${visibleNames[String(turn?.speaker || '').toLowerCase()] || 'AI'}: ${turn?.text || ''}`)
+          .join('\n\n')
+
+        console.log('🧠 Multi-Speaker:',data.turns.map(turn=>turn.speaker).join(' → '))
+        setReply(transcript)
+        await speakTurns(data.turns)
+      }else{
+        const answer=data.reply || data.message || data.text || 'Yanıt alınamadı.'
+        const speaker=String(data.speaker || 'jarvis').toLowerCase()
+
+        console.log('🧠 Aktif ajan:',speaker)
+
+        setReply(answer)
+        speak(answer,speaker)
+      }
     }catch(e){
       console.error(e)
       setReply('Bağlantıda bir sorun oluştu. Gemini Core ve API bağlantısını kontrol et.')
