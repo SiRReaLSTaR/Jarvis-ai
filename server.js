@@ -21,30 +21,30 @@ const OPENROUTER_MODEL =
   process.env.OPENROUTER_MODEL || "openrouter/free";
 
 /* =========================================================
-   JARVIS V5.1.1
-   MULTI-AGENT PERSONALITY CORE
+   DİLAN V5.3.3
+   MULTI-AGENT + MULTI-SPEAKER CORE
    ========================================================= */
 
 const AGENTS = {
   jarvis: {
     id: "jarvis",
-    name: "JARVIS",
-    role: "COMMAND / ORCHESTRATOR",
+    name: "DİLAN",
+    role: "COMMAND CORE / ORCHESTRATOR",
     engine: "orchestrator",
     symbol: "🔴",
   },
 
   atlas: {
     id: "atlas",
-    name: "ATLAS",
-    role: "RESEARCH INTELLIGENCE",
+    name: "LARA",
+    role: "RESEARCH CORE",
     engine: "gemini",
     symbol: "🔵",
   },
 
   nexus: {
     id: "nexus",
-    name: "NEXUS",
+    name: "VERA",
     role: "ENGINEERING CORE",
     engine: "openrouter",
     symbol: "🟣",
@@ -243,27 +243,64 @@ function routeTask(message = "") {
     .toLocaleLowerCase("tr-TR")
     .trim();
 
-  /*
-   * ÇOKLU AJAN KONTROLÜ HER ŞEYDEN ÖNCE GELİR.
-   *
-   * Böylece:
-   *
-   * "Atlas ve Nexus birlikte düşünün"
-   *
-   * mesajı yanlışlıkla yalnızca Atlas veya Nexus'a gitmez.
-   */
+  const hasDilan =
+    text.includes("dilan") ||
+    text.includes("jarvis");
 
+  const hasLara =
+    text.includes("lara") ||
+    text.includes("atlas");
+
+  const hasVera =
+    text.includes("vera") ||
+    text.includes("nexus");
+
+  const mentionedAgentCount =
+    Number(hasDilan) +
+    Number(hasLara) +
+    Number(hasVera);
+
+  const multiSpeakerIntent =
+    text.includes("sırayla") ||
+    text.includes("tek tek") ||
+    text.includes("ayrı ayrı") ||
+    text.includes("konuşun") ||
+    text.includes("kendinizi tanıt") ||
+    text.includes(" de sus") ||
+    text.includes(" söyle ve sus") ||
+    text.includes("ses verin");
+
+  /*
+   * İki veya daha fazla ajan açıkça konuşmaya çağrılırsa
+   * Multi-Speaker modu devreye girer.
+   */
+  if (
+    mentionedAgentCount >= 2 &&
+    multiSpeakerIntent
+  ) {
+    return {
+      mode: "multi-speaker",
+      speaker: "multi",
+      reason:
+        "Birden fazla ajan bağımsız konuşmacı olarak çağrıldı.",
+    };
+  }
+
+  /*
+   * LARA + VERA ortak düşünme / analiz.
+   * Burada son sözü DİLAN söyler.
+   */
   const collaborative = [
     "atlas ve nexus",
     "nexus ve atlas",
-    "atlas'la nexus",
+    "lara ve vera",
+    "vera ve lara",
     "atlas ile nexus",
     "nexus ile atlas",
+    "lara ile vera",
+    "vera ile lara",
     "jarvis atlas ve nexus",
-    "jarvis, atlas ve nexus",
-    "atlas nexus birlikte",
-    "nexus atlas birlikte",
-    "ikiniz",
+    "dilan lara ve vera",
     "birlikte düşün",
     "birlikte düşünün",
     "beraber düşün",
@@ -272,12 +309,11 @@ function routeTask(message = "") {
     "ortak çalışın",
     "ajanlar birlikte",
     "ajanlarım birlikte",
-    "iki ajan",
-    "üçünüz",
-    "hepiniz",
     "birlikte değerlendirin",
     "birlikte analiz edin",
     "karşılaştır ve birleştir",
+    "hepiniz",
+    "üçünüz",
   ];
 
   if (collaborative.some((x) => text.includes(x))) {
@@ -285,57 +321,46 @@ function routeTask(message = "") {
       mode: "collaborate",
       speaker: "jarvis",
       reason:
-        "ATLAS ve NEXUS ortak göreve çağrıldı. Sonuç JARVIS tarafından sunulacak.",
+        "LARA ve VERA ortak göreve çağrıldı. Sonucu DİLAN sunacak.",
     };
   }
 
-  /* =====================================================
-     DOĞRUDAN ATLAS
-     ===================================================== */
-
-  const atlasDirect = [
-    "atlas",
-    "atlas'a sor",
-    "atlasa sor",
-    "atlas araştır",
-    "atlas ne düşünüyorsun",
-    "atlas ne düşünür",
-  ];
-
-  if (atlasDirect.some((x) => text.includes(x))) {
+  /*
+   * DOĞRUDAN LARA
+   */
+  if (hasLara) {
     return {
       mode: "atlas",
       speaker: "atlas",
-      reason: "ATLAS doğrudan çağrıldı.",
+      reason: "LARA doğrudan çağrıldı.",
     };
   }
 
-  /* =====================================================
-     DOĞRUDAN NEXUS
-     ===================================================== */
-
-  const nexusDirect = [
-    "nexus",
-    "nexus'a sor",
-    "nexusa sor",
-    "nexus çöz",
-    "nexus incele",
-    "nexus ne düşünüyorsun",
-    "nexus ne düşünür",
-  ];
-
-  if (nexusDirect.some((x) => text.includes(x))) {
+  /*
+   * DOĞRUDAN VERA
+   */
+  if (hasVera) {
     return {
       mode: "nexus",
       speaker: "nexus",
-      reason: "NEXUS doğrudan çağrıldı.",
+      reason: "VERA doğrudan çağrıldı.",
     };
   }
 
-  /* =====================================================
-     TEKNİK GÖREV
-     ===================================================== */
+  /*
+   * DOĞRUDAN DİLAN
+   */
+  if (hasDilan) {
+    return {
+      mode: "jarvis",
+      speaker: "jarvis",
+      reason: "DİLAN doğrudan çağrıldı.",
+    };
+  }
 
+  /*
+   * TEKNİK GÖREV
+   */
   const technical = [
     "kod",
     "yazılım",
@@ -367,14 +392,13 @@ function routeTask(message = "") {
       mode: "nexus",
       speaker: "jarvis",
       reason:
-        "Teknik görev NEXUS'a yönlendirildi. Sonucu JARVIS sunacak.",
+        "Teknik görev VERA'ya yönlendirildi. Sonucu DİLAN sunacak.",
     };
   }
 
-  /* =====================================================
-     ARAŞTIRMA / GÜNCEL BİLGİ
-     ===================================================== */
-
+  /*
+   * ARAŞTIRMA / GÜNCEL BİLGİ
+   */
   const research = [
     "araştır",
     "internetten",
@@ -397,14 +421,14 @@ function routeTask(message = "") {
       mode: "atlas",
       speaker: "jarvis",
       reason:
-        "Araştırma görevi ATLAS'a yönlendirildi. Sonucu JARVIS sunacak.",
+        "Araştırma görevi LARA'ya yönlendirildi. Sonucu DİLAN sunacak.",
     };
   }
 
   return {
     mode: "jarvis",
     speaker: "jarvis",
-    reason: "Normal JARVIS sohbeti.",
+    reason: "Normal DİLAN sohbeti.",
   };
 }
 
@@ -432,7 +456,7 @@ async function askAtlas(message, memory = "") {
 
   return (
     response.text ||
-    "ATLAS şu anda araştırma sonucu üretemedi."
+    "LARA şu anda araştırma sonucu üretemedi."
   );
 }
 
@@ -453,7 +477,7 @@ async function askJarvis(message, memory = "") {
 
   return (
     response.text ||
-    "JARVIS şu anda yanıt üretemedi."
+    "DİLAN şu anda yanıt üretemedi."
   );
 }
 
@@ -478,7 +502,7 @@ async function askNexus(message, memory = "") {
 
   const timeout = setTimeout(() => {
     controller.abort();
-  }, 30000);
+  }, 90000);
 
   try {
     const response = await fetch(
@@ -494,7 +518,7 @@ async function askNexus(message, memory = "") {
 
           "Content-Type": "application/json",
 
-          "X-Title": "JARVIS AI",
+          "X-Title": "DILAN AI",
         },
 
         body: JSON.stringify({
@@ -527,7 +551,7 @@ async function askNexus(message, memory = "") {
 
     return (
       data?.choices?.[0]?.message?.content ||
-      "NEXUS şu anda teknik yanıt üretemedi."
+      "VERA şu anda teknik yanıt üretemedi."
     );
   } finally {
     clearTimeout(timeout);
@@ -745,6 +769,37 @@ ATLAS veya NEXUS gibi davranma.
   }
 }
 
+function directIdentityReply(message = "", speaker = "") {
+  const text = String(message)
+    .toLocaleLowerCase("tr-TR")
+    .trim();
+
+  const identityIntent =
+    text.includes("kendini tanıt") ||
+    text.includes("kendini tanit") ||
+    text.includes("sen kimsin") ||
+    text.includes("adın ne") ||
+    text.includes("adin ne");
+
+  if (!identityIntent) {
+    return "";
+  }
+
+  if (speaker === "nexus") {
+    return "Ben VERA'yım. DİLAN sisteminin mühendislik ve teknik ajanıyım. Kodlama, mimari, hata ayıklama ve sistem geliştirme işleri bende.";
+  }
+
+  if (speaker === "atlas") {
+    return "Ben LARA'yım. DİLAN sisteminin araştırma ve bilgi ajanıyım. Araştırma, güncel bilgi, doğrulama ve karşılaştırma işleri bende.";
+  }
+
+  if (speaker === "jarvis") {
+    return "Ben DİLAN'ım. Sistemin ana koordinatörü ve takım lideriyim. LARA ve VERA'nın çalışmalarını yönetirim.";
+  }
+
+  return "";
+}
+
 /* =========================================================
    ORCHESTRATOR
    ========================================================= */
@@ -758,6 +813,76 @@ async function orchestrate(
   console.log(
     `🧠 ROUTER → ${route.mode}`
   );
+
+  /*
+   * TEK AJAN HIZLI KİMLİK
+   */
+  const directIdentity =
+    directIdentityReply(
+      message,
+      route.speaker
+    );
+
+  if (
+    directIdentity &&
+    route.mode !== "multi-speaker" &&
+    route.mode !== "collaborate"
+  ) {
+    return {
+      reply: directIdentity,
+      speaker: route.speaker,
+      route: "fast-identity-direct",
+      agents: [route.speaker],
+      reason:
+        "Kimlik sorusu hızlı modda yanıtlandı.",
+    };
+  }
+
+  /*
+   * MULTI-SPEAKER
+   */
+  if (route.mode === "multi-speaker") {
+    const turns =
+      await createMultiSpeakerTurns(
+        message,
+        memory
+      );
+
+    if (!turns.length) {
+      const reply =
+        await askJarvis(
+          message,
+          memory
+        );
+
+      return {
+        reply,
+        speaker: "jarvis",
+        route: "multi-speaker-fallback",
+        agents: ["jarvis"],
+        reason:
+          "Multi-Speaker kullanılamadı. DİLAN görevi devraldı.",
+      };
+    }
+
+    const combinedReply = turns
+      .map(
+        (turn) =>
+          `${turn.name}: ${turn.text}`
+      )
+      .join("\n\n");
+
+    return {
+      reply: combinedReply,
+      speaker: "multi",
+      route: "multi-speaker",
+      agents: turns.map(
+        (turn) => turn.speaker
+      ),
+      turns,
+      reason: route.reason,
+    };
+  }
 
   /* DIRECT ATLAS */
 
@@ -1072,9 +1197,9 @@ app.get("/api/status", (req, res) => {
     online: true,
 
     system:
-      "JARVIS MULTI AGENT SYSTEM",
+      "DİLAN MULTI AGENT SYSTEM",
 
-    version: "5.1.1",
+    version: "5.3.3",
 
     agents: {
       jarvis: {
@@ -1115,6 +1240,8 @@ app.get("/api/status", (req, res) => {
       personalityCore: true,
 
       multiAgent: true,
+      multiSpeaker: true,
+      fastIdentityMode: true,
     },
 
     models: {
