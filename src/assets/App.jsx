@@ -42,22 +42,6 @@ const stripAction = (s='') => s
   .replace(/\s+(ara|arar mısın|arar misin|bul|bulur musun|aç|ac|açar mısın|acar misin)\s*$/i,'')
   .trim()
 
-
-function cleanForSpeech(text=''){
-  return String(text)
-    .replace(/```[\s\S]*?```/g,' kod bloğu ')
-    .replace(/`([^`]+)`/g,'$1')
-    .replace(/!\[([^\]]*)\]\([^)]+\)/g,'$1')
-    .replace(/\[([^\]]+)\]\([^)]+\)/g,'$1')
-    .replace(/https?:\/\/\S+/gi,' bağlantı ')
-    .replace(/[*_~#>|•●▪■◆◇★☆⭐✨⚡🔥🌌🪐🚀🤖❤️❤💙💚💜🧡💛]+/gu,' ')
-    .replace(/[“”"']/g,'')
-    .replace(/[-–—]{2,}/g,' ')
-    .replace(/\s*\/\s*/g,' ')
-    .replace(/\s+/g,' ')
-    .trim()
-}
-
 function App(){
   const [time,setTime] = useState(new Date())
   const [command,setCommand] = useState('')
@@ -91,9 +75,7 @@ function App(){
   function speak(text){
     if(!('speechSynthesis' in window) || !text) return
     window.speechSynthesis.cancel()
-    const spokenText=cleanForSpeech(text)
-    if(!spokenText) return
-    const speech=new SpeechSynthesisUtterance(spokenText)
+    const speech=new SpeechSynthesisUtterance(text)
     speech.lang='tr-TR'
     speech.rate=1.4
     speech.pitch=.9
@@ -221,7 +203,7 @@ function App(){
       <div className="bg-grid"/><div className="scan"/><div className="noise"/>
       <header className="topbar glass">
         <div className="brand"><span className="brandMark">J</span><div><b>JARVIS</b><small>AI PERSONAL ASSISTANT</small></div></div>
-        <div className="topStatus"><i/> CORE ONLINE <span>•</span> TR-TR <span>•</span> V3.4.1</div>
+        <div className="topStatus"><i/> CORE ONLINE <span>•</span> TR-TR</div>
         <div className="themeWrap">
           <button className="themeTrigger" onClick={()=>setThemeOpen(v=>!v)}>
             <span>◈</span><div><b>{currentTheme.name}</b><small>{currentTheme.sub}</small></div><em>⌄</em>
@@ -257,10 +239,6 @@ function App(){
         <div className="stageSpace" aria-hidden="true">
           <div className="galaxyCloud gc1"/><div className="galaxyCloud gc2"/>
           <div className="stageStars layer1"/><div className="stageStars layer2"/><div className="stageStars layer3"/>
-          <div className="planet planetA"><i/></div>
-          <div className="planet planetB"><i/></div>
-          <div className="planet planetC"><i/></div>
-          <div className="meteor meteor1"/><div className="meteor meteor2"/><div className="meteor meteor3"/>
           <div className="spaceHorizon"/>
           <div className="stageDust">{Array.from({length:22},(_,i)=><i key={i} style={{'--i':i}}/>)}</div>
         </div>
