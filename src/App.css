@@ -1429,3 +1429,153 @@ z-index:8!important
 @media(prefers-reduced-motion:reduce) {
   .agentPod.isWorking:not(.isSpeaking) .avatarHalo {animation:none}
 }
+
+/* TABLET İÇİN BÜYÜK MİKROFON */
+.commandBar {
+  height:60px;
+  grid-template-columns:62px minmax(0,1fr) 48px;
+  padding:3px;
+  gap:4px;
+  border-radius:16px;
+}
+.commandBar .mic {
+  display:grid;
+  place-items:center;
+  width:52px;
+  height:52px;
+  border:1px solid #ff648a;
+  border-radius:50%;
+  background:radial-gradient(circle at 35% 25%,#662443,#210b1b 75%);
+  color:#ffd4e0;
+  box-shadow:inset 0 1px 0 #ffffff22,0 0 14px #ff386633;
+  cursor:pointer;
+  touch-action:manipulation;
+}
+.commandBar .mic.active {
+  background:radial-gradient(circle,#a52950,#380f24);
+  box-shadow:0 0 22px #ff386680;
+  color:#fff;
+}
+.commandBar .mic:focus-visible {
+  outline:3px solid #82e5ff;
+  outline-offset:3px;
+}
+.commandBar input {
+  min-width:0;
+  font-size:13px;
+}
+.commandBar .send {
+  min-height:44px;
+  font-size:22px;
+}
+.stage .quickRow { bottom:80px; }
+.stage .reply { bottom:120px; }
+.stage .agentScene { bottom:200px; }
+
+/* LARA mavi, VERA altın sarısı */
+.agent-atlas {
+  --agent-color:#66dfff;
+}
+.agent-nexus {
+  --agent-color:#ffd45c;
+}
+.linkLeft {
+  background:linear-gradient(90deg,#66dfff,#ff547e);
+}
+.linkRight {
+  background:linear-gradient(90deg,#ff547e,#ffd45c);
+}
+
+/* LARA: soğuk çelik mavisi */
+.agent-atlas {
+  --agent-color:#8BA7D9;
+}
+.linkLeft {
+  background:linear-gradient(90deg,#8BA7D9,#ff547e);
+}
+
+/* Parlak ajan renkleri */
+.agent-jarvis { --agent-color:#F4FAFF; }
+.agent-atlas  { --agent-color:#FF4669; }
+.agent-nexus  { --agent-color:#FFE36B; }
+
+.linkLeft {
+  background:linear-gradient(90deg,#FF4669,#F4FAFF);
+  box-shadow:0 0 9px #ff466966;
+}
+.linkRight {
+  background:linear-gradient(90deg,#F4FAFF,#FFE36B);
+  box-shadow:0 0 9px #ffe36b66;
+}
+
+.agentPod .avatarFigure {
+  filter:drop-shadow(0 0 10px var(--agent-color));
+}
+.agentPod .avatarHead,
+.agentPod .avatarBody {
+  border-width:2px;
+}
+.agentPod .avatarHalo {
+  opacity:.65;
+  box-shadow:0 0 24px color-mix(in srgb,var(--agent-color) 25%,transparent);
+}
+.agentPod > b {
+  font-weight:700;
+  text-shadow:0 0 14px var(--agent-color);
+}
+.agentPod .avatarBase {
+  box-shadow:0 0 22px color-mix(in srgb,var(--agent-color) 45%,transparent);
+}
+.agentPod.isSpeaking .avatarHalo {
+  opacity:1;
+}
+
+/* DETAYLI ROBOT PORTRELERİ */
+.agentPod .avatarFigure {
+  width:150px;
+  height:180px;
+  overflow:visible;
+  color:var(--agent-color);
+  filter:none;
+}
+.agent-jarvis .avatarFigure {
+  width:175px;
+  height:210px;
+}
+.robotPortrait {
+  display:block;
+  width:100%;
+  height:100%;
+  overflow:visible;
+}
+.robotEyes,
+.robotCore {
+  filter:drop-shadow(0 0 4px var(--agent-color));
+}
+.agentPod .avatarHalo {
+  top:5%;
+  width:165px;
+  height:165px;
+  opacity:.25;
+}
+.agentPod.isSpeaking .avatarFigure {
+  animation:none;
+  filter:none;
+}
+.agentPod.isSpeaking .robotEyes,
+.agentPod.isSpeaking .robotCore {
+  animation:robotVoiceLight .8s ease-in-out infinite alternate;
+}
+@keyframes robotVoiceLight {
+  from {opacity:.6}
+  to {opacity:1;filter:drop-shadow(0 0 8px var(--agent-color))}
+}
+@media(max-width:760px), (max-height:650px) {
+  .agentPod .avatarFigure {width:110px;height:132px}
+  .agent-jarvis .avatarFigure {width:130px;height:156px}
+  .agentPod .avatarHalo {width:115px;height:115px}
+}
+@media(prefers-reduced-motion:reduce) {
+  .agentPod.isSpeaking .robotEyes,
+  .agentPod.isSpeaking .robotCore {animation:none}
+}
