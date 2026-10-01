@@ -1147,26 +1147,92 @@ function speak(text, speaker = 'jarvis'){
   }
 
   function startConversation(){
+    if(listening){
+      stopVoice()
+      return
+    }
+
     const SR=window.SpeechRecognition || window.webkitSpeechRecognition
-    if(!SR){ setReply('Bu tarayıcı ses tanımayı desteklemiyor.'); return }
-    if(speaking) window.speechSynthesis?.cancel()
-    try{ recognitionRef.current?.abort() }catch{}
+    if(!SR){
+      setReply('Bu tarayıcı ses tanımayı desteklemiyor.')
+      return
+    }
+
+    const previous=recognitionRef.current
+    if(previous){
+      previous.onstart=null
+      previous.onresult=null
+      previous.onerror=null
+      previous.onend=null
+    }
+    stopVoice()
+
+    const generation=voiceGeneration.current
     const recognition=new SR()
     recognition.lang='tr-TR'
     recognition.continuous=false
     recognition.interimResults=false
     recognitionRef.current=recognition
     conversationModeRef.current=true
-    recognition.onstart=()=>setListening(true)
-    recognition.onresult=(e)=>{
-      const transcript=e.results?.[0]?.[0]?.transcript || ''
+    let received=false
+    let failed=false
+
+    const current=()=>recognitionRef.current===recognition &&
+      voiceGeneration.current===generation &&
+      conversationModeRef.current
+
+    recognition.onstart=()=>{
+      if(!current()) return
+      setListening(true)
+    }
+
+    recognition.onresult=(event)=>{
+      if(!current() || received || failed) return
+      const transcript=(event.results?.[0]?.[0]?.transcript || '').trim()
+      if(!transcript) return
+      received=true
       setCommand(transcript)
       setListening(false)
       askJarvis(transcript)
     }
-    recognition.onerror=()=>setListening(false)
-    recognition.onend=()=>setListening(false)
-    recognition.start()
+
+    recognition.onerror=(event)=>{
+      if(!current()) return
+      failed=true
+      conversationModeRef.current=false
+      recognitionRef.current=null
+      setListening(false)
+      const messages={
+        'not-allowed':'Mikrofon izni verilmedi. Tarayıcının site ayarlarından mikrofon iznini aç.',
+        'service-not-allowed':'Tarayıcı ses tanıma hizmetine izin vermiyor.',
+        'audio-capture':'Mikrofona erişilemiyor. Başka bir uygulama kullanıyor olabilir.',
+        'network':'Ses tanıma bağlantısı kurulamadı. İnternet bağlantını kontrol edip tekrar dene.',
+        'no-speech':'Ses duyamadım. Mikrofona basıp tekrar konuş.',
+        'language-not-supported':'Tarayıcı Türkçe ses tanımayı desteklemiyor.'
+      }
+      if(event.error!=='aborted'){
+        setReply(messages[event.error] || 'Ses tanıma durdu. Mikrofona basıp tekrar dene.')
+      }
+    }
+
+    recognition.onend=()=>{
+      if(!current()) return
+      recognitionRef.current=null
+      setListening(false)
+      if(!received){
+        conversationModeRef.current=false
+        if(!failed) setReply('Ses duyamadım. Mikrofona basıp tekrar konuş.')
+      }
+    }
+
+    try{
+      recognition.start()
+    }catch{
+      recognitionRef.current=null
+      conversationModeRef.current=false
+      setListening(false)
+      setReply('Mikrofon başlatılamadı. Tekrar dene.')
+    }
   }
 
   const state = listening ? 'listening' : loading ? 'thinking' : speaking ? 'speaking' : 'idle'
