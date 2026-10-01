@@ -689,6 +689,27 @@ function App(){
   const [time,setTime] = useState(()=>new Date())
   const [system,setSystem] = useState(null)
   const [tasks,setTasks] = useState([])
+
+  useEffect(()=>{
+    let disposed=false
+    let busy=false
+    const controller=new AbortController()
+    async function pollAgents(){
+      if(busy || document.hidden) return
+      busy=true
+      try{
+        const status=await api('/api/status',{signal:controller.signal})
+        if(!disposed) setSystem(status)
+      }catch(error){
+        if(!disposed && error.name!=='AbortError') setSystem(null)
+      }finally{
+        busy=false
+      }
+    }
+    const timer=setInterval(pollAgents,1500)
+    return ()=>{disposed=true;clearInterval(timer);controller.abort()}
+  },[])
+
   const [history,setHistory] = useState([])
   const [sources,setSources] = useState([])
   const [access,setAccess] = useState('')
@@ -1209,7 +1230,7 @@ function speak(text, speaker = 'jarvis'){
             ['jarvis','DİLAN','KOORDİNATÖR'],
             ['nexus','VERA','MÜHENDİSLİK']
           ].map(([id,name,role])=>(
-            <div className={`agentPod agent-${id}${speaking && activeSpeaker===id ? ' isSpeaking' : ''}`} key={id}>
+            <div className={`agentPod agent-${id}${speaking && activeSpeaker===id ? ' isSpeaking' : ''}${system?.agentStates?.[id]?.state==='working' ? ' isWorking' : ''}${system?.agentStates?.[id]?.state==='error' ? ' hasError' : ''}`} key={id}>
               <div className="avatarHalo"/>
               <div className="avatarFigure">
                 <div className="avatarHead"/>
@@ -1219,6 +1240,19 @@ function speak(text, speaker = 'jarvis'){
               <div className="avatarBase"/>
               <b>{name}</b>
               <small>{role}</small>
+              <span className="agentStatus" role="status">
+                {speaking && activeSpeaker===id
+                  ? 'Konuşuyor'
+                  : !system
+                    ? 'Bağlantı yok'
+                    : system.agentStates?.[id]?.state==='working'
+                      ? system.agentStates[id].activity
+                      : system.agentStates?.[id]?.state==='error'
+                        ? 'İşlem hatası'
+                        : system.agentStates?.[id]?.state==='completed'
+                          ? 'Yanıt hazır'
+                          : 'Bekliyor'}
+              </span>
             </div>
           ))}
           <div className="agentLink linkLeft"/>

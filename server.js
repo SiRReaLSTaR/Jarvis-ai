@@ -419,7 +419,76 @@ function routeTask(message = "") {
    GEMINI + GOOGLE SEARCH
    ========================================================= */
 
-async function askAtlas(message, memory = "") {
+
+// LIVE AGENT STATES
+const agentStates = {
+  jarvis: { state:'idle', activity:'', updatedAt:null },
+  atlas: { state:'idle', activity:'', updatedAt:null },
+  nexus: { state:'idle', activity:'', updatedAt:null }
+};
+
+function setAgentState(id, state, activity){
+  agentStates[id] = {
+    state,
+    activity,
+    updatedAt:new Date().toISOString()
+  };
+}
+
+async function trackAgent(id, activity, work){
+  setAgentState(id, 'working', activity);
+
+  for(let attempt=0; attempt<2; attempt++){
+    try {
+      const answer=await work();
+      const text=typeof answer==='string' ? answer.trim() : '';
+
+      if(!text){
+        throw new Error('Ajan boş yanıt döndürdü.');
+      }
+
+      if(/^(?:User Safety:\s*(?:safe|unsafe)\s*)?(?:Response Safety:\s*(?:safe|unsafe)\s*)$/i.test(text) ||
+         /^User Safety:\s*(?:safe|unsafe)$/i.test(text)){
+        throw new Error('Ajan görev cevabı yerine güvenlik etiketi döndürdü.');
+      }
+
+      setAgentState(id, 'completed', 'Yanıt hazır');
+      return answer;
+    } catch(error){
+      const status=Number(error.status || error.statusCode || error.code);
+      const temporary=[502,503,504].includes(status);
+
+      if(temporary && attempt===0){
+        setAgentState(id, 'working', 'Sağlayıcı yoğun; yeniden deneniyor');
+        await new Promise(resolve=>setTimeout(resolve,2000));
+        setAgentState(id, 'working', activity);
+        continue;
+      }
+
+      setAgentState(id, 'error',
+        temporary ? 'Sağlayıcı geçici olarak yanıt veremiyor'
+                  : 'Geçerli yanıt alınamadı');
+      throw error;
+    }
+  }
+}
+
+function askAtlas(message, memory = ''){
+  return trackAgent('atlas', 'Araştırıyor',
+    ()=>askAtlasCore(message, memory));
+}
+
+function askJarvis(message, memory = ''){
+  return trackAgent('jarvis', 'Yanıt hazırlıyor',
+    ()=>askJarvisCore(message, memory));
+}
+
+function askNexus(message, memory = ''){
+  return trackAgent('nexus', 'Teknik yanıt hazırlıyor',
+    ()=>askNexusCore(message, memory));
+}
+
+async function askAtlasCore(message, memory = "") {
   const response = await gemini.models.generateContent({
     model: GEMINI_MODEL,
 
@@ -448,7 +517,7 @@ async function askAtlas(message, memory = "") {
    JARVIS CORE
    ========================================================= */
 
-async function askJarvis(message, memory = "") {
+async function askJarvisCore(message, memory = "") {
   const response = await gemini.models.generateContent({
     model: GEMINI_MODEL,
 
@@ -470,7 +539,7 @@ async function askJarvis(message, memory = "") {
    OPENROUTER
    ========================================================= */
 
-async function askNexus(message, memory = "") {
+async function askNexusCore(message, memory = "") {
   if (!process.env.OPENROUTER_API_KEY) {
     throw new Error(
       "OPENROUTER_API_KEY tanımlı değil."
@@ -684,7 +753,13 @@ Gereksiz açıklama yapma.
    JARVIS SYNTHESIS
    ========================================================= */
 
-async function synthesizeAgents(
+
+function synthesizeAgents(message, atlasAnswer, nexusAnswer, memory = ''){
+  return trackAgent('jarvis', 'Sonuçları birleştiriyor',
+    ()=>synthesizeAgentsCore(message, atlasAnswer, nexusAnswer, memory));
+}
+
+async function synthesizeAgentsCore(
   message,
   atlasAnswer,
   nexusAnswer,
@@ -1174,7 +1249,7 @@ ve JARVIS olarak cevap ver.
    STATUS
    ========================================================= */
 
-app.get('/api/status', (req, res) => res.json({ online: true, lastSuccess: store.state.lastSuccess,
+app.get('/api/status', (req, res) => res.json({ online: true, agentStates, lastSuccess: store.state.lastSuccess,
   agents: { jarvis: { name: 'DİLAN', configured: Boolean(process.env.GEMINI_API_KEY) }, atlas: { name: 'LARA', configured: Boolean(process.env.GEMINI_API_KEY) }, nexus: { name: 'VERA', configured: Boolean(process.env.OPENROUTER_API_KEY) } },
   executionEnabled: false }));
 app.get('/api/state', (req, res) => res.json(store.state));
