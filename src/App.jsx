@@ -5,7 +5,7 @@ const SITE_ACTIONS = [
   { names:['youtube'], label:'YouTube', web:'https://www.youtube.com', ios:'youtube://', android:'vnd.youtube://' },
   { names:['google'], label:'Google', web:'https://www.google.com', ios:'google://', android:'googlechrome://' },
   { names:['spotify'], label:'Spotify', web:'https://open.spotify.com', ios:'spotify://', android:'spotify://' },
-  { names:['instagram'], label:'Instagram', web:'https://www.instagram.com', ios:'instagram://app', android:'instagram://app' },
+  { names:['instagram','ınstagram','insta gram','ınsta gram'], label:'Instagram', web:'https://www.instagram.com', ios:'instagram://app', android:'instagram://app' },
   { names:['facebook'], label:'Facebook', web:'https://www.facebook.com', ios:'fb://', android:'fb://' },
   { names:['twitter','x.com'], label:'X', web:'https://x.com', ios:'twitter://', android:'twitter://' },
   { names:['github'], label:'GitHub', web:'https://github.com' },
@@ -24,6 +24,361 @@ const QUICK = [
   ['▣','Takvim','https://calendar.google.com'],
 ]
 
+
+// TABLET APPLICATION REGISTRY
+const TABLET_APPS = [
+  {
+    "label": "YouTube",
+    "names": [
+      "youtube",
+      "you tube"
+    ],
+    "target": "intent://www.youtube.com/#Intent;scheme=https;package=com.google.android.youtube;end"
+  },
+  {
+    "label": "Instagram",
+    "names": [
+      "instagram",
+      "ınstagram",
+      "insta gram"
+    ],
+    "target": "intent://www.instagram.com/#Intent;scheme=https;package=com.instagram.android;end"
+  },
+  {
+    "label": "WhatsApp",
+    "names": [
+      "whatsapp",
+      "whats app",
+      "vatsap"
+    ],
+    "target": "intent://#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=com.whatsapp;end"
+  },
+  {
+    "label": "Telegram",
+    "names": [
+      "telegram"
+    ],
+    "target": "tg://"
+  },
+  {
+    "label": "Discord",
+    "names": [
+      "discord",
+      "diskord"
+    ],
+    "target": "discord://"
+  },
+  {
+    "label": "TikTok",
+    "names": [
+      "tiktok",
+      "tik tok"
+    ],
+    "target": "intent://www.tiktok.com/#Intent;scheme=https;package=com.zhiliaoapp.musically;end"
+  },
+  {
+    "label": "ChatGPT",
+    "names": [
+      "chatgpt",
+      "chat gpt",
+      "çat gpt"
+    ],
+    "target": "intent://chatgpt.com/#Intent;scheme=https;package=com.openai.chatgpt;end"
+  },
+  {
+    "label": "Gemini",
+    "names": [
+      "gemini",
+      "cemini"
+    ],
+    "target": "intent://gemini.google.com/#Intent;scheme=https;package=com.google.android.apps.bard;end"
+  },
+  {
+    "label": "GitHub",
+    "names": [
+      "github",
+      "git hub"
+    ],
+    "target": "intent://github.com/#Intent;scheme=https;package=com.github.android;end"
+  },
+  {
+    "label": "Pinterest",
+    "names": [
+      "pinterest"
+    ],
+    "target": "intent://www.pinterest.com/#Intent;scheme=https;package=com.pinterest;end"
+  },
+  {
+    "label": "Prime Video",
+    "names": [
+      "prime video",
+      "amazon prime"
+    ],
+    "target": "intent://www.primevideo.com/#Intent;scheme=https;package=com.amazon.avod.thirdpartyclient;end"
+  },
+  {
+    "label": "Google",
+    "names": [
+      "google",
+      "gugıl"
+    ],
+    "target": "intent://www.google.com/#Intent;scheme=https;package=com.google.android.googlequicksearchbox;end"
+  },
+  {
+    "label": "Chrome",
+    "names": [
+      "chrome",
+      "krom",
+      "google chrome"
+    ],
+    "target": "intent://www.google.com/#Intent;scheme=https;package=com.android.chrome;end"
+  },
+  {
+    "label": "Opera",
+    "names": [
+      "opera"
+    ],
+    "target": "intent://www.google.com/#Intent;scheme=https;package=com.opera.browser;end"
+  },
+  {
+    "label": "Play Store",
+    "names": [
+      "play store",
+      "play market",
+      "google play"
+    ],
+    "target": "market://search?q="
+  },
+  {
+    "label": "Keep Notları",
+    "names": [
+      "keep",
+      "keep notları",
+      "google keep"
+    ],
+    "target": "intent://keep.google.com/#Intent;scheme=https;package=com.google.android.keep;end"
+  },
+  {
+    "label": "Gmail",
+    "names": [
+      "gmail",
+      "g mail"
+    ],
+    "target": "intent://mail.google.com/#Intent;scheme=https;package=com.google.android.gm;end"
+  },
+  {
+    "label": "Haritalar",
+    "names": [
+      "haritalar",
+      "google maps",
+      "harita"
+    ],
+    "target": "geo:0,0?q="
+  },
+  {
+    "label": "Google Drive",
+    "names": [
+      "google drive",
+      "drive"
+    ],
+    "target": "intent://drive.google.com/#Intent;scheme=https;package=com.google.android.apps.docs;end"
+  },
+  {
+    "label": "Takvim",
+    "names": [
+      "takvim",
+      "google takvim"
+    ],
+    "target": "intent://calendar.google.com/#Intent;scheme=https;package=com.google.android.calendar;end"
+  },
+  {
+    "label": "Spotify",
+    "names": [
+      "spotify"
+    ],
+    "target": "spotify://"
+  },
+  {
+    "label": "Ayarlar",
+    "names": [
+      "ayarlar"
+    ],
+    "target": "intent:#Intent;action=android.settings.SETTINGS;end"
+  },
+  {
+    "label": "Kamera",
+    "names": [
+      "kamera"
+    ],
+    "target": "intent:#Intent;action=android.media.action.STILL_IMAGE_CAMERA;end"
+  },
+  {
+    "label": "Saat",
+    "names": [
+      "saat",
+      "alarmlar"
+    ],
+    "target": "intent:#Intent;action=android.intent.action.SHOW_ALARMS;end"
+  },
+  {
+    "label": "Garanti BBVA",
+    "names": [
+      "garanti",
+      "garanti bbva"
+    ],
+    "target": null
+  },
+  {
+    "label": "MobilDeniz",
+    "names": [
+      "mobildeniz",
+      "mobil deniz",
+      "denizbank"
+    ],
+    "target": null
+  },
+  {
+    "label": "İşCep",
+    "names": [
+      "işcep",
+      "iş cep",
+      "iscep"
+    ],
+    "target": null
+  },
+  {
+    "label": "GSPara",
+    "names": [
+      "gspara",
+      "gs para"
+    ],
+    "target": null
+  },
+  {
+    "label": "NETV GOLD V11",
+    "names": [
+      "netv",
+      "netv gold",
+      "netv gold v11"
+    ],
+    "target": null
+  },
+  {
+    "label": "VPN Super Unlimited Proxy",
+    "names": [
+      "vpn",
+      "vpn super unlimited proxy"
+    ],
+    "target": null
+  },
+  {
+    "label": "Sunday City",
+    "names": [
+      "sunday city"
+    ],
+    "target": null
+  },
+  {
+    "label": "OneState",
+    "names": [
+      "onestate",
+      "one state"
+    ],
+    "target": null
+  },
+  {
+    "label": "Mobile Legends: Bang Bang",
+    "names": [
+      "mobile legends",
+      "mobile legends bang bang"
+    ],
+    "target": null
+  },
+  {
+    "label": "Sistem Yöneticisi",
+    "names": [
+      "sistem yöneticisi",
+      "sistem yoneticisi"
+    ],
+    "target": null
+  },
+  {
+    "label": "Flow",
+    "names": [
+      "flow"
+    ],
+    "target": null
+  },
+  {
+    "label": "Dosyalar",
+    "names": [
+      "dosyalar",
+      "dosya yöneticisi"
+    ],
+    "target": null
+  },
+  {
+    "label": "Galeri",
+    "names": [
+      "galeri",
+      "fotoğraflar"
+    ],
+    "target": null
+  },
+  {
+    "label": "Notlar",
+    "names": [
+      "notlar"
+    ],
+    "target": null
+  },
+  {
+    "label": "Temalar",
+    "names": [
+      "temalar"
+    ],
+    "target": null
+  },
+  {
+    "label": "Araçlar klasörü",
+    "names": [
+      "araçlar",
+      "araclar"
+    ],
+    "target": null
+  },
+  {
+    "label": "Klasör 1",
+    "names": [
+      "klasör 1",
+      "klasor 1"
+    ],
+    "target": null
+  }
+]
+
+function tabletAppFromCommand(raw){
+  const fold = value => commandText(value)
+    .replace(/ı/g,'i').replace(/ş/g,'s')
+    .replace(/ğ/g,'g').replace(/ü/g,'u')
+    .replace(/ö/g,'o').replace(/ç/g,'c')
+    .replace(/['’]/g,'')
+    .replace(/[^\p{L}\p{N}\s]/gu,' ')
+    .replace(/\s+/g,' ')
+    .trim()
+
+  const text=' '+fold(raw)+' '
+  const endings=['','i','u','yi','yu','ni','nu']
+
+  const candidates=TABLET_APPS
+    .flatMap(app=>app.names.map(name=>({app,name:fold(name)})))
+    .sort((a,b)=>b.name.length-a.name.length)
+
+  return candidates.find(({name})=>
+    endings.some(ending=>text.includes(' '+name+ending+' '))
+  )?.app
+}
+
 const normalize = (s='') => s.toLocaleLowerCase('tr-TR').trim()
 
 const commandText = (s='') => normalize(s)
@@ -32,7 +387,9 @@ const commandText = (s='') => normalize(s)
   .replace(/\s+/g,' ')
   .trim()
 
-const hasOpenIntent = (s='') => /\b(aç|ac|açar mısın|acar misin|açarmısın|acarmisin|uygulamasını aç|uygulamasini ac)\b/i.test(commandText(s))
+const hasOpenIntent = (s='') =>
+  /(?:^|\s)(?:aç|ac|açar mısın|acar misin|açarmısın|acarmisin|açabilir misin|acabilir misin|açsana)(?=$|\s)/u.test(commandText(s))
+
 const stripAction = (s='') => s
   .replace(/\s+(ara|arar mısın|arar misin|bul|bulur musun|aç|ac|açar mısın|acar misin)\s*$/i,'')
   .trim()
@@ -54,6 +411,14 @@ function cleanForSpeech(text=''){
 }
 
 
+const memoryBridge = { ready:false, pending:Promise.resolve() }
+function authHeaders(){ return { 'Content-Type':'application/json', ...(sessionStorage.getItem('jarvis-access') ? {Authorization:`Bearer ${sessionStorage.getItem('jarvis-access')}`} : {}) } }
+async function api(path, options={}) {
+  const response = await fetch(path, {...options, headers:authHeaders()})
+  const data = await response.json()
+  if(!response.ok) throw new Error(data.error || 'Bağlantı hatası')
+  return data
+}
 const JARVIS_MEMORY_KEY='jarvis-v4-memory'
 
 function emptyJarvisMemory(){
@@ -81,6 +446,7 @@ function loadJarvisMemory(){
 function saveJarvisMemory(data){
   try{
     window.localStorage.setItem(JARVIS_MEMORY_KEY,JSON.stringify(data))
+    if(memoryBridge.ready) memoryBridge.pending = memoryBridge.pending.catch(()=>{}).then(()=>api('/api/memory',{method:'PUT',body:JSON.stringify(data)}))
     return !!window.localStorage.getItem(JARVIS_MEMORY_KEY)
   }catch(e){
     console.error('Memory write error:',e)
@@ -211,17 +577,6 @@ function typeLabel(type='memory'){
   }[type] || 'Bilgiyi'
 }
 
-function jarvisMemoryContext(){
-  const data=loadJarvisMemory()
-  return [
-    ...data.memories.slice(0,20).map(x=>`HAFIZA: ${x.text}`),
-    ...data.projects.slice(0,20).map(x=>`PROJE: ${x.text}`),
-    ...data.ideas.slice(0,20).map(x=>`FIKIR: ${x.text}`),
-    ...data.tasks.slice(0,20).map(x=>`GOREV: ${x.text}`),
-    ...data.preferences.slice(0,20).map(x=>`TERCIH: ${x.text}`)
-  ].join('\n')
-}
-
 function jarvisMemoryReport(){
   const data=loadJarvisMemory()
   const section=(title,arr)=>arr.length
@@ -331,12 +686,59 @@ const AGENT_PROFILES = {
                                                                                                                                                                                                 return voices[index] || voices[0]
                                                                                                                                                                                                 }
 function App(){
-  const [time,setTime] = useState(new Date())
+  const [time,setTime] = useState(()=>new Date())
+  const [system,setSystem] = useState(null)
+  const [tasks,setTasks] = useState([])
+  const [history,setHistory] = useState([])
+  const [sources,setSources] = useState([])
+  const [access,setAccess] = useState('')
+  const [connectionError,setConnectionError] = useState('')
+  const requestRef = useRef(null)
+  const voiceGeneration = useRef(0)
+  async function refreshState(){
+    try {
+      const status = await api('/api/status')
+      const data = await api('/api/state')
+      setSystem(status); setTasks(data.tasks); setHistory(data.history); setConnectionError('')
+
+    if(!memoryBridge.ready){
+        const local=loadJarvisMemory()
+        if(Object.values(data.memory).every(items=>!items.length) && Object.values(local).some(items=>items.length)) await api('/api/memory',{method:'PUT',body:JSON.stringify(local)})
+        else window.localStorage.setItem(JARVIS_MEMORY_KEY,JSON.stringify(data.memory))
+        memoryBridge.ready=true
+      }
+    }catch(error){ setConnectionError(error.message); setSystem(null) }
+  }
+  useEffect(()=>{
+    const initial=setTimeout(refreshState,0)
+    const timer=setInterval(refreshState,5000)
+    return ()=>{ clearTimeout(initial); clearInterval(timer); conversationModeRef.current=false; recognitionRef.current?.abort(); window.speechSynthesis?.cancel(); requestRef.current?.abort(); memoryBridge.ready=false }
+  },[])
+  function stopVoice(){
+    conversationModeRef.current=false; voiceGeneration.current++
+    recognitionRef.current?.abort(); window.speechSynthesis?.cancel()
+    setListening(false); setSpeaking(false)
+  }
+  function exportMemory(){
+    const url=URL.createObjectURL(new Blob([JSON.stringify(loadJarvisMemory(),null,2)],{type:'application/json'}))
+    const link=document.createElement('a');link.href=url;link.download='jarvis-memory.json';link.click();URL.revokeObjectURL(url)
+  }
+  async function importMemory(event){
+    try{
+      const file=event.target.files?.[0];if(!file)return
+      if(file.size>1000000) throw new Error('Dosya çok büyük.')
+      const data=JSON.parse(await file.text())
+      await api('/api/memory',{method:'PUT',body:JSON.stringify(data)})
+      window.localStorage.setItem(JARVIS_MEMORY_KEY,JSON.stringify(data));setReply('Hafıza içe aktarıldı.')
+    }catch(error){setReply(error.message)}
+    event.target.value=''
+  }
   const [command,setCommand] = useState('')
   const [reply,setReply] = useState('Sistemler çevrimiçi. Komutunu bekliyorum Mustafa.')
   const [loading,setLoading] = useState(false)
   const [listening,setListening] = useState(false)
   const [speaking,setSpeaking] = useState(false)
+  const [activeSpeaker,setActiveSpeaker] = useState(null)
   const recognitionRef = useRef(null)
   const conversationModeRef = useRef(false)
 
@@ -349,34 +751,58 @@ function App(){
   const dateText = time.toLocaleDateString('tr-TR',{day:'2-digit',month:'long',year:'numeric',weekday:'long'})
   const timeText = time.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'})
 
+  const lastLaunchRef = useRef({target:'',time:0})
+
   function openExternal(url){
-    const w=window.open(url,'_blank','noopener,noreferrer')
-    if(!w) window.location.href=url
+    // Tek açılış; ikinci bir yönlendirme yapma.
+    const link=document.createElement('a')
+    link.href=url
+    link.target='_blank'
+    link.rel='noopener noreferrer'
+    document.body.appendChild(link)
+    link.click()
+    link.remove()
   }
 
   function launchApp(app, fallbackUrl){
-    const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent) ||
-      (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1)
-    const isAndroid=/Android/i.test(navigator.userAgent)
-    const deepLink=isIOS ? app?.ios : isAndroid ? app?.android : null
+    const label=app?.label
     const web=fallbackUrl || app?.web
 
-    if(!deepLink){
-      if(web) openExternal(web)
+    // Bu Android tablette masaüstü modu açık olsa da
+    // YouTube ve Instagram doğrudan uygulamaya gitsin.
+    const nativeTargets={
+      YouTube:'intent://www.youtube.com/#Intent;scheme=https;package=com.google.android.youtube;end',
+      Instagram:'intent://www.instagram.com/#Intent;scheme=https;package=com.instagram.android;end'
+    }
+
+    const isAndroid=/Android/i.test(navigator.userAgent)
+    const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent) ||
+      (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1)
+
+    const target=nativeTargets[label] ||
+      (isAndroid ? app?.android : isIOS ? app?.ios : null)
+
+    const destination=target || web
+    if(!destination) return
+
+    const now=Date.now()
+    if(lastLaunchRef.current.target===destination &&
+       now-lastLaunchRef.current.time<3000) return
+    lastLaunchRef.current={target:destination,time:now}
+
+    // Uygulama açılırken dinleme döngüsünü durdur.
+    conversationModeRef.current=false
+    recognitionRef.current?.abort()
+    window.speechSynthesis?.cancel()
+    setListening(false)
+    setSpeaking(false)
+
+    if(target){
+      window.location.assign(target)
       return
     }
 
-    let leftPage=false
-    const markHidden=()=>{ if(document.hidden) leftPage=true }
-    document.addEventListener('visibilitychange',markHidden,{once:true})
-
-    // Deep links work best directly inside the user's click/voice-result event.
-    window.location.href=deepLink
-
-    // If no native app handled the link, fall back to the website.
-    setTimeout(()=>{
-      if(!leftPage && document.visibilityState==='visible' && web) openExternal(web)
-    },1300)
+    openExternal(web)
   }
 
   function appByName(name){
@@ -409,6 +835,7 @@ function speak(text, speaker = 'jarvis'){
   speech.volume = agent.volume
 
   speech.onstart = () => {
+    setActiveSpeaker(speaker)
     console.log(
       `🎙️ ${agent.name} konuşuyor`,
       voice ? `// ${voice.name}` : '// Varsayılan ses'
@@ -420,7 +847,7 @@ function speak(text, speaker = 'jarvis'){
     setSpeaking(false)
 
     if(conversationModeRef.current){
-      setTimeout(startConversation,450)
+      setTimeout(()=>{if(conversationModeRef.current)startConversation()},450)
     }
   }
 
@@ -437,9 +864,11 @@ function speak(text, speaker = 'jarvis'){
 
     window.speechSynthesis.cancel()
     setSpeaking(true)
+    const generation=voiceGeneration.current
 
     try{
       for(const turn of turns){
+        if(generation!==voiceGeneration.current) break
         const text=String(turn?.text || turn?.reply || '').trim()
         if(!text) continue
 
@@ -463,11 +892,12 @@ function speak(text, speaker = 'jarvis'){
           speech.pitch=agent.pitch
           speech.volume=agent.volume
 
-          speech.onstart=()=>console.log(`🎙️ ${agent.name} konuşuyor`)
-          speech.onend=resolve
+          speech.onstart=()=>{setActiveSpeaker(speaker);setSpeaking(true);console.log(`🎙️ ${agent.name} konuşuyor`)}
+          const watcher=setInterval(()=>{if(generation!==voiceGeneration.current){clearInterval(watcher);resolve()}},100)
+          speech.onend=()=>{clearInterval(watcher);resolve()}
           speech.onerror=(event)=>{
             console.error(`${agent.name} Voice Core hatası:`,event)
-            resolve()
+            clearInterval(watcher);resolve()
           }
 
           window.speechSynthesis.speak(speech)
@@ -475,11 +905,28 @@ function speak(text, speaker = 'jarvis'){
       }
     }finally{
       setSpeaking(false)
-      if(conversationModeRef.current) setTimeout(startConversation,450)
+      if(conversationModeRef.current) setTimeout(()=>{if(conversationModeRef.current)startConversation()},450)
     }
   }
 
   function localAction(raw){
+    if(hasOpenIntent(raw)){
+      const app=tabletAppFromCommand(raw)
+      if(app){
+        if(!app.target){
+          setReply(`${app.label} listeye eklendi; ancak bu uygulamanın doğrulanmış açılış bağlantısı henüz tanımlı değil.`)
+          return true
+        }
+        launchApp({
+          label:app.label,
+          android:app.target,
+          ios:app.target
+        })
+        setReply(`${app.label} için uygulama açma isteği gönderildi.`)
+        return true
+      }
+    }
+
     const q=normalize(raw)
     const cq=commandText(raw)
     if(!q) return true
@@ -616,23 +1063,41 @@ function speak(text, speaker = 'jarvis'){
   }
 
   async function askJarvis(text){
-    const clean=text.trim()
-    if(!clean || loading) return
+    const clean=String(text || '').trim()
+    if(!clean) return
+
+    if(/^(dur|sus|iptal et|konuşmayı durdur)$/i.test(clean)){
+      stopVoice()
+      setReply('Sesli iletişim durduruldu.')
+      return
+    }
+
+    // Uygulama açılışı sunucu bağlantısından bağımsızdır.
+    if(hasOpenIntent(clean)){
+      setCommand('')
+      if(localAction(clean)) return
+    }
+
+    if(!memoryBridge.ready){
+      setReply('Sohbet için sunucu bağlantısını kontrol et.')
+      return
+    }
+
+    if(loading) return
     setCommand('')
     if(localAction(clean)) return
+
     setLoading(true)
     setReply('İşleniyor…')
     try{
-      const r=await fetch('/api/chat',{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({
-          message:clean,
-          memory:jarvisMemoryContext()
-        })
+      await memoryBridge.pending
+      requestRef.current=new AbortController()
+      const data=await api('/api/chat',{
+        method:'POST', signal:requestRef.current.signal,
+        body:JSON.stringify({message:clean})
       })
-      const data=await r.json()
-      if(!r.ok) throw new Error(data?.error || 'API hatası')
+      setSources(data.sources || [])
+      await refreshState()
       if(Array.isArray(data.turns) && data.turns.length){
         const visibleNames={jarvis:'DİLAN',atlas:'LARA',nexus:'VERA'}
         const transcript=data.turns
@@ -653,9 +1118,10 @@ function speak(text, speaker = 'jarvis'){
       }
     }catch(e){
       console.error(e)
-      setReply('Bağlantıda bir sorun oluştu. Gemini Core ve API bağlantısını kontrol et.')
+      setReply(e.message || 'Bağlantıda sorun oluştu.')
     }finally{
       setLoading(false)
+      refreshState()
     }
   }
 
@@ -696,7 +1162,7 @@ function speak(text, speaker = 'jarvis'){
       <div className="bg-grid"/><div className="scan"/><div className="noise"/>
       <header className="topbar glass">
         <div className="brand"><span className="brandMark">J</span><div><b>JARVIS</b><small>AI PERSONAL ASSISTANT</small></div></div>
-        <div className="topStatus"><i/> CORE ONLINE <span>•</span> TR-TR <span>•</span> V4.8.0</div>
+        <div className="topStatus"><i/> {system?'CORE BAĞLI':'CORE BAĞLANTISI YOK'} <span>•</span> TR-TR <span>•</span> V6.0</div>
       </header>
 
 
@@ -734,28 +1200,39 @@ function speak(text, speaker = 'jarvis'){
         <div className="corner c1"/><div className="corner c2"/><div className="corner c3"/><div className="corner c4"/>
         <div className="stageTitle"><b>KIRMIZI SİYAH</b><small>RED CORE</small></div>
         <div className="telemetry leftT">01 // CORE<br/>SIGNAL STABLE</div>
-        <div className="telemetry rightT">NEURAL LINK<br/>98.7% SECURE</div>
+        <div className="telemetry rightT">NEURAL LINK<br/>ERİŞİM KONTROLÜ</div>
 
-        <div className="energy" aria-label={`JARVIS ${stateLabel}`}>
-          <div className="halo h1"/><div className="halo h2"/><div className="halo h3"/>
-          <div className="orbit o1"><i/><i/><i/></div>
-          <div className="orbit o2"><i/><i/><i/><i/></div>
-          <div className="energyTrails">
-            {Array.from({length:14},(_,i)=><i key={i} style={{'--i':i}}/>)}
-          </div>
-          <div className="plasma"><span/><span/><span/><span/><span/></div>
-          <div className="core"><i/><span className="coreSpark"/><span className="coreSpark s2"/><span className="coreSpark s3"/></div>
-          <div className="pulse p1"/><div className="pulse p2"/>
+
+        <div className="agentScene">
+          {[
+            ['atlas','LARA','ARAŞTIRMA'],
+            ['jarvis','DİLAN','KOORDİNATÖR'],
+            ['nexus','VERA','MÜHENDİSLİK']
+          ].map(([id,name,role])=>(
+            <div className={`agentPod agent-${id}${speaking && activeSpeaker===id ? ' isSpeaking' : ''}`} key={id}>
+              <div className="avatarHalo"/>
+              <div className="avatarFigure">
+                <div className="avatarHead"/>
+                <div className="avatarBody"/>
+                <div className="avatarScan"/>
+              </div>
+              <div className="avatarBase"/>
+              <b>{name}</b>
+              <small>{role}</small>
+            </div>
+          ))}
+          <div className="agentLink linkLeft"/>
+          <div className="agentLink linkRight"/>
         </div>
 
-        <div className="reply glass">
+<div className="reply glass">
           <div className="replyIcon">J</div>
           <div className="replyText"><b>JARVIS // {stateLabel}</b><p>{reply}</p></div>
           <div className={`wave ${speaking||listening?'active':''}`}>{Array.from({length:18},(_,i)=><i key={i} style={{'--i':i}}/>)}</div>
         </div>
 
         <div className="quickRow">
-          {QUICK.slice(0,5).map(([ic,n,u])=><button key={n} className="quickButton" onClick={()=>{const a=appByName(n);a?launchApp(a,u):openExternal(u)}}><span>{ic}</span><b>{n}</b><i/></button>)}
+          {QUICK.slice(0,5).map(([ic,n,u])=><button key={n} className="quickButton" onClick={()=>{const a=appByName(n);if(a)launchApp(a,u);else openExternal(u)}}><span>{ic}</span><b>{n}</b><i/></button>)}
         </div>
 
         <form className="commandBar glass" onSubmit={e=>{e.preventDefault();askJarvis(command)}}>
@@ -768,11 +1245,32 @@ function speak(text, speaker = 'jarvis'){
       <aside className="rightRail">
         <div className="clockCard glass"><b>{timeText}</b><small>{dateText}</small></div>
         <div className="systemCard glass"><h3>SİSTEM DURUMU</h3>
-          <p><i/>AI Core <b>Online</b></p><p><i/>Mikrofon <b>{listening?'Dinliyor':'Hazır'}</b></p>
-          <p><i/>API Link <b>Bağlı</b></p><p><i/>Ses Motoru <b>{speaking?'Aktif':'Hazır'}</b></p>
+          <p><i/>AI Core <b>{system ? 'Sunucu bağlı' : 'Bağlı değil'}</b></p><p><i/>Mikrofon <b>{listening?'Dinliyor':'Hazır'}</b></p>
+          <p><i/>API Link <b>{system?.lastSuccess ? 'Son işlem başarılı' : 'Henüz doğrulanmadı'}</b></p><p><i/>Ses Motoru <b>{speaking?'Aktif':'Hazır'}</b></p>
+        </div>
+        <div className="controlCard glass">
+          <h3>GÖREV MERKEZİ</h3>
+          {Object.values(system?.agents || {}).map(agent=><p key={agent.name}>{agent.name}: {agent.configured?'Yapılandırıldı':'Anahtar eksik'}</p>)}
+          <p>Kod üretimi: öneri ve taslak</p>
+          <button onClick={stopVoice}>Sesi durdur</button>
+          <details><summary>Erişim ayarı</summary>
+            <input type="password" value={access} onChange={e=>setAccess(e.target.value)} placeholder="Erişim anahtarı" aria-label="Erişim anahtarı"/>
+            <button onClick={()=>{sessionStorage.setItem('jarvis-access',access);setAccess('');memoryBridge.ready=false;refreshState()}}>Bağlan</button>
+          </details>
+          {connectionError && <p role="alert">{connectionError}</p>}
+          <details><summary>Görevler ({tasks.length})</summary>
+            {tasks.map(task=><p key={task.id}>{task.message} — {({running:'Çalışıyor',completed:'Yanıt hazır',partial:'Kısmi sonuç',failed:'Hata',interrupted:'Kesintiye uğradı'})[task.status] || task.status}</p>)}
+          </details>
+          <details><summary>Konuşma geçmişi</summary>
+            {history.map((item,index)=><p key={index}><b>{item.role==='user'?'Sen':'Jarvis'}:</b> {item.content}</p>)}
+            <button onClick={async()=>{try{await api('/api/history',{method:'DELETE'});await refreshState()}catch(e){setReply(e.message)}}}>Geçmişi temizle</button>
+          </details>
+          <button onClick={exportMemory}>Hafızayı indir</button>
+          <label>Hafıza içe aktar<input type="file" accept="application/json" onChange={importMemory}/></label>
+          {sources.length>0 && <details open><summary>Araştırma kaynakları</summary>{sources.map(source=><p key={source.url}><a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a></p>)}</details>}
         </div>
         <div className="accessCard glass"><h3>HIZLI ERİŞİM</h3><div>
-          {QUICK.map(([ic,n,u])=><button key={n} className="accessButton" onClick={()=>{const a=appByName(n);a?launchApp(a,u):openExternal(u)}}><span>{ic}</span><small>{n}</small><i/></button>)}
+          {QUICK.map(([ic,n,u])=><button key={n} className="accessButton" onClick={()=>{const a=appByName(n);if(a)launchApp(a,u);else openExternal(u)}}><span>{ic}</span><small>{n}</small><i/></button>)}
         </div></div>
       </aside>
     </main>

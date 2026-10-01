@@ -1,17 +1,28 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import { AsyncLocalStorage } from "node:async_hooks";
+import { createStore, accessControl, validMemory, exactAgent } from "./lib/runtime.js";
 import { GoogleGenAI } from "@google/genai";
 
 dotenv.config();
 
 const app = express();
 
-app.use(cors());
+const HOST = process.env.HOST || '127.0.0.1';
+const token = process.env.JARVIS_ACCESS_TOKEN || '';
+if (HOST !== '127.0.0.1' && HOST !== 'localhost' && !token) throw new Error('Dış erişim için JARVIS_ACCESS_TOKEN gerekli.');
+const origins = (process.env.ALLOWED_ORIGINS || 'http://localhost:5173,http://127.0.0.1:5173').split(',').map(x => x.trim());
+app.use(cors({ origin: origins }));
 app.use(express.json({ limit: "1mb" }));
 
+const store = createStore(process.env.JARVIS_DATA_DIR || './data');
+const context = new AsyncLocalStorage();
+app.use('/api', accessControl({ token, origins, limit: 120 }));
+const chatLimit = accessControl({ token, origins, limit: 20 });
 const gemini = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY,
+  apiKey: process.env.GEMINI_API_KEY || "not-configured",
+  httpOptions: { timeout: 90000 },
 });
 
 const GEMINI_MODEL =
@@ -24,32 +35,6 @@ const OPENROUTER_MODEL =
    DİLAN V5.3.3
    MULTI-AGENT + MULTI-SPEAKER CORE
    ========================================================= */
-
-const AGENTS = {
-  jarvis: {
-    id: "jarvis",
-    name: "DİLAN",
-    role: "COMMAND CORE / ORCHESTRATOR",
-    engine: "orchestrator",
-    symbol: "🔴",
-  },
-
-  atlas: {
-    id: "atlas",
-    name: "LARA",
-    role: "RESEARCH CORE",
-    engine: "gemini",
-    symbol: "🔵",
-  },
-
-  nexus: {
-    id: "nexus",
-    name: "VERA",
-    role: "ENGINEERING CORE",
-    engine: "openrouter",
-    symbol: "🟣",
-  },
-};
 
 /* =========================================================
    MEMORY CORE
@@ -90,7 +75,7 @@ Kayıtlarda olmayan bir şeyi hatırlıyormuş gibi davranma.
 
 function jarvisInstruction(memory = "") {
   return `
-Sen JARVIS'sin.
+Sen DİLAN'sın. Jarvis sisteminin ana asistanısın.
 
 Mustafa'nın kişisel yapay zeka asistanı ve
 AI sisteminin ana koordinatörüsün.
@@ -138,7 +123,7 @@ ${memoryBlock(memory)}
 
 function atlasInstruction(memory = "") {
   return `
-Sen ATLAS'sın.
+Sen LARA'sın. Dahili ajan kimliğin ATLAS.
 
 JARVIS sisteminin RESEARCH INTELLIGENCE ajanısın.
 
@@ -166,11 +151,11 @@ KARAKTERİN:
 Her zaman Türkçe konuş.
 
 Mustafa sana doğrudan seslenirse
-ATLAS olarak cevap ver.
+LARA olarak cevap ver.
 
 Kendini JARVIS olarak tanıtma.
 
-Sen JARVIS'in araştırma ajanı ATLAS'sın.
+Sen DİLAN'ın araştırma ajanı LARA'sın.
 
 Bilmediğin veya doğrulayamadığın bir şeyi
 kesin bilgi gibi sunma.
@@ -187,7 +172,7 @@ ${memoryBlock(memory)}
 
 function nexusInstruction(memory = "") {
   return `
-Sen NEXUS'sun.
+Sen VERA'sın. Dahili ajan kimliğin NEXUS.
 
 JARVIS sisteminin ENGINEERING CORE ajanısın.
 
@@ -219,11 +204,11 @@ KARAKTERİN:
 Her zaman Türkçe konuş.
 
 Mustafa sana doğrudan seslenirse
-NEXUS olarak cevap ver.
+VERA olarak cevap ver.
 
 Kendini JARVIS olarak tanıtma.
 
-Sen JARVIS'in mühendislik ajanı NEXUS'sun.
+Sen DİLAN'ın mühendislik ajanı VERA'sın.
 
 Kod üretirken doğrudan uygulanabilir çözümler ver.
 
@@ -244,16 +229,13 @@ function routeTask(message = "") {
     .trim();
 
   const hasDilan =
-    text.includes("dilan") ||
-    text.includes("jarvis");
+    exactAgent(text, ["dilan", "dılan", "jarvis"]);
 
   const hasLara =
-    text.includes("lara") ||
-    text.includes("atlas");
+    exactAgent(text, ["lara", "atlas"]);
 
   const hasVera =
-    text.includes("vera") ||
-    text.includes("nexus");
+    exactAgent(text, ["vera", "nexus"]);
 
   const mentionedAgentCount =
     Number(hasDilan) +
@@ -350,7 +332,7 @@ function routeTask(message = "") {
   /*
    * DOĞRUDAN DİLAN
    */
-  if (hasDilan) {
+  if (hasDilan && /^(dilan|dılan|jarvis)[ ,:]*$/u.test(text)) {
     return {
       mode: "jarvis",
       speaker: "jarvis",
@@ -441,7 +423,7 @@ async function askAtlas(message, memory = "") {
   const response = await gemini.models.generateContent({
     model: GEMINI_MODEL,
 
-    contents: String(message),
+    contents: [...(context.getStore()?.history || []).map(x => ({ role: x.role === "assistant" ? "model" : "user", parts: [{ text: x.content }] })), { role: "user", parts: [{ text: String(message) }] }],
 
     config: {
       tools: [
@@ -454,10 +436,12 @@ async function askAtlas(message, memory = "") {
     },
   });
 
-  return (
-    response.text ||
-    "LARA şu anda araştırma sonucu üretemedi."
-  );
+  const sources = context.getStore()?.sources;
+  for (const chunk of response.candidates?.[0]?.groundingMetadata?.groundingChunks || []) {
+    const web = chunk.web;
+    if (web?.uri && /^https?:\/\//.test(web.uri) && sources && !sources.some(x => x.url === web.uri)) sources.push({ title: web.title || web.uri, url: web.uri });
+  }
+  return response.text || "LARA şu anda araştırma sonucu üretemedi.";
 }
 
 /* =========================================================
@@ -468,7 +452,7 @@ async function askJarvis(message, memory = "") {
   const response = await gemini.models.generateContent({
     model: GEMINI_MODEL,
 
-    contents: String(message),
+    contents: [...(context.getStore()?.history || []).map(x => ({ role: x.role === "assistant" ? "model" : "user", parts: [{ text: x.content }] })), { role: "user", parts: [{ text: String(message) }] }],
 
     config: {
       systemInstruction: jarvisInstruction(memory),
@@ -530,10 +514,8 @@ async function askNexus(message, memory = "") {
               content: nexusInstruction(memory),
             },
 
-            {
-              role: "user",
-              content: String(message),
-            },
+            ...(context.getStore()?.history || []),
+            { role: "user", content: String(message) },
           ],
         }),
       }
@@ -586,7 +568,7 @@ async function createMultiSpeakerTurns(message, memory = "") {
       let position = Infinity;
 
       for (const alias of agent.aliases) {
-        const index = normalized.indexOf(alias);
+        const index = (exactAgent(normalized, [alias]) ? normalized.indexOf(alias) : -1);
 
         if (index !== -1 && index < position) {
           position = index;
@@ -1192,113 +1174,38 @@ ve JARVIS olarak cevap ver.
    STATUS
    ========================================================= */
 
-app.get("/api/status", (req, res) => {
-  res.json({
-    online: true,
-
-    system:
-      "DİLAN MULTI AGENT SYSTEM",
-
-    version: "5.3.3",
-
-    agents: {
-      jarvis: {
-        ...AGENTS.jarvis,
-        online: true,
-      },
-
-      atlas: {
-        ...AGENTS.atlas,
-        online: Boolean(
-          process.env.GEMINI_API_KEY
-        ),
-      },
-
-      nexus: {
-        ...AGENTS.nexus,
-        online: Boolean(
-          process.env.OPENROUTER_API_KEY
-        ),
-      },
-    },
-
-    cores: {
-      gemini: Boolean(
-        process.env.GEMINI_API_KEY
-      ),
-
-      openrouter: Boolean(
-        process.env.OPENROUTER_API_KEY
-      ),
-
-      memoryBridge: true,
-
-      googleSearch: true,
-
-      orchestrator: true,
-
-      personalityCore: true,
-
-      multiAgent: true,
-      multiSpeaker: true,
-      fastIdentityMode: true,
-    },
-
-    models: {
-      atlas: GEMINI_MODEL,
-      nexus: OPENROUTER_MODEL,
-    },
-  });
+app.get('/api/status', (req, res) => res.json({ online: true, lastSuccess: store.state.lastSuccess,
+  agents: { jarvis: { name: 'DİLAN', configured: Boolean(process.env.GEMINI_API_KEY) }, atlas: { name: 'LARA', configured: Boolean(process.env.GEMINI_API_KEY) }, nexus: { name: 'VERA', configured: Boolean(process.env.OPENROUTER_API_KEY) } },
+  executionEnabled: false }));
+app.get('/api/state', (req, res) => res.json(store.state));
+app.put('/api/memory', (req, res) => {
+  if (!validMemory(req.body)) return res.status(400).json({ error: 'Geçersiz hafıza.' });
+  store.state.memory = req.body; store.save(); res.json({ ok: true });
 });
-
-/* =========================================================
-   CHAT API
-   ========================================================= */
-
-app.post("/api/chat", async (req, res) => {
+app.delete('/api/history', (req, res) => { store.state.history = []; store.save(); res.json({ ok: true }); });
+let busy = false;
+app.post('/api/chat', chatLimit, async (req, res) => {
+  if (typeof req.body.message !== 'string' || !req.body.message.trim() || req.body.message.length > 8000) return res.status(400).json({ error: 'Komut 1–8000 karakter olmalı.' });
+  if (busy) return res.status(409).json({ error: 'Önceki görev devam ediyor.' });
+  busy = true;
+  const message = req.body.message.trim();
+  const task = store.task(message);
+  const run = { history: store.state.history.slice(-20).map(({ role, content }) => ({ role, content })), sources: [] };
+  const memory = Object.entries(store.state.memory).flatMap(([key, items]) => items.slice(0, 20).map(x => `${key}: ${x.text}`)).join('\n');
   try {
-    const {
-      message,
-      memory = "",
-    } = req.body;
-
-    if (
-      !message ||
-      !String(message).trim()
-    ) {
-      return res.status(400).json({
-        error: "Komut bulunamadı.",
-      });
-    }
-
-    const result =
-      await orchestrate(
-        String(message).trim(),
-        memory
-      );
-
-    console.log(
-      `🤖 AGENTS → ${result.agents.join(
-        " + "
-      )}`
-    );
-
-    console.log(
-      `🎙️ SPEAKER → ${result.speaker}`
-    );
-
-    res.json(result);
+    const result = await context.run(run, () => orchestrate(message, memory));
+    task.status = result.route.includes('fallback') || result.route.includes('partial') ? 'partial' : 'completed';
+    task.route = result.route; task.agents = result.agents; task.finishedAt = new Date().toISOString();
+    store.state.lastSuccess = task.finishedAt;
+    store.state.history.push({ role: 'user', content: message }, { role: 'assistant', content: result.reply });
+    store.state.history = store.state.history.slice(-40);
+    store.save();
+    res.json({ ...result, sources: run.sources, task });
   } catch (error) {
-    console.error(
-      "JARVIS MULTI AGENT ERROR:",
-      error
-    );
-
-    res.status(500).json({
-      error:
-        "JARVIS Multi-Agent sistemi şu anda cevap veremiyor.",
-    });
-  }
+    console.error('Chat error:', error);
+    task.status = 'failed'; task.finishedAt = new Date().toISOString(); store.save();
+    res.status(502).json({ error: 'Yapay zekâ bağlantısı yanıt vermedi. Sağlayıcı ayarlarını kontrol et.', task });
+  } finally { busy = false; }
 });
 
 /* =========================================================
@@ -1307,7 +1214,7 @@ app.post("/api/chat", async (req, res) => {
 
 const PORT = Number(process.env.PORT) || 3001;
 
-const server = app.listen(PORT, "0.0.0.0", () => {
+const server = app.listen(PORT, HOST, () => {
   console.log("");
   console.log("════════════════════════════════");
   console.log("🧠 DİLAN V5.3.2 MULTI-AGENT SYSTEM");
