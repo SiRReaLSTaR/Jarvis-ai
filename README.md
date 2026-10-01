@@ -1,16 +1,29 @@
-# React + Vite
+# Jarvis AI
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+DİLAN koordinasyon, LARA kaynaklı araştırma, VERA teknik kod önerileri üretir. React/Vite arayüzü ve Node/Express sunucusu kullanılır.
 
-Currently, two official plugins are available:
+## Çalıştırma
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Node.js 22.12+ gerekir. `npm ci` çalıştırın. `.env.example` dosyasını `.env` olarak kopyalayın ve mevcut Gemini/OpenRouter anahtarlarını yerel dosyaya girin. Anahtarları GitHub'a yüklemeyin.
 
-## React Compiler
+İki terminalde `npm run server` ve `npm run dev` çalıştırın. Vite'ın gösterdiği yerel adresi açın.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Erişim ve kalıcı veriler
 
-## Expanding the Oxlint configuration
+Sunucu varsayılan olarak yalnızca yerel bilgisayarı dinler. Dış erişim için `HOST=0.0.0.0`, uzun rastgele `JARVIS_ACCESS_TOKEN` ve tam arayüz adreslerini içeren `ALLOWED_ORIGINS` zorunludur. Arayüzde Görev Merkezi → Erişim ayarı alanına aynı erişim anahtarını girin. Anahtar yalnızca sekme oturumunda tutulur. İnternet yayını HTTPS ve `/api` için sunucuya yönlendiren reverse proxy gerektirir; Vite proxy'si yalnızca geliştirme içindir.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+Bu sürüm tek kullanıcılıdır: tüm yetkili sekmeler aynı hafızayı ve konuşma geçmişini paylaşır. Veriler `data/state.json` içinde saklanır; bu klasör Git'e alınmaz. Üretimde kalıcı disk bağlayın ve erişimi sunucu kullanıcısıyla sınırlayın. Bozuk veri dosyası sunucunun başlamasını durdurur; veriyi sessizce sıfırlamaz.
+
+İlk bağlantıda sunucu hafızası boşsa mevcut tarayıcı hafızası taşınır. Hafızayı indir/içe aktar düğmeleri JSON yedeklerini yönetir; içe aktarma mevcut hafızayı değiştirir. Geçmişi temizle yalnızca konuşma geçmişini siler. Son 40 mesaj saklanır, son 20 mesaj modellere bağlam olarak gönderilir. Hafıza ve geçmiş seçilen AI sağlayıcısına gönderilir.
+
+## Görevler ve ses
+
+Görevler çalışan, yanıt hazır, kısmi sonuç, hata veya kesintiye uğradı olarak kaydedilir. Aynı anda bir sohbet görevi kabul edilir. Kaynak bağlantıları Google grounding metadata'dan alınır. Yapılandırıldı göstergesi anahtarın varlığını, son başarılı işlem zamanı ise gerçek başarılı yanıtı belirtir.
+
+Sesi durdur düğmesi ve `dur`, `sus`, `iptal et` komutları mikrofon döngüsünü ve konuşmayı durdurur. Arka plandaki AI isteğini iptal etmez. Ses tanıma ve kullanılabilir Türkçe sesler tarayıcıya bağlıdır.
+
+VERA kod taslağı üretir; dosya yazmaz, terminal komutu çalıştırmaz, GitHub'a otomatik göndermez. Böyle bir yetenek ayrı izole çalışma ortamı, izinli araçlar ve değişiklik incelemesi gerektirir. `completed`/Yanıt hazır durumu AI yanıtının tamamlandığını belirtir.
+
+## Doğrulama
+
+`npm test`, `npm run build`, `npm run lint`.
