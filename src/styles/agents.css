@@ -1,0 +1,362 @@
+.agentScene {
+  position: absolute;
+  inset: 65px 5% 160px;
+  display: grid;
+  grid-template-columns: 1fr 1.2fr 1fr;
+  align-items: center;
+  gap: 12px;
+  isolation: isolate;
+}
+.agentPod {
+  --agent-color: #66dfff;
+  position: relative;
+  min-width: 0;
+  height: 230px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  color: var(--agent-color);
+}
+.agent-jarvis {
+  --agent-color: #ff547e;
+  height: 270px;
+}
+.agent-nexus {
+  --agent-color: #bd8aff;
+}
+.avatarHalo {
+  position: absolute;
+  top: 8%;
+  width: 150px;
+  height: 150px;
+  border: 1px solid var(--agent-color);
+  border-radius: 50%;
+  opacity: .35;
+  box-shadow: 0 0 28px color-mix(in srgb, var(--agent-color) 25%, transparent);
+}
+.avatarFigure {
+  position: relative;
+  width: 130px;
+  height: 160px;
+  overflow: hidden;
+  filter: drop-shadow(0 0 12px var(--agent-color));
+}
+.agent-jarvis .avatarFigure {
+  width: 150px;
+  height: 185px;
+}
+.avatarHead {
+  position: absolute;
+  top: 4%;
+  left: 30%;
+  width: 40%;
+  height: 45%;
+  border: 2px solid var(--agent-color);
+  border-radius: 45% 45% 40% 40%;
+  background: linear-gradient(100deg, transparent, color-mix(in srgb, var(--agent-color) 30%, transparent), transparent);
+}
+.avatarHead::after {
+  content: '';
+  position: absolute;
+  top: 42%;
+  left: 15%;
+  right: 15%;
+  height: 3px;
+  background: var(--agent-color);
+  box-shadow: 0 0 12px var(--agent-color);
+}
+.avatarBody {
+  position: absolute;
+  bottom: 0;
+  left: 8%;
+  width: 84%;
+  height: 47%;
+  border: 2px solid var(--agent-color);
+  border-radius: 48% 48% 12% 12%;
+  background: repeating-linear-gradient(
+    0deg, transparent 0 6px,
+    color-mix(in srgb, var(--agent-color) 18%, transparent) 7px 8px
+  );
+}
+.avatarScan {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(0deg, transparent 0 4px, #03060d66 5px 6px);
+  pointer-events: none;
+}
+.avatarBase {
+  width: 125px;
+  height: 20px;
+  margin: 8px 0 12px;
+  border: 1px solid var(--agent-color);
+  border-radius: 50%;
+  box-shadow: 0 0 16px color-mix(in srgb, var(--agent-color) 35%, transparent);
+}
+.agentPod > b {
+  font-size: 16px;
+  letter-spacing: 4px;
+}
+.agentPod > small {
+  margin-top: 6px;
+  font-size: 8px;
+  letter-spacing: 1px;
+}
+.agentLink {
+  position: absolute;
+  top: 55%;
+  height: 1px;
+  width: 17%;
+  opacity: .6;
+  z-index: -1;
+}
+.linkLeft {
+  left: 25%;
+  background: linear-gradient(90deg, #66dfff, #ff547e);
+}
+.linkRight {
+  right: 25%;
+  background: linear-gradient(90deg, #ff547e, #bd8aff);
+}
+.controlCard > p:nth-of-type(-n+3) {
+  display: none;
+}
+@media(max-width:760px), (max-height:650px) {
+  .agentScene { inset: 45px 3% 145px; gap: 4px; }
+  .agentPod { height: 175px; }
+  .agent-jarvis { height: 200px; }
+  .avatarFigure { width: 90px; height: 115px; }
+  .agent-jarvis .avatarFigure { width: 110px; height: 135px; }
+  .avatarHalo { width: 95px; height: 95px; }
+  .avatarBase { width: 85px; margin-bottom: 8px; }
+  .agentPod > b { font-size: 12px; letter-spacing: 2px; }
+  .agentPod > small { font-size: 7px; }
+}
+
+/* AJAN KONUŞMA TEPKİSİ */
+.agentPod.isSpeaking .avatarHalo {
+  opacity: .85;
+  border-width: 2px;
+  animation: agentSpeechPulse 1s ease-in-out infinite;
+}
+.agentPod.isSpeaking .avatarFigure {
+  animation: agentSpeechGlow .8s ease-in-out infinite alternate;
+}
+.agentPod.isSpeaking .avatarHead::after {
+  animation: agentVoiceLine .45s ease-in-out infinite alternate;
+}
+.agentPod.isSpeaking > b {
+  text-shadow: 0 0 16px var(--agent-color);
+}
+.agentPod.isSpeaking .avatarBase {
+  background: color-mix(in srgb, var(--agent-color) 18%, transparent);
+  box-shadow: 0 0 24px var(--agent-color);
+}
+@keyframes agentSpeechPulse {
+  0%,100% { transform: scale(1); opacity: .55; }
+  50% { transform: scale(1.12); opacity: 1; }
+}
+@keyframes agentSpeechGlow {
+  from { filter: drop-shadow(0 0 8px var(--agent-color)); }
+  to { filter: drop-shadow(0 0 20px var(--agent-color)); }
+}
+@keyframes agentVoiceLine {
+  from { transform: scaleX(.65); opacity: .6; }
+  to { transform: scaleX(1); opacity: 1; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .agentPod.isSpeaking .avatarHalo,
+  .agentPod.isSpeaking .avatarFigure,
+  .agentPod.isSpeaking .avatarHead::after {
+    animation: none;
+  }
+}
+
+.controlCard > p[role="alert"] {
+  display: block !important;
+  color: #ffb4c6;
+  background: #35101b;
+  border: 1px solid #ff547e;
+  padding: 10px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* GERÇEK AJAN DURUMLARI */
+.agentStatus {
+  margin-top:8px;
+  padding:4px 8px;
+  border-radius:5px;
+  color:var(--agent-color);
+  background:#060b16;
+  border:1px solid color-mix(in srgb,var(--agent-color) 35%,transparent);
+  font-size:10px;
+  text-align:center;
+}
+.agentPod.isWorking:not(.isSpeaking) .avatarHalo {
+  animation:agentWorkPulse 1.8s ease-in-out infinite;
+}
+.agentPod.isWorking .agentStatus {
+  box-shadow:0 0 12px color-mix(in srgb,var(--agent-color) 35%,transparent);
+}
+.agentPod.hasError:not(.isSpeaking) .agentStatus {
+  color:#ffd0ab;
+  border-color:#ff9b54;
+}
+@keyframes agentWorkPulse {
+  0%,100% {opacity:.35;transform:scale(1)}
+  50% {opacity:.85;transform:scale(1.06)}
+}
+@media(prefers-reduced-motion:reduce) {
+  .agentPod.isWorking:not(.isSpeaking) .avatarHalo {animation:none}
+}
+
+/* TABLET İÇİN BÜYÜK MİKROFON */
+.commandBar {
+  height:60px;
+  grid-template-columns:62px minmax(0,1fr) 48px;
+  padding:3px;
+  gap:4px;
+  border-radius:16px;
+}
+.commandBar .mic {
+  display:grid;
+  place-items:center;
+  width:52px;
+  height:52px;
+  border:1px solid #ff648a;
+  border-radius:50%;
+  background:radial-gradient(circle at 35% 25%,#662443,#210b1b 75%);
+  color:#ffd4e0;
+  box-shadow:inset 0 1px 0 #ffffff22,0 0 14px #ff386633;
+  cursor:pointer;
+  touch-action:manipulation;
+}
+.commandBar .mic.active {
+  background:radial-gradient(circle,#a52950,#380f24);
+  box-shadow:0 0 22px #ff386680;
+  color:#fff;
+}
+.commandBar .mic:focus-visible {
+  outline:3px solid #82e5ff;
+  outline-offset:3px;
+}
+.commandBar input {
+  min-width:0;
+  font-size:13px;
+}
+.commandBar .send {
+  min-height:44px;
+  font-size:22px;
+}
+.stage .quickRow { bottom:80px; }
+.stage .reply { bottom:120px; }
+.stage .agentScene { bottom:200px; }
+
+/* LARA mavi, VERA altın sarısı */
+.agent-atlas {
+  --agent-color:#66dfff;
+}
+.agent-nexus {
+  --agent-color:#ffd45c;
+}
+.linkLeft {
+  background:linear-gradient(90deg,#66dfff,#ff547e);
+}
+.linkRight {
+  background:linear-gradient(90deg,#ff547e,#ffd45c);
+}
+
+/* LARA: soğuk çelik mavisi */
+.agent-atlas {
+  --agent-color:#8BA7D9;
+}
+.linkLeft {
+  background:linear-gradient(90deg,#8BA7D9,#ff547e);
+}
+
+/* Parlak ajan renkleri */
+.agent-jarvis { --agent-color:#F4FAFF; }
+.agent-atlas  { --agent-color:#FF4669; }
+.agent-nexus  { --agent-color:#FFE36B; }
+
+.linkLeft {
+  background:linear-gradient(90deg,#FF4669,#F4FAFF);
+  box-shadow:0 0 9px #ff466966;
+}
+.linkRight {
+  background:linear-gradient(90deg,#F4FAFF,#FFE36B);
+  box-shadow:0 0 9px #ffe36b66;
+}
+
+.agentPod .avatarFigure {
+  filter:drop-shadow(0 0 10px var(--agent-color));
+}
+.agentPod .avatarHead,
+.agentPod .avatarBody {
+  border-width:2px;
+}
+.agentPod .avatarHalo {
+  opacity:.65;
+  box-shadow:0 0 24px color-mix(in srgb,var(--agent-color) 25%,transparent);
+}
+.agentPod > b {
+  font-weight:700;
+  text-shadow:0 0 14px var(--agent-color);
+}
+.agentPod .avatarBase {
+  box-shadow:0 0 22px color-mix(in srgb,var(--agent-color) 45%,transparent);
+}
+.agentPod.isSpeaking .avatarHalo {
+  opacity:1;
+}
+
+/* DETAYLI ROBOT PORTRELERİ */
+.agentPod .avatarFigure {
+  width:150px;
+  height:180px;
+  overflow:visible;
+  color:var(--agent-color);
+  filter:none;
+}
+.agent-jarvis .avatarFigure {
+  width:175px;
+  height:210px;
+}
+.robotPortrait {
+  display:block;
+  width:100%;
+  height:100%;
+  overflow:visible;
+}
+.robotEyes,
+.robotCore {
+  filter:drop-shadow(0 0 4px var(--agent-color));
+}
+.agentPod .avatarHalo {
+  top:5%;
+  width:165px;
+  height:165px;
+  opacity:.25;
+}
+.agentPod.isSpeaking .avatarFigure {
+  animation:none;
+  filter:none;
+}
+.agentPod.isSpeaking .robotEyes,
+.agentPod.isSpeaking .robotCore {
+  animation:robotVoiceLight .8s ease-in-out infinite alternate;
+}
+@keyframes robotVoiceLight {
+  from {opacity:.6}
+  to {opacity:1;filter:drop-shadow(0 0 8px var(--agent-color))}
+}
+@media(max-width:760px), (max-height:650px) {
+  .agentPod .avatarFigure {width:110px;height:132px}
+  .agent-jarvis .avatarFigure {width:130px;height:156px}
+  .agentPod .avatarHalo {width:115px;height:115px}
+}
+@media(prefers-reduced-motion:reduce) {
+  .agentPod.isSpeaking .robotEyes,
+  .agentPod.isSpeaking .robotCore {animation:none}
+}
