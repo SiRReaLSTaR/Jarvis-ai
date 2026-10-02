@@ -288,8 +288,9 @@ function routeTask(message = "") {
    * Multi-Speaker modu devreye girer.
    */
   if (
-    mentionedAgentCount >= 2 &&
-    multiSpeakerIntent
+    (mentionedAgentCount >= 2 && multiSpeakerIntent) ||
+    (mentionedAgentCount === 0 &&
+      exactAgent(text, ["kızlar", "kizlar", "hepiniz", "üçünüz", "ucunuz"]))
   ) {
     return {
       mode: "multi-speaker",
@@ -691,7 +692,11 @@ async function createMultiSpeakerTurns(message, memory = "") {
 
       return { ...agent, position };
     })
-    .filter((agent) => agent.position !== Infinity)
+    .filter((agent) =>
+      agent.position !== Infinity ||
+      (exactAgent(normalized, ["kızlar", "kizlar", "hepiniz", "üçünüz", "ucunuz"]) &&
+       !exactAgent(normalized, ["dilan", "dılan", "jarvis", "lara", "atlas", "vera", "nexus"]))
+    )
     .sort((a, b) => a.position - b.position);
 
   // ⚡ HIZLI KİMLİK MODU
@@ -716,7 +721,7 @@ async function createMultiSpeakerTurns(message, memory = "") {
     return requestedAgents.map((agent) => ({
       speaker: agent.speaker,
       name: agent.name,
-      text: `Ben ${agent.name}'ım.`,
+      text: `Ben ${agent.name.charAt(0) + agent.name.slice(1).toLocaleLowerCase("tr-TR")}.`,
     }));
   }
 

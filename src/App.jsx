@@ -855,7 +855,7 @@ function speak(text, speaker = 'jarvis'){
     speech.lang = 'tr-TR'
   }
 
-  speech.rate = agent.rate
+  speech.rate = 1.20
   speech.pitch = agent.pitch
   speech.volume = agent.volume
 
@@ -913,7 +913,7 @@ function speak(text, speaker = 'jarvis'){
             speech.lang='tr-TR'
           }
 
-          speech.rate=agent.rate
+          speech.rate = 1.20
           speech.pitch=agent.pitch
           speech.volume=agent.volume
 
