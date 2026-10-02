@@ -1317,7 +1317,7 @@ app.post('/api/chat', chatLimit, async (req, res) => {
     task.status = result.route.includes('fallback') || result.route.includes('partial') ? 'partial' : 'completed';
     task.route = result.route; task.agents = result.agents; task.finishedAt = new Date().toISOString();
     store.state.lastSuccess = task.finishedAt;
-    store.state.history.push({ role: 'user', content: message }, { role: 'assistant', content: result.reply });
+    store.state.history.push({ role: 'user', content: message }, { role: 'assistant', content: result.reply, speaker: result.speaker, turns: result.turns || [] });
     store.state.history = store.state.history.slice(-40);
     store.save();
     res.json({ ...result, sources: run.sources, task });
