@@ -1,0 +1,72 @@
+/* Geniş sohbet alanı ve köşe avatarları */
+.stage .stageTitle {display:none}
+.stage .agentScene {inset:12px 12px 76px;display:block;pointer-events:none;z-index:3}
+.stage .agentPod {position:absolute;width:92px;height:126px;justify-content:flex-end;gap:2px}
+.stage .agent-atlas {top:0;left:0}
+.stage .agent-nexus {top:0;right:0}
+.stage .agent-jarvis {bottom:0;left:0}
+.stage .agentPod .avatarFigure {width:66px;height:79px;flex-shrink:0}
+.stage .agentPod .avatarHalo {top:4px;width:72px;height:72px}
+.stage .agentPod .avatarBase,.stage .agentLink {display:none}
+.stage .agentPod > b {font-size:11px;letter-spacing:2px;margin:0}
+.stage .agentPod > small {font-size:6px;margin:0}
+.stage .agentStatus {font-size:8px;max-width:92px;text-align:center}
+.stage .quickRow {display:none}
+.stage .commandBar {left:12px;right:12px;bottom:12px;height:52px}
+.chatWorkspace {position:absolute;inset:16px 114px 78px;z-index:4;min-height:0}
+.chatMessages {height:100%;overflow-y:auto;overscroll-behavior:contain;padding:8px 12px 36px;scrollbar-width:thin;scrollbar-color:#6b3448 transparent}
+.chatMessage {border:1px solid #ffffff18;border-radius:14px;background:#10121ce8;margin:0 0 14px;padding:14px;color:#edf2fa;min-width:0;box-shadow:0 6px 20px #0003}
+.chatMessage.fromUser {background:#242031;margin-left:12%;border-color:#ffffff25}
+.chatMessage.fromAgent {border-left:3px solid var(--agent-color,#f4faff)}
+.chatMessage header,.chatCode header,.expandedCode header {display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.chatMessage header b {font-size:11px;letter-spacing:2px;color:var(--agent-color,#dfe8f5)}
+.chatMessage button,.expandedCode button,.newChatMessage {border:1px solid #ffffff30;border-radius:7px;background:#ffffff09;color:#eef4ff;padding:8px 10px;cursor:pointer;font:inherit;font-size:11px;min-height:34px}
+.chatMessage button:focus-visible,.expandedCode button:focus-visible,.newChatMessage:focus-visible {outline:2px solid #ffe36b;outline-offset:2px}
+.chatProse {white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;line-height:1.75;user-select:text}
+.chatCode {margin:12px 0;border:1px solid #ffe36b40;border-radius:10px;overflow:hidden;background:#080c13}
+.chatCode header {padding:9px 12px;margin:0;background:#ffe36b0b;font-size:11px;color:#ffe36b}
+.chatCode header div,.expandedCode header div {display:flex;gap:6px}
+.chatCode pre,.expandedCode pre {margin:0;padding:16px;overflow:auto;text-align:left;direction:ltr;white-space:pre;font:13px/1.7 monospace;user-select:text}
+.chatWelcome {padding:30px 10px;color:#adb5c6;font-size:14px;line-height:1.8;text-align:center}
+.chatNotice {color:#bac5d6;font-size:13px;line-height:1.7}
+.newChatMessage {position:absolute;bottom:8px;left:50%;transform:translateX(-50%);background:#30202b;box-shadow:0 4px 16px #0009}
+.expandedCode {width:min(900px,90vw);max-height:85dvh;box-sizing:border-box;background:#10141f;color:#f2f6ff;border:1px solid #ffe36b70;border-radius:14px;padding:18px}
+.expandedCode::backdrop {background:#000b}
+.expandedCode pre {max-height:65dvh}
+@media(max-width:760px){
+ .stage .agentScene {inset:8px 6px 76px}
+ .stage .agentPod {width:64px;height:98px}
+ .stage .agentPod .avatarFigure {width:44px;height:53px}
+ .stage .agentPod .avatarHalo {width:48px;height:48px}
+ .stage .agentPod > small {display:none}
+ .stage .agentPod > b {font-size:9px}
+ .stage .agentStatus {font-size:7px;max-width:64px}
+ .chatWorkspace {inset:10px 76px 78px}
+ .chatMessages {padding:4px 0 36px}
+ .chatMessage {padding:10px;margin-bottom:10px}
+ .chatMessage.fromUser {margin-left:3%}
+ .chatProse {font-size:13px}
+ .chatMessage header {gap:4px}
+}
+@media(max-width:480px){
+ .stage .agentScene {bottom:auto;height:80px}
+ .stage .agent-jarvis {top:0;bottom:auto;left:calc(50% - 32px)}
+ .stage .agentPod {height:78px}
+ .stage .agentStatus {display:none}
+ .chatWorkspace {inset:94px 10px 78px}
+}
+
+/* Sohbet kartları içeriğe göre uzasın */
+.chatMessages .chatMessage {
+  position: relative;
+  display: block;
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  overflow: visible;
+}
+.chatMessages .chatProse {
+  position: static;
+  height: auto;
+  max-height: none;
+}
