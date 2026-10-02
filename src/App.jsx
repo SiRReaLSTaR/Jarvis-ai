@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import './App.css'
+import ChatPanel from './ChatPanel'
 
 const SITE_ACTIONS = [
   { names:['youtube'], label:'YouTube', web:'https://www.youtube.com', ios:'youtube://', android:'vnd.youtube://' },
@@ -755,7 +756,10 @@ function App(){
     event.target.value=''
   }
   const [command,setCommand] = useState('')
-  const [reply,setReply] = useState('Sistemler çevrimiçi. Komutunu bekliyorum Mustafa.')
+  const [reply,setReplyValue] = useState('Sistemler çevrimiçi. Komutunu bekliyorum Mustafa.')
+  const [chatNotice,setChatNotice] = useState('')
+  const [pendingUser,setPendingUser] = useState('')
+  function setReply(text){setReplyValue(text);setChatNotice(String(text || ''))}
   const [loading,setLoading] = useState(false)
   const [listening,setListening] = useState(false)
   const [speaking,setSpeaking] = useState(false)
@@ -851,7 +855,7 @@ function speak(text, speaker = 'jarvis'){
     speech.lang = 'tr-TR'
   }
 
-  speech.rate = agent.rate
+  speech.rate = 1.20
   speech.pitch = agent.pitch
   speech.volume = agent.volume
 
@@ -909,7 +913,7 @@ function speak(text, speaker = 'jarvis'){
             speech.lang='tr-TR'
           }
 
-          speech.rate=agent.rate
+          speech.rate = 1.20
           speech.pitch=agent.pitch
           speech.volume=agent.volume
 
@@ -1108,6 +1112,7 @@ function speak(text, speaker = 'jarvis'){
     setCommand('')
     if(localAction(clean)) return
 
+    setPendingUser(clean)
     setLoading(true)
     setReply('İşleniyor…')
     try{
@@ -1127,6 +1132,7 @@ function speak(text, speaker = 'jarvis'){
 
         console.log('🧠 Multi-Speaker:',data.turns.map(turn=>turn.speaker).join(' → '))
         setReply(transcript)
+        setChatNotice('')
         await speakTurns(data.turns)
       }else{
         const answer=data.reply || data.message || data.text || 'Yanıt alınamadı.'
@@ -1135,6 +1141,7 @@ function speak(text, speaker = 'jarvis'){
         console.log('🧠 Aktif ajan:',speaker)
 
         setReply(answer)
+        setChatNotice('')
         speak(answer,speaker)
       }
     }catch(e){
@@ -1142,6 +1149,7 @@ function speak(text, speaker = 'jarvis'){
       setReply(e.message || 'Bağlantıda sorun oluştu.')
     }finally{
       setLoading(false)
+      setPendingUser('')
       refreshState()
     }
   }
@@ -1421,11 +1429,7 @@ function speak(text, speaker = 'jarvis'){
           <div className="agentLink linkRight"/>
         </div>
 
-<div className="reply glass">
-          <div className="replyIcon">J</div>
-          <div className="replyText"><b>JARVIS // {stateLabel}</b><p>{reply}</p></div>
-          <div className={`wave ${speaking||listening?'active':''}`}>{Array.from({length:18},(_,i)=><i key={i} style={{'--i':i}}/>)}</div>
-        </div>
+<ChatPanel historyReady={memoryBridge.ready} history={history} notice={chatNotice} loading={loading} pendingUser={pendingUser}/>
 
         <div className="quickRow">
           {QUICK.slice(0,5).map(([ic,n,u])=><button key={n} className="quickButton" onClick={()=>{const a=appByName(n);if(a)launchApp(a,u);else openExternal(u)}}><span>{ic}</span><b>{n}</b><i/></button>)}

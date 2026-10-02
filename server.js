@@ -288,8 +288,9 @@ function routeTask(message = "") {
    * Multi-Speaker modu devreye girer.
    */
   if (
-    mentionedAgentCount >= 2 &&
-    multiSpeakerIntent
+    (mentionedAgentCount >= 2 && multiSpeakerIntent) ||
+    (mentionedAgentCount === 0 &&
+      exactAgent(text, ["kızlar", "kizlar", "hepiniz", "üçünüz", "ucunuz"]))
   ) {
     return {
       mode: "multi-speaker",
@@ -691,7 +692,11 @@ async function createMultiSpeakerTurns(message, memory = "") {
 
       return { ...agent, position };
     })
-    .filter((agent) => agent.position !== Infinity)
+    .filter((agent) =>
+      agent.position !== Infinity ||
+      (exactAgent(normalized, ["kızlar", "kizlar", "hepiniz", "üçünüz", "ucunuz"]) &&
+       !exactAgent(normalized, ["dilan", "dılan", "jarvis", "lara", "atlas", "vera", "nexus"]))
+    )
     .sort((a, b) => a.position - b.position);
 
   // ⚡ HIZLI KİMLİK MODU
@@ -716,7 +721,7 @@ async function createMultiSpeakerTurns(message, memory = "") {
     return requestedAgents.map((agent) => ({
       speaker: agent.speaker,
       name: agent.name,
-      text: `Ben ${agent.name}'ım.`,
+      text: `Ben ${agent.name.charAt(0) + agent.name.slice(1).toLocaleLowerCase("tr-TR")}.`,
     }));
   }
 
@@ -1317,7 +1322,7 @@ app.post('/api/chat', chatLimit, async (req, res) => {
     task.status = result.route.includes('fallback') || result.route.includes('partial') ? 'partial' : 'completed';
     task.route = result.route; task.agents = result.agents; task.finishedAt = new Date().toISOString();
     store.state.lastSuccess = task.finishedAt;
-    store.state.history.push({ role: 'user', content: message }, { role: 'assistant', content: result.reply });
+    store.state.history.push({ role: 'user', content: message }, { role: 'assistant', content: result.reply, speaker: result.speaker, turns: result.turns || [] });
     store.state.history = store.state.history.slice(-40);
     store.save();
     res.json({ ...result, sources: run.sources, task });
