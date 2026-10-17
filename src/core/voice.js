@@ -103,7 +103,7 @@ const index = agent.voiceIndex % voices.length
 return voices[index] || voices[0]
 }
 
-export function createVoiceController({listening, setListening, setSpeaking, setActiveSpeaker, setCommand, setReply, recognitionRef, conversationModeRef, voiceGeneration, askJarvis}) {
+export function createVoiceController({listening, setListening, setSpeaking, setActiveSpeaker, setCommand, setReply, recognitionRef, conversationModeRef, voiceGeneration, askJarvis, speechRate = 1.20}) {
   function stopVoice(){
     conversationModeRef.current=false; voiceGeneration.current++
     recognitionRef.current?.abort(); window.speechSynthesis?.cancel()
@@ -129,7 +129,7 @@ function speak(text, speaker = 'jarvis'){
     speech.lang = 'tr-TR'
   }
 
-  speech.rate = 1.20
+  speech.rate = Math.max(0.7, Math.min(1.5, speechRate))
   speech.pitch = agent.pitch
   speech.volume = agent.volume
 
@@ -187,7 +187,7 @@ function speak(text, speaker = 'jarvis'){
             speech.lang='tr-TR'
           }
 
-          speech.rate = 1.20
+          speech.rate = Math.max(0.7, Math.min(1.5, speechRate))
           speech.pitch=agent.pitch
           speech.volume=agent.volume
 
@@ -300,3 +300,4 @@ function speak(text, speaker = 'jarvis'){
 
 return {stopVoice,speak,speakTurns,startConversation}
 }
+

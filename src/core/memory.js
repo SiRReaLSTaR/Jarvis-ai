@@ -24,15 +24,26 @@ function loadJarvisMemory(){
   }
 }
 
-function saveJarvisMemory(data){
-  try{
-    window.localStorage.setItem(JARVIS_MEMORY_KEY,JSON.stringify(data))
-    if(memoryBridge.ready) memoryBridge.pending = memoryBridge.pending.catch(()=>{}).then(()=>api('/api/memory',{method:'PUT',body:JSON.stringify(data)}))
-    return !!window.localStorage.getItem(JARVIS_MEMORY_KEY)
-  }catch(e){
-    console.error('Memory write error:',e)
-    return false
-  }
+async function saveJarvisMemory(data){
+  if(!memoryBridge.ready) throw new Error('Hafıza için sunucuya bağlanın.')
+  const expectedRevision=memoryBridge.revision
+  memoryBridge.writes++
+  const work=memoryBridge.pending.catch(()=>{}).then(async()=>{
+    try {
+      const response=await api('/api/memory',{method:'PUT',body:JSON.stringify({memory:data,revision:expectedRevision})})
+      memoryBridge.revision=response.revision
+      window.localStorage.setItem(JARVIS_MEMORY_KEY,JSON.stringify(data))
+      return true
+    } catch(error) {
+      if(error.state){
+        memoryBridge.revision=error.state.revision
+        window.localStorage.setItem(JARVIS_MEMORY_KEY,JSON.stringify(error.state.memory))
+      }
+      throw error
+    } finally { memoryBridge.writes-- }
+  })
+  memoryBridge.pending=work
+  return work
 }
 
 function memoryBucket(type='memory'){
@@ -45,7 +56,7 @@ function memoryBucket(type='memory'){
   }[type] || 'memories'
 }
 
-function addJarvisMemory(text,type='memory'){
+async function addJarvisMemory(text,type='memory'){
   const value=String(text||'').trim()
   if(!value) return {ok:false,duplicate:false}
 
@@ -65,7 +76,7 @@ function addJarvisMemory(text,type='memory'){
     updatedAt:new Date().toISOString()
   })
 
-  if(!saveJarvisMemory(data)) return {ok:false,duplicate:false}
+  if(!await saveJarvisMemory(data)) return {ok:false,duplicate:false}
   const check=loadJarvisMemory()
   return {ok:check[bucket].some(x=>commandText(x.text)===normalizedValue),duplicate:false}
 }
@@ -110,15 +121,15 @@ function findBestMemoryMatch(data,term){
   return best && (best.score===100 || best.score>=0.5) ? best : null
 }
 
-function removeJarvisMemory(term){
+async function removeJarvisMemory(term){
   const data=loadJarvisMemory()
   const match=findBestMemoryMatch(data,term)
   if(!match) return 0
   data[match.key].splice(match.index,1)
-  return saveJarvisMemory(data) ? 1 : 0
+  return await saveJarvisMemory(data) ? 1 : 0
 }
 
-function moveJarvisMemory(term,targetType='memory'){
+async function moveJarvisMemory(term,targetType='memory'){
   const data=loadJarvisMemory()
   const target=memoryBucket(targetType)
   const match=findBestMemoryMatch(data,term)
@@ -180,3 +191,4 @@ function jarvisMemoryReport(){
 
 
 export { JARVIS_MEMORY_KEY, loadJarvisMemory, addJarvisMemory, removeJarvisMemory, moveJarvisMemory, detectMemoryType, typeLabel, jarvisMemoryReport }
+

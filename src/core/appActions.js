@@ -58,7 +58,7 @@ export function createAppActions({lastLaunchRef,conversationModeRef,recognitionR
     return SITE_ACTIONS.find(s=>s.names.some(n=>q.includes(n)))
   }
 
-  function localAction(raw){
+  async function localAction(raw){
     if(hasOpenIntent(raw)){
       const app=tabletAppFromCommand(raw)
       if(app){
@@ -96,7 +96,7 @@ export function createAppActions({lastLaunchRef,conversationModeRef,recognitionR
         :/fikir/.test(cq)?'idea'
         :/tercih/.test(cq)?'preference'
         :'memory'
-      const ok=moveJarvisMemory(phrase,target)
+      const ok=await moveJarvisMemory(phrase,target)
       const x=ok
         ? `Kaydı ${target==='task'?'Görevler':target==='project'?'Projeler':target==='idea'?'Fikirler':target==='preference'?'Tercihler':'Hafıza'} bölümüne taşıdım Mustafa.`
         : 'Taşımak istediğin kaydı bulamadım Mustafa.'
@@ -110,7 +110,7 @@ export function createAppActions({lastLaunchRef,conversationModeRef,recognitionR
         .replace(/\b(bunu|şunu|sunu)\b/ig,'')
         .trim()
       if(value){
-        const n=removeJarvisMemory(value)
+        const n=await removeJarvisMemory(value)
         const x=n ? `${n} kayıt hafızadan silindi.` : 'Bu ifadeyle eşleşen bir kayıt bulamadım.'
         setReply(x); speak(x); return true
       }
@@ -127,7 +127,7 @@ export function createAppActions({lastLaunchRef,conversationModeRef,recognitionR
 
       if(value){
         const type=detectMemoryType(value)
-        const result=addJarvisMemory(value,type)
+        const result=await addJarvisMemory(value,type)
         const x=!result.ok
           ? 'Hafızaya yazamadım Mustafa. Tarayıcı depolamasını kontrol etmemiz gerekiyor.'
           : result.duplicate
@@ -142,7 +142,7 @@ export function createAppActions({lastLaunchRef,conversationModeRef,recognitionR
     if(explicit?.[2]){
       const head=commandText(explicit[1])
       const type=/proje/.test(head)?'project':/fikir/.test(head)?'idea':/(görev|gorev|yapılacak|yapilacak)/.test(head)?'task':'preference'
-      const result=addJarvisMemory(explicit[2],type)
+      const result=await addJarvisMemory(explicit[2],type)
       const x=!result.ok
         ? `${typeLabel(type)} hafızaya yazamadım.`
         : result.duplicate
@@ -170,11 +170,11 @@ export function createAppActions({lastLaunchRef,conversationModeRef,recognitionR
     }
 
     if(/saat kaç|saati söyle|saat nedir/.test(q)){
-      const x=`Saat ${time.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'})}.`
+      const x=`Saat ${new Date().toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'})}.`
       setReply(x); speak(x); return true
     }
     if(/bugünün tarihi|tarih ne|hangi gün/.test(q)){
-      const x=`Bugün ${dateText}.`
+      const x=`Bugün ${new Date().toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric',weekday:'long'})}.`
       setReply(x); speak(x); return true
     }
 
@@ -214,3 +214,4 @@ export function createAppActions({lastLaunchRef,conversationModeRef,recognitionR
 
 return {openExternal,launchApp,appByName,localAction}
 }
+
