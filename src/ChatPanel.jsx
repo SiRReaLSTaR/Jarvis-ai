@@ -27,41 +27,21 @@ function MessageText({text,onExpand}) {
     </section>
   })
 }
-export default function ChatPanel({history: archivedHistory,historyReady,notice,loading,pendingUser}) {
-  const previousHistory=useRef(null)
-  const [history,setVisibleHistory]=useState([])
-  useEffect(()=>{
-    if(!historyReady) return
-    const next=archivedHistory || []
-    const previous=previousHistory.current
-    previousHistory.current=next
-    if(previous===null) return
-    if(!next.length){setVisibleHistory([]);return}
-    let overlap=0
-    for(let size=Math.min(previous.length,next.length);size>0;size--){
-      if(JSON.stringify(previous.slice(-size))===JSON.stringify(next.slice(0,size))){
-        overlap=size
-        break
-      }
-    }
-    const added=next.slice(overlap)
-    if(added.length) setVisibleHistory(items=>[...items,...added])
-  },[archivedHistory,historyReady])
-
+export default function ChatPanel({history: archivedHistory,historyReady,notice,loading,pendingUser,drafts={},names={atlas:'LARA',jarvis:'DİLAN',nexus:'VERA'}}) {
+  const history=historyReady ? archivedHistory || [] : []
   const scrollRef=useRef(null),nearBottom=useRef(true)
   const [unread,setUnread]=useState(false),[expanded,setExpanded]=useState(null)
   const dialogRef=useRef(null)
-  const signature=JSON.stringify([history,notice,loading,pendingUser])
+  const signature=JSON.stringify([history,notice,loading,pendingUser,drafts])
   useEffect(()=>{
     if(nearBottom.current){const el=scrollRef.current;if(el)el.scrollTop=el.scrollHeight;setUnread(false)}
     else setUnread(true)
   },[signature])
   useEffect(()=>{if(expanded)dialogRef.current?.showModal()},[expanded])
   const messages=history.flatMap((item,index)=>{
-    if(item.role==='assistant' && item.turns?.length) return item.turns.map((turn,j)=>({key:`${index}-${j}`,role:'assistant',speaker:turn.speaker,content:turn.text}))
+    if(item.role==='assistant' && item.turns?.length) return item.turns.map((turn,j)=>({key:`${index}-${j}`,role:'assistant',speaker:turn.speaker,content:turn.text,sources:item.sources}))
     return [{...item,key:String(index)}]
   })
-  const names={atlas:'LARA',jarvis:'DİLAN',nexus:'VERA'}
   return <div className="chatWorkspace">
     <div className="chatMessages" ref={scrollRef} role="log" aria-label="Sohbet geçmişi" aria-live="polite" onScroll={()=>{
       const el=scrollRef.current;nearBottom.current=el.scrollHeight-el.scrollTop-el.clientHeight<60
@@ -71,8 +51,11 @@ export default function ChatPanel({history: archivedHistory,historyReady,notice,
       {messages.map(item=><article className={`chatMessage ${item.role==='user'?'fromUser':`fromAgent agent-${item.speaker || 'jarvis'}`}`} key={item.key}>
         <header><b>{item.role==='user'?'SEN':names[item.speaker] || 'JARVIS'}</b><CopyButton text={item.content || ''}/></header>
         <MessageText text={item.content || ''} onExpand={setExpanded}/>
+        {item.imageAttached && <small>Fotoğraf eklendi (görüntü saklanmadı).</small>}
+        {item.sources?.length>0 && <details><summary>Kaynaklar</summary>{item.sources.filter(s=>/^https?:\/\//.test(s.url)).map(s=><p key={s.url}><a href={s.url} target="_blank" rel="noreferrer">{s.title}</a></p>)}</details>}
       </article>)}
       {pendingUser && history.at(-2)?.content!==pendingUser && <article className="chatMessage fromUser"><header><b>SEN</b></header><div className="chatProse">{pendingUser}</div></article>}
+      {Object.entries(drafts).map(([speaker,text])=><article className={`chatMessage fromAgent agent-${speaker}`} key={`draft-${speaker}`}><header><b>{speaker === 'user' ? 'SEN' : names[speaker] || 'JARVIS'} · Canlı taslak</b></header><MessageText text={text} onExpand={setExpanded}/></article>)}
       {loading && <div className="chatNotice" role="status">Yanıt hazırlanıyor…</div>}
       {!loading && notice && <article className="chatMessage chatNotice"><header><b>JARVIS</b><CopyButton text={notice}/></header><MessageText text={notice} onExpand={setExpanded}/></article>}
     </div>
@@ -85,3 +68,4 @@ export default function ChatPanel({history: archivedHistory,historyReady,notice,
     </dialog>}
   </div>
 }
+

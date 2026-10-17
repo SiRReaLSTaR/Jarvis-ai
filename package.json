@@ -11,7 +11,9 @@
     "server": "node server.js",
     "test": "node --test",
     "start": "node server.js",
-    "jarvis": "node scripts/start-jarvis.mjs"
+    "jarvis": "node scripts/start-jarvis.mjs",
+    "test:unit": "node --test test/modules.test.js test/runtime.test.js test/upgrade.test.js test/live.test.js",
+    "test:integration": "node --test test/integration.test.js"
   },
   "dependencies": {
     "@google/genai": "^2.24.0",
