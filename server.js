@@ -1,3 +1,6 @@
+import { randomUUID } from 'node:crypto';
+import { createTodoService, todoCommand } from './lib/todos.js';
+import { retainHistory } from './lib/agent-context.js';
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -33,7 +36,8 @@ export function createApp({ store = createStore(process.env.JARVIS_DATA_DIR || '
   const gemini = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || 'not-configured', httpOptions: { timeout: 90_000 } });
   const providers = providersFactory({ gemini, context, GEMINI_MODEL: process.env.GEMINI_MODEL || 'gemini-3.5-flash-lite', OPENROUTER_MODEL: process.env.OPENROUTER_MODEL || 'openrouter/free', getSettings: () => store.state.settings, onState: states => hub.publish('agents', states) });
   const { orchestrate: agentOrchestrate } = createOrchestrator({ ...providers, getSettings: () => store.state.settings });
-  const live = createLiveService({ tokenClient: tokenClient || new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || 'not-configured', apiVersion: 'v1alpha', httpOptions: { timeout: 15_000 } }), state: store.state, save: store.save, publish: hub.publish, providers, context });
+  const todos = createTodoService({ state:store.state, save:store.save, publish:hub.publish });
+  const live = createLiveService({ tokenClient: tokenClient || new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || 'not-configured', apiVersion: 'v1alpha', httpOptions: { timeout: 15_000 } }), state: store.state, save: store.save, publish: hub.publish, providers, context, todos });
   const jobs = createJobs({ store, context, publish: hub.publish, orchestrate: (message, memory) => context.getStore()?.image ? providers.askJarvis(message, memory).then(reply => ({ reply, speaker: 'jarvis', route: 'vision', agents: ['jarvis'] })) : context.getStore()?.agent && context.getStore().agent !== 'jarvis' ? (context.getStore().agent === 'atlas' ? providers.askAtlas : providers.askNexus)(message, memory).then(reply => ({ reply, speaker: context.getStore().agent, route: 'selected-agent', agents: [context.getStore().agent] })) : agentOrchestrate(message, memory) });
   const status = () => ({ online: true, agentStates: providers.agentStates, lastSuccess: store.state.lastSuccess, screens: hub.size, active: jobs.active,
     dataSchemaVersion: SCHEMA_VERSION, recovery: store.state.recovery, usageMode: 'single-user',
@@ -41,6 +45,21 @@ export function createApp({ store = createStore(process.env.JARVIS_DATA_DIR || '
   app.get('/api/status', (_req, res) => res.json(status()));
   app.get('/api/events', hub.connect);
   app.get('/api/state', (_req, res) => res.json({ ...store.state, active: jobs.active }));
+  const todoFailure = (res, error) => res.status(error.status || 500).json({ error:error.status ? error.message : 'Görev işlemi tamamlanamadı.' });
+  app.get('/api/todos', (_req,res) => res.json({todos:todos.list()}));
+  app.post('/api/todos', (req,res) => {
+    try { res.status(201).json({todo:todos.create(req.body.todo, req.body.requestId)}); }
+    catch(error) { todoFailure(res,error); }
+  });
+  app.delete('/api/todos/:id', (req,res) => {
+    if (req.body.confirm !== true) return res.status(400).json({error:'Görev silme işlemini onaylayın.'});
+    try { res.json(todos.remove(req.params.id,req.body.version)); }
+    catch(error) { todoFailure(res,error); }
+  });
+  app.patch('/api/todos/:id', (req,res) => {
+    try { res.json({todo:todos.update(req.params.id,req.body.patch,req.body.version)}); }
+    catch(error) { todoFailure(res,error); }
+  });
   app.post('/api/recovery/ack', (_req,res) => {store.acknowledgeRecovery();hub.publish('state',store.state);res.json({ok:true});});
   app.put('/api/memory', (req, res) => {
     if (!validMemory(req.body.memory) || !Number.isSafeInteger(req.body.revision)) return res.status(400).json({ error: 'Geçersiz hafıza.' });
@@ -68,6 +87,19 @@ export function createApp({ store = createStore(process.env.JARVIS_DATA_DIR || '
     if (!Object.hasOwn(AGENTS, agent)) return res.status(400).json({ error: 'Geçersiz ajan.' });
     let clock;
     try { clock = clockSnapshot(req.body.timeZone || 'Europe/Istanbul'); } catch { return res.status(400).json({ error: 'Geçersiz saat dilimi.' }); }
+    if (!image) {
+      try {
+        const reply = todoCommand(req.body.message, todos, {timeZone:clock.timeZone, requestId:req.body.requestId || randomUUID()});
+        if (reply !== null) {
+          const previous = store.state.history;
+          store.state.history = retainHistory([...previous, {role:'user',agent,content:req.body.message.trim()}, {role:'assistant',agent,speaker:agent,content:reply}]);
+          try { store.save(); } catch { store.state.history=previous; } // The todo was already durably saved; never report a false mutation failure.
+          hub.publish('state',store.state);
+          hub.publish('reply',{reply,speaker:agent,origin:req.body.client});
+          return res.json({reply,speaker:agent,personalTask:true});
+        }
+      } catch(error) { return todoFailure(res,error); }
+    }
     const result = jobs.start(req.body.message.trim(), String(req.body.client || '').slice(0, 80), image, { agent, clock });
     if (!result) return res.status(409).json({ error: 'Önceki görev devam ediyor.' });
     res.status(202).json({ task: result.task });

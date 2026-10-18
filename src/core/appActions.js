@@ -1,3 +1,4 @@
+import {isTodoCommand} from '../../lib/todo-intent.js'
 import {SITE_ACTIONS,tabletAppFromCommand,normalize,commandText,hasOpenIntent,stripAction} from './commands.js'
 import {moveJarvisMemory,removeJarvisMemory,detectMemoryType,addJarvisMemory,typeLabel,jarvisMemoryReport} from './memory.js'
 export function createAppActions({lastLaunchRef,conversationModeRef,recognitionRef,setListening,setSpeaking,setReply,speak}) {
@@ -59,6 +60,8 @@ export function createAppActions({lastLaunchRef,conversationModeRef,recognitionR
   }
 
   async function localAction(raw){
+    // Personal tasks must reach the server, even when the text contains kaydet/sil/aç.
+    if(isTodoCommand(raw)) return false
     if(hasOpenIntent(raw)){
       const app=tabletAppFromCommand(raw)
       if(app){

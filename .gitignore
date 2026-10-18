@@ -26,3 +26,6 @@ dist-ssr
 .env.*
 !.env.example
 data/
+
+# Personal task upgrade source copies
+.task-notebook-original/

@@ -1,3 +1,4 @@
+import { isTodoCommand } from '../lib/todo-intent.js';
 import RecoveryNotice from './components/RecoveryNotice';
 import { useEffect, useRef, useState } from 'react';
 import './App.css';
@@ -65,13 +66,13 @@ export default function App() {
     if (/^(dur|sus|iptal et|konuşmayı durdur)$/i.test(clean)) { await cancelTask(); return; }
     try {
       if (live.active) { if (image) throw new Error('Fotoğraf göndermek için canlı konuşmayı kapatın.'); live.sendText(clean); setCommand(''); return; }
-      if (!image && hasOpenIntent(clean) && await actions.localAction(clean)) { setCommand(''); return; }
+      if (!image && !isTodoCommand(clean) && hasOpenIntent(clean) && await actions.localAction(clean)) { setCommand(''); return; }
       if (!memoryBridge.ready) { setNotice('Sunucuya bağlanın.'); return; }
       if (loading) return;
       setSubmitting(true);
-      if (!image && await actions.localAction(clean)) { setCommand(''); return; }
+      if (!image && !isTodoCommand(clean) && await actions.localAction(clean)) { setCommand(''); return; }
       await memoryBridge.pending;
-      await api('/api/chat', { method: 'POST', body: JSON.stringify({ message: clean, client: session.client, agent: selected, timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone, ...(image ? { image } : {}) }) });
+      await api('/api/chat', { method: 'POST', body: JSON.stringify({ message: clean, requestId: crypto.randomUUID(), client: session.client, agent: selected, timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone, ...(image ? { image } : {}) }) });
       setCommand(''); setImage(null); setNotice('');
       await session.refresh();
     } catch(e) { setNotice(e.message); }
@@ -105,7 +106,7 @@ export default function App() {
     <div className="spaceBackdrop" aria-hidden="true"><div className="nebula nebulaA"/><div className="nebula nebulaB"/><div className="stars starsFar"/><div className="stars starsNear"/></div>
     <div className="bg-grid"/><div className="scan"/>
     <RecoveryNotice recovery={saved?.recovery} onRefresh={session.refresh}/>
-    {screen === 'dashboard' ? <MissionControl state={saved} system={system} connected={session.connected} selected={selected} phase={phase} time={time} busy={loading} liveActive={live.active} error={session.error || live.error || notice} onSelect={chooseAgent} onHud={() => setScreen('hud')} onSettings={() => settingsDialog.current?.showModal()} onSend={text => { askJarvis(text); setScreen('hud'); }} onVoice={() => { setScreen('hud'); voice.stopVoice(); if (!live.active && !loading && !image) live.start(); }} onCancel={cancelTask} onExport={exportMemory}/> : <>
+    {screen === 'dashboard' ? <MissionControl state={saved} system={system} connected={session.connected} selected={selected} phase={phase} time={time} busy={loading} liveActive={live.active} error={session.error || live.error || notice} onSelect={chooseAgent} onHud={() => setScreen('hud')} onSettings={() => settingsDialog.current?.showModal()} onSend={text => { askJarvis(text); setScreen('hud'); }} onVoice={() => { setScreen('hud'); voice.stopVoice(); if (!live.active && !loading && !image) live.start(); }} onCancel={cancelTask} onExport={exportMemory} onRefresh={session.refresh}/> : <>
     <header className="topbar glass">
       <div className="hudBrand"><b>JARVIS</b><small>KİŞİSEL YAPAY ZEKA</small></div>
       <nav className="hudAgentTabs" aria-label="Asistan seçimi">{Object.entries(AGENTS).map(([id,a]) => <button type="button" key={id} style={{'--tab-color':a.color}} className={id === selected ? 'selected' : ''} aria-pressed={id === selected} onClick={() => chooseAgent(id)}><span className="hudTabRing" aria-hidden="true"/>{settings.profiles[id].name}</button>)}</nav>
@@ -162,7 +163,7 @@ export default function App() {
           <form onSubmit={e => { e.preventDefault(); saveSettings({ city: city.trim() || settings.city }); }}><label>Hava durumu şehri<input value={city} onChange={e => setCity(e.target.value)} placeholder={settings.city} maxLength={80}/></label><button>Şehri kaydet</button></form>
         </details>
         <details><summary>Hafıza</summary><p>{Object.values(saved?.memory || {}).reduce((n, items) => n + items.length, 0)} kayıt · Konuyla ilgili bilgiler seçilerek hatırlanır.</p><button onClick={exportMemory}>Yedeği indir</button><label>Yedekten yükle<input type="file" accept="application/json" onChange={importMemory}/></label><p>“Proje: …”, “Bunu unutma”, “Projelerim neler” diyebilirsin.</p></details>
-        <details><summary>Görevler ({saved?.tasks.length || 0})</summary>{saved?.tasks.slice(0, 20).map(task => <p key={task.id}>{task.message} — {({ running: 'Çalışıyor', completed: 'Yanıt hazır', partial: 'Kısmi sonuç', failed: 'Hata', interrupted: 'Kesintiye uğradı', cancelled: 'İptal edildi' })[task.status]}{task.error && <small>{task.error}</small>}</p>)}</details>
+        <details><summary>AI işlem kayıtları ({saved?.tasks.length || 0})</summary>{saved?.tasks.slice(0, 20).map(task => <p key={task.id}>{task.message} — {({ running: 'Çalışıyor', completed: 'Yanıt hazır', partial: 'Kısmi sonuç', failed: 'Hata', interrupted: 'Kesintiye uğradı', cancelled: 'İptal edildi' })[task.status]}{task.error && <small>{task.error}</small>}</p>)}</details>
         <button disabled={loading} onClick={async () => { try { await api('/api/history', { method: 'DELETE' }); await session.refresh(); } catch(e) { setNotice(e.message); } }}>Konuşma geçmişini temizle</button>
         {saved && <HomePanel sharedState={session.home}/>}
         <p className="railHint">VERA kod önerir; dosya veya terminal işlemi yapmaz. AI yanıtlarını önemli kararlardan önce doğrula.</p>

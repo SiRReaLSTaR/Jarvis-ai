@@ -15,7 +15,7 @@ test('HTTP: renamed status, classified quota errors, pre-import checkpoint, reco
   const base=`http://127.0.0.1:${server.address().port}`,headers={authorization:'Bearer test-reliability-token','content-type':'application/json'};
   const call=(path,body)=>fetch(base+path,{headers,...(body!==undefined?{method:'POST',body:JSON.stringify(body)}:{})});
   try {
-    const status=await (await call('/api/status')).json();assert.equal(status.agents.jarvis.name,'Komutan');assert.equal(status.dataSchemaVersion,1);assert.equal(status.usageMode,'single-user');
+    const status=await (await call('/api/status')).json();assert.equal(status.agents.jarvis.name,'Komutan');assert.equal(status.dataSchemaVersion,2);assert.equal(status.usageMode,'single-user');
     assert.equal((await fetch(base+'/api/recovery/ack',{method:'POST',headers:{'content-type':'application/json'},body:'{}'})).status,401);
     const memory=emptyMemory();memory.projects.push({text:'Yeni kayıt'});
     const result=await fetch(base+'/api/memory',{method:'PUT',headers,body:JSON.stringify({memory,revision:store.state.revision})});assert.equal(result.status,200);

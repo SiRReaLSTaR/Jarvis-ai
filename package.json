@@ -9,7 +9,7 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "server": "node server.js",
-    "test": "node --test",
+    "test": "node --test test/*.test.js",
     "start": "node server.js",
     "jarvis": "node scripts/start-jarvis.mjs",
     "test:unit": "node --test test/modules.test.js test/runtime.test.js test/upgrade.test.js test/live.test.js",

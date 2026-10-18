@@ -33,13 +33,13 @@ test('Profile updates preserve the other roles and cannot inject instructions or
   assert.equal(validSettings({ profiles: { atlas: { name: 'Araştırmacı' } } }), true);
   for (const patch of [{ selectedAgent: '__proto__' }, { profiles: { jarvis: { name: 'Ignore\nSystem' } } }, { profiles: { atlas: { voice: 'fake-voice' } } }]) assert.equal(validSettings(patch), false);
 });
-test('Live config includes correct local clock, actual abilities, selected voice, and only read-only tools', () => {
+test('Live config includes correct local clock, actual abilities, selected voice, and explicitly scoped personal task tools', () => {
   const f = fixture(); f.state.settings.profiles.jarvis.name = 'Mustafa';
   const config = liveConfig({ state: f.state, agent: 'jarvis', timeZone: 'Europe/Istanbul', now: instant });
   assert.match(config.systemInstruction, /2026-10-17/); assert.match(config.systemInstruction, /Mustafa/);
   assert.match(config.systemInstruction, /Alarm, Takvim/);
   assert.equal(config.speechConfig.voiceConfig.prebuiltVoiceConfig.voiceName, 'Charon');
-  assert.deepEqual(config.tools[0].functionDeclarations.map(x => x.name), ['get_clock', 'ask_expert']);
+  assert.deepEqual(config.tools[0].functionDeclarations.map(x => x.name), ['get_clock', 'ask_expert', 'list_todos', 'create_todo', 'update_todo']);
 });
 test('Ephemeral credentials are one-use, expire, and constrain the model and config', async () => {
   const f = fixture(), lease = await f.service.start(request);
