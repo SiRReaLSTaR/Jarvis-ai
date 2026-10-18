@@ -1,0 +1,387 @@
+/* Mission Control is an optional view. HUD remains the default. */
+.jarvis.v8 .headerActions .hudDashboardButton{width:auto;min-height:32px;height:auto;padding:7px 10px;border:1px solid var(--line);border-radius:7px;font:10px var(--mono);letter-spacing:0;color:var(--voice-accent);background:var(--soft);margin:0}
+.jarvis.v8.missionMode{display:block;padding:0;gap:0;background:#080c10;isolation:isolate}
+.missionControl{--mc-accent:var(--voice-accent);--mc-muted:#82909c;--mc-border:#ffffff0d;display:grid;grid-template-columns:166px minmax(0,1fr) 260px;grid-template-rows:68px minmax(0,1fr);width:100%;height:100%;min-height:0;color:#e9eef2;background:radial-gradient(ellipse at 20% 10%,color-mix(in srgb,var(--mc-accent) 4%,transparent),transparent 50%),#090d12;font:13px var(--font);overflow:hidden}
+.missionControl *{box-sizing:border-box}.missionControl button,.missionControl input,.missionControl select{font:inherit}.missionControl button{cursor:pointer;transition:background .15s,border-color .15s}.missionControl button:disabled{opacity:.4;cursor:default}.missionControl button:focus-visible,.missionControl input:focus-visible,.missionControl select:focus-visible{outline:2px solid var(--mc-accent);outline-offset:3px}.missionControl input,.missionControl select{min-width:0;color:#e5edf3;background:#10161e;border:1px solid #ffffff13;border-radius:7px;padding:10px 12px;outline:none}.missionControl h1,.missionControl h2,.missionControl h3,.missionControl p{margin:0}.missionControl button svg{flex-shrink:0}
+.mcHeader{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:20px;height:68px;padding:0 22px;border-bottom:1px solid #ffffff0c;background:#0d1118;z-index:2}.mcBrand{display:flex;align-items:center;gap:11px;border:0;background:none;color:#eaf0f6;padding:0;text-align:left}.mcBrandMark{width:30px;height:30px;border:1px solid var(--mc-accent);border-radius:50%;display:grid;place-items:center;font:500 14px var(--mono);color:var(--mc-accent);box-shadow:inset 0 0 12px color-mix(in srgb,var(--mc-accent) 12%,transparent)}.mcBrand b{font-size:17px;letter-spacing:3px;white-space:nowrap}.mcBrand small{font:8px var(--mono);color:#7b8999;letter-spacing:1px;margin-left:8px}.mcHeaderMotto{font:8px var(--mono);color:#7b8999;letter-spacing:1px}.mcHeaderRight{display:flex;align-items:center;gap:15px}.mcConnection{font:8px var(--mono);letter-spacing:1px;color:#95a3b4;border:1px solid #ffffff0b;padding:8px;border-radius:5px;white-space:nowrap;display:flex;align-items:center;gap:7px}.mcConnection::before{content:'';width:5px;height:5px;border-radius:50%;background:#a5845d}.mcConnection.online::before{background:#45d894;box-shadow:0 0 8px #45d89466}.mcHeaderRight time{font:500 17px var(--font);white-space:nowrap}.mcHeaderRight time small{display:block;font:8px var(--font);color:var(--mc-muted);margin-top:1px}.mcIconButton{width:34px;height:34px;display:grid;place-items:center;background:none;border:1px solid #ffffff0f;color:var(--mc-muted);border-radius:7px}
+.mcSidebar{grid-column:1;grid-row:2;display:flex;flex-direction:column;min-height:0;padding:22px 0 16px;border-right:1px solid #ffffff0c;background:#0a0f15;overflow-y:auto}.mcNavLabel{font:8px var(--mono);letter-spacing:1.5px;color:#657583;padding:0 18px 16px}.mcSidebar>button{display:flex;align-items:center;gap:13px;width:100%;min-height:47px;padding:10px 18px;text-align:left;border:0;border-left:2px solid transparent;background:none;color:#8e9aa8;font-size:11px}.mcSidebar>button:hover{background:#ffffff04;color:#e7edf5}.mcSidebar>button.active{color:var(--mc-accent);border-left-color:var(--mc-accent);background:linear-gradient(90deg,color-mix(in srgb,var(--mc-accent) 10%,transparent),transparent)}.mcSidebarFooter{margin:auto 16px 0;padding-top:24px;border-top:1px solid #ffffff0d}.mcSidebarFooter strong{font:12px var(--font);letter-spacing:2px}.mcSidebarFooter small{display:block;font:7px var(--mono);color:var(--mc-muted);margin-top:6px;line-height:1.7}.mcSidebarFooter button{margin-top:17px;display:flex;align-items:center;gap:8px;background:none;color:var(--mc-accent);border:0;font-size:10px;padding:0}
+.mcContent{grid-column:2;grid-row:2;min-height:0;min-width:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#35404a transparent;padding:26px 22px 30px;display:flex;flex-direction:column;gap:18px;align-items:stretch}.mcWelcome{padding-bottom:3px}.mcEyebrow{font:9px var(--mono);letter-spacing:2px;color:var(--mc-accent);display:block;margin-bottom:8px}.mcWelcome h1{font-size:clamp(23px,2.3vw,34px);font-weight:600;letter-spacing:-.6px;line-height:1.2}.mcWelcome p{font-size:12px;color:var(--mc-muted);margin-top:9px;line-height:1.7}
+.mcAgentGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.mcAgentCard{min-width:0;text-align:left;padding:13px 12px 10px;background:linear-gradient(135deg,color-mix(in srgb,var(--agent) 5%,transparent),transparent 85%),#0c1118;color:#e9eef4;border:1px solid color-mix(in srgb,var(--agent) 20%,transparent);border-radius:12px;overflow:hidden}.mcAgentCard.selected{border-color:color-mix(in srgb,var(--agent) 70%,transparent);box-shadow:inset 0 0 20px color-mix(in srgb,var(--agent) 4%,transparent)}.mcAgentCard:hover{border-color:var(--agent)}.mcAgentTop{display:flex;align-items:center;gap:9px;min-width:0}.mcAvatar{color:var(--agent);width:65px;height:65px;flex-shrink:0;filter:drop-shadow(0 0 8px color-mix(in srgb,var(--agent) 14%,transparent))}.mcAgentTop>div{min-width:0}.mcAgentTop h3{font-size:15px;font-weight:600;letter-spacing:1.2px;overflow-wrap:anywhere}.mcAgentTop small{display:block;font:6px var(--mono);letter-spacing:1px;color:var(--mc-muted);margin-top:4px;white-space:nowrap}.mcAgentBadge{display:block;font:7px/1.7 var(--font);color:#9d8b73;margin-top:8px}.mcAgentBadge::before{content:'';display:inline-block;width:4px;height:4px;margin-right:5px;border-radius:50%;background:currentColor}.mcAgentBadge.configured{color:#72cba3}.mcAgentCard>p{font-size:11px;line-height:1.6;color:#9aa8b6;margin-top:11px;min-height:36px}.mcCardAction{margin-top:13px;display:flex;align-items:center;justify-content:space-between;font:7px var(--mono);letter-spacing:1px;color:var(--agent)}
+.mcPanel{background:linear-gradient(140deg,#111720,#0c1118);border:1px solid #ffffff0b;border-radius:12px;padding:16px;min-width:0}.mcSectionTitle{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}.mcSectionTitle h2{display:flex;align-items:center;gap:8px;font:9px var(--mono);letter-spacing:1px;color:#cbd5df;line-height:1.6}.mcSectionTitle>button{display:flex;align-items:center;gap:7px;background:none;border:0;color:#8292a2;padding:0;font-size:10px;text-align:right}.mcSectionTitle>button:hover{color:var(--mc-accent)}.mcComposer form{display:flex;align-items:center;gap:7px;background:#0a1017;border:1px solid #ffffff12;padding:6px;border-radius:8px}.mcComposer input{border:0;background:none;flex:1;font-size:13px;min-width:0;padding:10px}.mcComposer form button{display:grid;place-items:center;flex:none;width:36px;height:36px;border-radius:6px;border:1px solid #ffffff0d;background:#161e29;color:#b3bfcb}.mcComposer .mcSend{background:var(--mc-accent);color:#0a0e13;border-color:var(--mc-accent)}.mcQuickActions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}.mcQuickActions button{display:flex;align-items:center;gap:8px;flex:1;justify-content:center;border:1px solid #ffffff0d;border-radius:6px;background:#ffffff02;color:#9baaba;font-size:10px;padding:9px 7px;white-space:nowrap}.mcQuickActions button:hover{color:var(--mc-accent);border-color:var(--line)}
+.mcStatGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}.mcStatGrid article{padding:12px;border:1px solid #ffffff0b;border-radius:9px;background:#10161d;display:grid;grid-template-columns:auto 1fr;gap:5px 9px;align-items:center}.mcStatGrid svg{width:17px;height:17px;color:var(--mc-accent)}.mcStatGrid strong{font:500 20px var(--font)}.mcStatGrid span{grid-column:1/-1;font-size:9px;color:var(--mc-muted);line-height:1.5}
+.mcTaskList article{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid #ffffff08;min-width:0}.mcTaskList article:last-child{border:0;padding-bottom:0}.mcTaskList article:first-child{padding-top:0}.mcTaskList article>div{flex:1;min-width:0}.mcTaskList strong{display:block;font-size:12px;font-weight:400;overflow-wrap:anywhere;line-height:1.6}.mcTaskList small{display:block;color:var(--mc-muted);font-size:10px;margin-top:3px}.mcTaskList time{font-size:9px;color:#70808f;text-align:right;max-width:105px;line-height:1.7;flex-shrink:0}.mcTaskIcon{display:grid;place-items:center;width:28px;height:28px;border:1px solid #ffffff0c;background:#ffffff02;color:#82919d;border-radius:50%;flex-shrink:0}.mcTaskIcon svg{width:15px;height:15px}.mcTaskIcon.status-completed{color:#4dd596;background:#4dd59609}.mcTaskIcon.status-running{color:var(--mc-accent)}.mcTaskIcon.status-failed{color:#ee8590}.mcEmpty{font:12px/1.8 var(--font);color:#8594a4;padding:10px 0}.mcHistory{padding:10px 12px;margin-bottom:10px;border-radius:7px;background:#ffffff03;border-left:2px solid var(--mc-accent)}.mcHistory.user{margin-left:10%;border-left:0;background:var(--soft)}.mcHistory small{font:8px var(--mono);letter-spacing:1px;color:var(--mc-accent)}.mcHistory p{font:12px/1.8 var(--font);color:#aebdcc;margin-top:6px;white-space:pre-wrap;overflow-wrap:anywhere}.mcError{color:#f2a0a4;font:12px/1.7 var(--font);border:1px solid #ee667722;background:#ee667708;padding:8px 10px;border-radius:7px;overflow-wrap:anywhere}
+.mcRail{grid-column:3;grid-row:2;min-height:0;overflow-y:auto;scrollbar-width:thin;padding:16px 14px 20px 0;display:flex;flex-direction:column;gap:14px}.mcRail .mcPanel{padding:14px}.mcStatusList{display:flex;flex-direction:column;gap:8px}.mcStatusList article{display:flex;align-items:center;gap:10px;padding:10px;background:#ffffff02;border:1px solid #ffffff05;border-radius:7px}.mcStatusList article>span{width:7px;height:7px;border-radius:50%;background:#9b8058;flex-shrink:0}.mcStatusList article>span.ok{background:#3eda94;box-shadow:0 0 9px #3eda9433}.mcStatusList strong{display:block;font-size:11px;font-weight:400}.mcStatusList small{display:block;font-size:9px;color:var(--mc-muted);margin-top:4px;line-height:1.6}.mcFootnote{font:9px/1.7 var(--font);color:#687a8c;margin-top:12px!important}.mcActiveCore{text-align:center;padding:8px}.mcActiveCore .mcAvatar{width:110px;height:110px}.mcActiveCore h3{font-size:16px;letter-spacing:2px}.mcActiveCore p{font-size:11px;color:var(--mc-muted);margin-top:6px}.mcPrimary,.mcSecondary{display:inline-flex;align-items:center;justify-content:center;gap:9px;border:1px solid var(--line);border-radius:7px;padding:10px 12px;background:var(--soft);color:var(--mc-accent);font:11px var(--font)}.mcRail .mcPrimary{width:100%;margin-top:10px}.mcPrimary svg{width:16px;height:16px}.mcSmallNote{padding:20px 16px;border:1px solid #ffffff0b;border-radius:11px;background:radial-gradient(ellipse at 100% 130%,var(--soft),transparent 75%),#0d121a}.mcSmallNote>span{font:8px var(--mono);color:var(--mc-muted);letter-spacing:2px}.mcSmallNote strong{font:500 19px var(--font);display:block;letter-spacing:2px;margin-top:6px}.mcSmallNote p{font:10px/1.7 var(--font);color:var(--mc-muted);margin-top:8px}
+.mcFilters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}.mcFilters input{flex:1;min-width:150px}.mcFilters select{min-width:140px}.mcMemoryList{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.mcMemoryList article{border:1px solid #ffffff0d;background:#0a1119;padding:13px;border-radius:8px;min-width:0}.mcMemoryList small{font:8px var(--mono);color:var(--mc-accent);letter-spacing:1px}.mcMemoryList p{font:12px/1.8 var(--font);color:#acbac8;margin-top:8px;white-space:pre-wrap;overflow-wrap:anywhere}.mcAgentDetail{display:flex;align-items:center;gap:24px;padding:24px}.mcAgentDetail .mcAvatar{width:140px;height:140px}.mcAgentDetail h2{font-size:24px;letter-spacing:2px}.mcAgentDetail p{font-size:12px;line-height:1.8;color:var(--mc-muted);margin:10px 0}.mcSrOnly{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+@media(max-width:1199px){.missionControl{grid-template-columns:84px minmax(0,1fr);grid-template-rows:62px minmax(0,1fr)}.mcRail{display:none}.mcHeader{height:62px;padding:0 16px}.mcHeaderMotto{display:none}.mcHeaderRight{gap:10px}.mcSidebar>button{flex-direction:column;gap:6px;padding:10px 3px;text-align:center;font-size:8px;min-height:63px}.mcNavLabel{font-size:7px;text-align:center;padding:0 0 14px}.mcSidebarFooter{margin: auto 8px 0}.mcSidebarFooter strong{font-size:10px}.mcSidebarFooter small{font-size:6px}.mcSidebarFooter button{font-size:8px;gap:4px;flex-direction:column}.mcContent{padding:22px;gap:16px}.mcAgentCard{padding:13px}.mcAgentTop{gap:8px}.mcAvatar{width:65px;height:65px}.mcAgentTop h3{font-size:16px}}
+@media(min-width:1500px){.missionControl{grid-template-columns:190px minmax(0,1fr) 290px}.mcContent{padding:32px;gap:22px}.mcAgentCard{padding:18px}.mcAvatar{width:82px;height:82px}.mcAgentTop h3{font-size:20px}.mcAgentTop small{font-size:8px}.mcAgentBadge{font-size:9px}.mcAgentCard>p{font-size:12px}.mcAgentTop{gap:14px}}
+@media(min-width:1200px) and (max-width:1350px){.mcBrand small,.mcHeaderMotto{display:none}.mcAgentTop{flex-direction:column;align-items:flex-start;gap:6px}.mcAgentBadge{font-size:8px}.mcAgentCard>p{min-height:54px}.mcContent{padding:22px 18px}.mcAgentTop small{font-size:7px}}
+@media(max-width:760px){.mcBrand small{display:none}.mcHeaderRight time{font-size:14px}.mcConnection{font-size:7px}.mcAgentGrid{gap:8px}.mcAgentTop{flex-direction:column;align-items:flex-start;gap:5px}.mcAgentCard{padding:10px}.mcAgentTop h3{font-size:14px}.mcAgentTop small{font-size:6px;letter-spacing:.5px}.mcAgentBadge{font-size:8px}.mcAgentCard>p{min-height:54px;font-size:10px}.mcQuickActions button{font-size:9px;gap:5px}.mcWelcome h1{font-size:25px}.mcStatGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.missionControl{grid-template-columns:1fr;grid-template-rows:60px minmax(0,1fr) 64px}.mcHeader{height:60px;padding:0 12px;gap:8px}.mcBrand{gap:7px}.mcBrand b{font-size:15px;letter-spacing:2px}.mcBrandMark{width:26px;height:26px}.mcHeaderRight time{display:none}.mcHeaderRight{gap:8px}.mcConnection{border:0;padding:0;font-size:7px;letter-spacing:0}.mcHeaderRight .mcIconButton{width:30px;height:30px}.mcContent{grid-column:1;grid-row:2;padding:20px 14px 24px;gap:14px}.mcSidebar{grid-column:1;grid-row:3;flex-direction:row;justify-content:space-around;align-items:center;padding:4px 3px max(4px,env(safe-area-inset-bottom));border-top:1px solid #ffffff10;border-right:0;background:#0c1119;overflow:visible}.mcSidebar>button{width:auto;min-height:52px;flex:1;gap:5px;border:0;border-top:2px solid transparent;padding:5px 2px;font-size:8px;white-space:nowrap}.mcSidebar>button.active{border-top-color:var(--mc-accent);border-left:0;background:none}.mcSidebar>button:nth-of-type(n+6),.mcNavLabel,.mcSidebarFooter{display:none}.mcSidebar>button svg{width:18px;height:18px}.mcWelcome h1{font-size:25px}.mcWelcome p{font-size:11px}.mcAgentGrid{display:flex;overflow-x:auto;scroll-snap-type:x proximity;padding-bottom:5px}.mcAgentCard{flex:0 0 185px;scroll-snap-align:start}.mcAgentTop{flex-direction:row;align-items:center;gap:8px}.mcAgentTop h3{font-size:14px}.mcAvatar{width:60px;height:60px}.mcAgentCard>p{min-height:35px}.mcPanel{padding:13px}.mcQuickActions{gap:6px}.mcQuickActions button{flex:1 1 110px}.mcTaskList time{font-size:8px;max-width:66px}.mcMemoryList{grid-template-columns:1fr}.mcAgentDetail{padding:16px;gap:12px}.mcAgentDetail .mcAvatar{width:85px;height:85px}.mcAgentDetail h2{font-size:20px}.mcSectionTitle h2{font-size:8px}.mcComposer input{font-size:16px;padding:10px 4px}.mcAgentCard .mcAgentTop small{font-size:6px}}
+@media(max-height:500px) and (min-width:601px){.missionControl{grid-template-rows:50px minmax(0,1fr)}.mcHeader{height:50px}.mcContent{padding-top:16px}.mcSidebar{padding-top:12px}.mcSidebar>button{min-height:42px;font-size:9px}.mcSidebarFooter{display:none}.mcWelcome h1{font-size:25px}}
+@media(prefers-reduced-motion:reduce){.missionControl *{transition:none!important;scroll-behavior:auto!important}}
+
+/* COSMOS — blue/violet environment, independent red/green/yellow agent identities. */
+.missionCosmos{--mc-blue:#55caff;--mc-purple:#ae83ff;--mc-border:#6e92c820;background:radial-gradient(ellipse at 78% 0%,#6d37b71a,transparent 48%),radial-gradient(ellipse at 25% 70%,#007fc70d,transparent 55%),#050c15;grid-template-columns:178px minmax(0,1fr) 260px;grid-template-rows:72px minmax(0,1fr)}
+.missionCosmos .mcHeader{height:72px;margin:8px 10px 0;padding:0 16px;height:60px;border:1px solid #6297b820;border-radius:13px;background:linear-gradient(100deg,#0c1721dd,#0b1120dd);box-shadow:0 8px 30px #0002}
+.missionCosmos .mcBrandMark{background:radial-gradient(circle,var(--soft),#040b12);box-shadow:inset 0 0 12px var(--soft),0 0 14px var(--soft)}
+.missionCosmos .mcHeaderMotto{font-size:7px;letter-spacing:1.5px;color:#91a0ba}.missionCosmos .mcBrand b{letter-spacing:4px}.missionCosmos .mcBrand small{font-size:7px;letter-spacing:1.5px}
+.missionCosmos .mcContent{padding:18px 16px 28px;gap:17px}.missionCosmos .mcContent>*{flex-shrink:0}
+.missionCosmos .mcSidebar{margin:16px 0 14px 10px;border:1px solid #647fba18;border-radius:14px;background:linear-gradient(170deg,#0c1620e8,#070f1aef);position:relative;padding-top:22px;isolation:isolate}
+.missionCosmos .mcSidebar::before{content:'';position:absolute;bottom:0;left:0;right:0;height:140px;background:linear-gradient(0deg,transparent,#070f1a 95%),var(--mission-space);background-size:cover;background-position:right bottom;opacity:.5;pointer-events:none;z-index:-1;border-radius:0 0 13px 13px}
+.missionCosmos .mcSidebar>button{min-height:49px;color:#95a9bc;font-size:11px}.missionCosmos .mcSidebar>button.active{color:var(--mc-blue);border-left-color:var(--mc-blue);background:linear-gradient(90deg,#1c8bd51c,#7740b810);box-shadow:inset 0 1px #45bdff13,inset 0 -1px #45bdff13}
+.missionCosmos .mcSidebar>button.active svg{filter:drop-shadow(0 0 5px #41bfff66)}.missionCosmos .mcSidebarFooter{padding-top:20px;padding-bottom:22px;border-top-color:#8ab1cc21}.missionCosmos .mcNavLabel{font-size:8px;letter-spacing:2px}
+.mcHero{position:relative;display:grid;grid-template-columns:minmax(0,1.25fr) minmax(160px,.75fr);align-items:center;min-height:242px;overflow:hidden;border:1px solid #8190d323;border-radius:15px;background:#030b13;isolation:isolate}
+.mcHero::before{content:'';position:absolute;inset:0;background-image:linear-gradient(90deg,#030c15ed 5%,#030c1580 48%,#030c1520),var(--mission-space);background-size:cover;background-position:center center;opacity:.95;z-index:-2}
+.mcHero::after{content:'';position:absolute;inset:0;border-radius:15px;box-shadow:inset 0 0 50px #02081066;pointer-events:none;z-index:-1}
+.mcHeroCopy{padding:25px 20px 30px;min-width:0}.mcHeroCopy .mcEyebrow{font-size:8px;letter-spacing:2px;color:#af95dc;display:flex;align-items:center;gap:10px;margin-bottom:19px}.mcHeroCopy .mcEyebrow i{width:24px;height:1px;background:linear-gradient(90deg,#ad83ff,transparent)}
+.mcHeroCopy h1{font:600 clamp(26px,2.7vw,38px)/1.18 var(--font);letter-spacing:-.6px;color:#eef4ff;text-shadow:0 2px 15px #030615aa}.mcHeroCopy>p{margin-top:14px;color:#95a8bc;font:13px/1.7 var(--font);letter-spacing:.7px}.mcDesktopBreak{display:none}
+.mcHeroFigure{display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;min-height:216px;padding:12px 0 18px;margin-right:12px;color:var(--agent)}
+.missionCosmos .mcHeroFigure>.mcAvatar{width:175px;height:175px;filter:drop-shadow(0 0 18px color-mix(in srgb,var(--agent) 14%,transparent));z-index:1}
+.mcHeroOrbit{position:absolute;width:205px;height:205px;top:0;left:calc(50% - 102px);border:1px solid color-mix(in srgb,var(--agent) 13%,transparent);border-radius:50%;pointer-events:none}.mcHeroOrbit::after{content:'';position:absolute;inset:15px;border:1px dashed color-mix(in srgb,var(--agent) 18%,transparent);border-radius:50%}
+.mcHeroCaption{text-align:center;position:relative;z-index:1}.mcHeroCaption>span{display:inline-block;border:1px solid color-mix(in srgb,var(--agent) 40%,transparent);border-radius:20px;padding:4px 13px;color:var(--agent);font:7px var(--mono);letter-spacing:2px;background:#040b12aa}.mcHeroCaption h2{font:500 18px var(--font);letter-spacing:3px;margin:6px 0 2px;color:#f0f5ff}.mcHeroCaption small{font:6px var(--mono);letter-spacing:1.8px;color:#92a2b9}.mcHeroCaption p{display:none;font-size:9px;letter-spacing:1px;margin-top:6px;color:var(--agent)}.mcHeroCaption p i{display:inline-block;width:5px;height:5px;background:currentColor;border-radius:50%;margin-right:6px}
+.mcHeroCoordinates{position:absolute;right:12px;top:15px;font:6px/1.9 var(--mono);letter-spacing:1px;color:#8f86b7;opacity:.6;text-align:right}
+.missionCosmos .mcPanel{background:linear-gradient(145deg,#0b1a28cc,#111225b0);border-color:#647faa23;box-shadow:inset 0 1px #b8d8ff03,0 10px 25px #0001;border-radius:12px}
+.missionCosmos .mcSectionTitle h2{font:9px var(--mono);letter-spacing:1.7px;color:#c5d8ed}.missionCosmos .mcSectionTitle h2::before{content:'';width:2px;height:14px;background:linear-gradient(#58caff,#b58aff);box-shadow:0 0 8px #7ca6ff33;flex-shrink:0}.missionCosmos .mcSectionTitle>button{font-size:9px;color:#7998b5}.missionCosmos .mcSectionTitle>button:hover{color:var(--mc-blue)}
+.missionCosmos .mcComposer{position:relative;padding:17px;border-color:#7592d435;background:linear-gradient(115deg,#0e1e2cbf,#16132da6);box-shadow:0 0 24px #432a7810,inset 0 1px #b8c7ff09}
+.missionCosmos .mcComposer form{border:1px solid #789dc42b;background:#07111bd9;padding:7px 9px;border-radius:10px;box-shadow:inset 0 0 15px #03081155}
+.missionCosmos .mcComposer input{font:14px var(--font);color:#dcebf9;padding:12px 7px}.missionCosmos .mcComposer input::placeholder{color:#718599}.missionCosmos .mcComposer .mcMic{height:43px;width:43px;color:var(--mc-accent);background:radial-gradient(circle,var(--soft),#07101b);border:1px solid var(--line);border-radius:50%;box-shadow:inset 0 0 10px var(--soft),0 0 12px var(--soft)}
+.missionCosmos .mcComposer .mcSend{width:41px;height:41px;background:linear-gradient(135deg,color-mix(in srgb,var(--mc-accent) 85%,white),var(--mc-accent));border-color:var(--line);box-shadow:0 0 14px var(--soft);border-radius:8px}
+.missionCosmos .mcQuickActions{gap:8px;margin-top:13px}.missionCosmos .mcQuickActions button{min-height:36px;border-color:#6a91b321;background:linear-gradient(130deg,#1230491c,#ffffff02);font-size:10px;color:#a2b4c8;border-radius:7px}.missionCosmos .mcQuickActions button:hover{color:var(--mc-blue);border-color:#53c7ff55;background:#2a76bc14}
+.mcAgentSection>.mcSectionTitle{padding:0 2px;margin:0 0 12px}.missionCosmos .mcAgentGrid{gap:11px}.missionCosmos .mcAgentCard{padding:14px 13px 11px;border-radius:13px;border-color:color-mix(in srgb,var(--agent) 22%,transparent);background:linear-gradient(130deg,color-mix(in srgb,var(--agent) 5%,#0a101a),#090f1be6);box-shadow:inset 0 1px color-mix(in srgb,var(--agent) 6%,transparent)}
+.missionCosmos .mcAgentCard.selected{border-color:color-mix(in srgb,var(--agent) 60%,transparent);box-shadow:0 0 16px color-mix(in srgb,var(--agent) 5%,transparent),inset 0 0 22px color-mix(in srgb,var(--agent) 3%,transparent)}.missionCosmos .mcAgentCard:hover{border-color:var(--agent);box-shadow:0 0 16px color-mix(in srgb,var(--agent) 10%,transparent)}
+.missionCosmos .mcAgentTop{gap:8px;flex-direction:row;align-items:center}.missionCosmos .mcAgentTop h3{font-size:14px;letter-spacing:1px}.missionCosmos .mcAgentTop small{font-size:6px;letter-spacing:.5px}.missionCosmos .mcAgentBadge{font-size:7px;line-height:1.6}.missionCosmos .mcAvatar{width:66px;height:66px}.missionCosmos .mcAgentCard>p{font-size:10px;line-height:1.7;min-height:35px;color:#8da0b2;margin-top:9px}.missionCosmos .mcCardAction{font-size:7px;margin-top:13px}
+.mcStatsHeading{margin:4px 0 -6px;padding:0 2px}.missionCosmos .mcStatGrid{gap:9px}.missionCosmos .mcStatGrid>button{padding:13px;text-align:left;border:1px solid #6182a720;border-radius:10px;background:linear-gradient(130deg,#0d202d99,#0d1220cc);display:grid;grid-template-columns:auto 1fr;gap:6px 9px;align-items:center;color:#e5eff9;min-width:0}.missionCosmos .mcStatGrid>button:hover{border-color:#56b7ff55;background:#0c2134}.missionCosmos .mcStatGrid svg{color:#81b7f3}.missionCosmos .mcStatGrid strong{font-size:21px}.missionCosmos .mcStatGrid span{grid-column:1/-1;color:#8096ab;font-size:9px}
+.missionCosmos .mcRail{padding:18px 12px 20px 0;gap:14px}.missionCosmos .mcRail .mcPanel{background:linear-gradient(140deg,#0b1b27e6,#101324cc);border-color:#6a8bba25;padding:14px}.missionCosmos .mcStatusList article{border-color:#97baff08;background:linear-gradient(90deg,#86b1de05,transparent);padding:11px 9px}.missionCosmos .mcStatusList strong{font-size:10px;letter-spacing:.1px}.missionCosmos .mcStatusList small{font-size:9px;line-height:1.8}.missionCosmos .mcStatusList article>span.ok{box-shadow:0 0 11px #26dc9666}.missionCosmos .mcActiveCore{padding:10px 5px}.missionCosmos .mcActiveCore .mcAvatar{width:142px;height:142px}.missionCosmos .mcActiveCore h3{font:500 17px var(--font);letter-spacing:3px}.missionCosmos .mcPrimary{border-color:var(--line);background:linear-gradient(115deg,var(--soft),#19122c66);color:var(--mc-accent);border-radius:8px}
+.mcActivityList article{display:flex;position:relative;gap:11px;padding:0 0 16px}.mcActivityList article:last-child{padding-bottom:0}.mcActivityList article>i{width:5px;height:5px;flex-shrink:0;background:var(--mc-blue);border-radius:50%;margin-top:5px;box-shadow:0 0 7px #4ebfff55}.mcActivityList article:not(:last-child)::before{content:'';position:absolute;left:2px;top:12px;bottom:5px;width:1px;background:linear-gradient(#5a9acb44,#7a56b833)}.mcActivityList strong{font-size:9px;color:#becce0;font-weight:400}.mcActivityList p{font:9px/1.7 var(--font);color:#8196ad;margin-top:4px;overflow-wrap:anywhere}.mcActivityList time{display:block;font:7px var(--mono);color:#5b718c;margin-top:5px}
+.missionCosmos .mcSmallNote{background-image:linear-gradient(90deg,#09101be6,#0a101b66),var(--mission-space);background-size:cover;background-position:right bottom;border-color:#7693bc20}.missionCosmos .mcTaskList article{border-color:#6383b712}.missionCosmos .mcHistory{background:#6997c508}.missionCosmos .mcHistory.user{background:#6453b70c}
+.mcCoreOrbit{transform-origin:60px 60px}.mc-phase-listening .mcCoreOrbit,.mc-phase-speaking .mcCoreOrbit,.mc-phase-connecting .mcCoreOrbit,.mc-phase-thinking .mcCoreOrbit{animation:mcOrbit 24s linear infinite}.quality-performance .mcCoreOrbit{animation:none!important}.quality-performance .missionCosmos .mcAvatar{filter:none}
+@keyframes mcOrbit{to{transform:rotate(360deg)}}
+@media(min-width:1450px){.missionCosmos{grid-template-columns:195px minmax(0,1fr) 280px}.missionCosmos .mcContent{padding:20px 22px 30px;gap:20px}.mcHero{min-height:285px}.mcHeroCopy{padding:30px}.mcHeroCopy h1{font-size:43px}.missionCosmos .mcHeroFigure>.mcAvatar{width:210px;height:210px}.mcHeroOrbit{width:235px;height:235px;left:calc(50% - 117px)}.missionCosmos .mcAgentTop h3{font-size:17px}.missionCosmos .mcAvatar{width:78px;height:78px}.missionCosmos .mcAgentCard>p{font-size:11px}}
+@media(min-width:1200px) and (max-width:1350px){.missionCosmos{grid-template-columns:154px minmax(0,1fr) 236px}.missionCosmos .mcHeaderMotto{display:none}.missionCosmos .mcContent{padding:17px 14px 26px}.missionCosmos .mcAgentTop{flex-direction:column;align-items:flex-start;gap:5px}.missionCosmos .mcAvatar{width:64px;height:64px}.missionCosmos .mcAgentTop h3{font-size:15px}.missionCosmos .mcAgentTop small{font-size:7px}.missionCosmos .mcAgentCard>p{min-height:50px}.missionCosmos .mcAgentBadge{font-size:8px}.mcHeroCopy h1{font-size:30px}.missionCosmos .mcHeroFigure>.mcAvatar{width:164px;height:164px}.mcHeroOrbit{width:188px;height:188px;left:calc(50% - 94px)}}
+@media(min-width:601px) and (max-width:1199px){.missionCosmos{grid-template-columns:86px minmax(0,1fr);grid-template-rows:68px minmax(0,1fr)}.missionCosmos .mcHeader{height:56px}.missionCosmos .mcRail{display:none}.missionCosmos .mcSidebar{margin-top:12px;margin-left:7px}.missionCosmos .mcSidebar>button{font-size:8px;min-height:62px}.missionCosmos .mcSidebarFooter{margin: auto 8px 0}.missionCosmos .mcContent{padding:12px 14px 26px}.missionCosmos .mcBrand small{display:none}.missionCosmos .mcAgentTop{flex-direction:column;align-items:flex-start;gap:6px}.missionCosmos .mcAgentTop small{font-size:7px}.missionCosmos .mcAgentBadge{font-size:8px}.missionCosmos .mcAgentCard>p{min-height:45px}.mcHero{min-height:245px}.mcHeroCopy h1{font-size:clamp(26px,3.5vw,36px)}.missionCosmos .mcHeroFigure>.mcAvatar{width:170px;height:170px}.mcHeroCoordinates{display:none}}
+@media(min-width:601px) and (max-width:760px){.mcHero{grid-template-columns:minmax(0,1.2fr) minmax(130px,.8fr)}.mcHeroCopy{padding:23px 16px}.mcHeroCopy h1{font-size:26px}.mcHeroFigure{margin-right:0}.missionCosmos .mcHeroFigure>.mcAvatar{width:146px;height:146px}.mcHeroOrbit{width:168px;height:168px;left:calc(50% - 84px);top:15px}.mcHeroCaption h2{font-size:16px}.mcHeroCaption small{font-size:5px}.missionCosmos .mcAgentCard{padding:11px 9px}.missionCosmos .mcAgentTop small{font-size:6px}}
+@media(max-width:600px){.missionCosmos{grid-template-columns:1fr;grid-template-rows:70px minmax(0,1fr) calc(68px + env(safe-area-inset-bottom));background:radial-gradient(ellipse at 50% 20%,#24204a26,transparent 65%),#050c15}.missionCosmos .mcHeader{height:58px;margin:6px 8px 0;padding:0 11px;gap:6px}.missionCosmos .mcBrand{gap:8px}.missionCosmos .mcBrandMark{display:none}.missionCosmos .mcBrand b{font-size:20px;letter-spacing:4px}.missionCosmos .mcBrand small{display:block;margin:3px 0 0;font-size:6px;letter-spacing:2px}.missionCosmos .mcHeaderRight{gap:8px}.missionCosmos .mcConnection{font-size:7px;letter-spacing:0}.missionCosmos .mcContent{padding:8px 12px 24px;gap:15px}.missionCosmos .mcSidebar{margin:0;border-radius:18px 18px 0 0;grid-row:3;padding:4px 3px max(4px,env(safe-area-inset-bottom));overflow:hidden;border-top-color:#718db733;background:#09111bef;box-shadow:0 -8px 25px #0003}.missionCosmos .mcSidebar::before{display:none}.missionCosmos .mcSidebar>button{min-height:54px;font-size:8px;padding:7px 2px;gap:5px}.missionCosmos .mcSidebar>button.active{border-left:0;border-top-color:var(--mc-accent);color:var(--mc-accent);box-shadow:none;background:radial-gradient(ellipse at 50% 100%,var(--soft),transparent 80%)}.missionCosmos .mcSidebar>button[data-nav="agents"],.missionCosmos .mcSidebar>button[data-nav="research"]{display:none}.missionCosmos .mcSidebar>button[data-nav="settings"]{display:flex}.missionCosmos .mcSidebar>button[data-nav="chat"] span{font-size:0}.missionCosmos .mcSidebar>button[data-nav="chat"] span::after{content:'Sohbet';font-size:8px}
+.mc-page-overview .mcAgentSection{order:0}.mc-page-overview .mcHero{order:1}.mc-page-overview .mcComposer{order:2}.mc-page-overview .mcStatsHeading{order:3}.mc-page-overview .mcStatGrid{order:4}.mc-page-overview .mcTasksPanel{order:5}.mc-page-overview .mcRecentPanel{order:6}.mc-page-overview .mcContent>.mcError{order:-1}
+.mc-page-overview .mcAgentSection>.mcSectionTitle{display:none}.missionCosmos .mcAgentGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;overflow:visible;padding:0}.missionCosmos .mcAgentCard{min-width:0;padding:9px 6px;border-radius:10px}.missionCosmos .mcAgentTop{flex-direction:column;align-items:center;text-align:center;gap:2px}.missionCosmos .mcAvatar{width:62px;height:62px}.missionCosmos .mcAgentTop h3{font-size:12px;letter-spacing:1px}.missionCosmos .mcAgentTop small{font-size:5px;letter-spacing:.1px;white-space:normal}.missionCosmos .mcAgentBadge{display:none}.missionCosmos .mcAgentCard>p{display:none}.missionCosmos .mcCardAction{justify-content:center;font-size:6px;margin-top:8px;min-height:11px;letter-spacing:.4px}.missionCosmos .mcCardAction svg{display:none}.missionCosmos .mcAgentCard.selected{box-shadow:0 0 15px color-mix(in srgb,var(--agent) 9%,transparent),inset 0 0 15px color-mix(in srgb,var(--agent) 5%,transparent)}
+.mcHero{display:flex;flex-direction:column;min-height:0;padding:12px 12px 20px;overflow:hidden;border-color:#6d79ab13;border-radius:14px;background:transparent}.mcHero::before{background-image:linear-gradient(0deg,#050c15 0%,#050c1570 45%,#050c15 98%),var(--mission-space);background-position:65% center;background-size:auto 100%;opacity:.8}.mcHero::after{box-shadow:none}.mcHeroCopy{order:2;padding:14px 0 0;text-align:center}.mcHeroCopy .mcEyebrow{display:none}.mcHeroCopy h1{font-size:26px;line-height:1.2;letter-spacing:-.4px}.mcHeroCopy h1 br{display:none}.mcHeroCopy>p{margin-top:10px;font-size:11px;letter-spacing:.4px}.mcDesktopBreak{display:none}.mcHeroFigure{order:1;min-height:0;margin:0;padding:0 0 2px;width:100%}.missionCosmos .mcHeroFigure>.mcAvatar{width:218px;height:218px;max-width:80%;filter:drop-shadow(0 0 18px color-mix(in srgb,var(--agent) 17%,transparent))}.mcHeroOrbit{width:240px;height:240px;max-width:90%;left:calc(50% - 120px);top:-11px;border-color:color-mix(in srgb,var(--agent) 11%,transparent)}.mcHeroCaption{margin-top:0}.mcHeroCaption>span{font-size:7px;letter-spacing:2px;padding:4px 14px}.mcHeroCaption h2{font-size:25px;margin-top:9px;letter-spacing:5px}.mcHeroCaption small{font-size:6px;letter-spacing:2px}.mcHeroCaption p{display:block;font-size:9px;margin-top:8px}.mcHeroCoordinates{display:none}
+.missionCosmos .mcComposer{padding:12px;border-radius:13px}.missionCosmos .mcComposer .mcSectionTitle{margin-bottom:10px}.missionCosmos .mcComposer form{padding:6px;gap:6px;border-color:var(--line);border-radius:12px;min-height:62px}.missionCosmos .mcComposer input{font-size:16px;padding:10px 5px}.missionCosmos .mcComposer .mcMic{width:43px;height:43px}.missionCosmos .mcComposer .mcSend{width:35px;height:38px}.missionCosmos .mcQuickActions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:12px}.missionCosmos .mcQuickActions button{display:flex;flex-direction:column;text-align:center;white-space:normal;min-height:61px;gap:8px;padding:9px 4px;font-size:9px;border-radius:8px}.missionCosmos .mcQuickActions svg{width:17px;height:17px}.missionCosmos .mcStatGrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.missionCosmos .mcStatGrid>button{padding:12px;min-height:78px}.missionCosmos .mcStatGrid span{font-size:9px}.mcStatsHeading{margin-top:2px}.missionCosmos .mcAgentDetail .mcAvatar{width:84px;height:84px}}
+@media(max-width:360px){.missionCosmos .mcBrand b{font-size:17px;letter-spacing:3px}.missionCosmos .mcConnection{font-size:6px}.missionCosmos .mcHeroFigure>.mcAvatar{width:190px;height:190px}.mcHeroOrbit{width:208px;height:208px;left:calc(50% - 104px)}.mcHeroCopy h1{font-size:23px}.missionCosmos .mcComposer form{gap:4px}.missionCosmos .mcComposer .mcMic{width:38px;height:38px}.missionCosmos .mcComposer .mcSend{width:30px;height:36px}.missionCosmos .mcSectionTitle>button{font-size:8px}}
+@media(max-height:500px) and (min-width:601px){.missionCosmos{grid-template-rows:56px minmax(0,1fr)}.missionCosmos .mcHeader{height:48px;margin-top:4px}.missionCosmos .mcContent{padding-top:10px}.missionCosmos .mcSidebar{margin-top:10px}.mcHero{min-height:215px}.mcHeroCopy h1{font-size:29px}.mcHeroFigure{min-height:190px}.missionCosmos .mcHeroFigure>.mcAvatar{width:145px;height:145px}.mcHeroOrbit{width:175px;height:175px;left:calc(50% - 87px)}}
+@media(prefers-reduced-motion:reduce){.mcCoreOrbit{animation:none!important}.missionCosmos .mcAvatar{filter:none}}
+
+.missionCosmos .mcAgentDetail .mcAvatar{width:140px;height:140px}
+@media(max-width:600px){.missionCosmos .mcAgentDetail .mcAvatar{width:84px;height:84px}}
+
+/* COSMOS TABLET FIT - PRO ENHANCED EDITION */
+@media (min-width: 900px) and (min-height: 500px) and (max-height: 1000px) {
+  /* Sayfa Ana Izgara Yapısı */
+  .missionCosmos.mc-page-overview {
+    grid-template-rows: 56px minmax(0, 1fr) !important;
+  }
+  .missionCosmos.mc-page-overview .mcHeader {
+    height: 48px !important;
+    margin-top: 4px !important;
+  }
+  .missionCosmos.mc-page-overview .mcContent {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    grid-template-rows: minmax(105px, 1.05fr) auto auto 14px 58px !important;
+    gap: 10px !important;
+    padding: 10px 16px 12px !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    align-content: stretch !important;
+  }
+
+  /* 1. HERO ALANI: Dengeli Gezegen & Işıltılı Orb */
+  .missionCosmos.mc-page-overview .mcHero {
+    min-height: 0 !important;
+    height: 100% !important;
+    grid-template-columns: minmax(0, 1.45fr) minmax(130px, 0.55fr) !important;
+    border-radius: 14px !important;
+    background: radial-gradient(circle at 85% 50%, rgba(255, 212, 90, 0.08) 0%, transparent 60%),
+                rgba(13, 19, 33, 0.72) !important;
+    border: 1px solid rgba(255, 212, 90, 0.18) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+  }
+  .missionCosmos.mc-page-overview .mcHeroCopy {
+    padding: 14px 22px !important;
+  }
+  .missionCosmos.mc-page-overview .mcHeroCopy .mcEyebrow {
+    font-size: 10px !important;
+    letter-spacing: 2px !important;
+    margin-bottom: 6px !important;
+    color: rgba(255, 212, 90, 0.85) !important;
+  }
+  .missionCosmos.mc-page-overview .mcHeroCopy h1 {
+    font-size: clamp(24px, 2.3vw, 32px) !important;
+    line-height: 1.15 !important;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6) !important;
+  }
+  .missionCosmos.mc-page-overview .mcHeroCopy > p {
+    font-size: 12px !important;
+    margin-top: 6px !important;
+    letter-spacing: 0.3px !important;
+    color: rgba(210, 225, 250, 0.8) !important;
+  }
+  .missionCosmos.mc-page-overview .mcHeroFigure {
+    min-height: 0 !important;
+    height: 100% !important;
+    padding: 2px 0 !important;
+    margin: 0 12px 0 0 !important;
+    justify-content: center !important;
+  }
+  .missionCosmos.mc-page-overview .mcHeroFigure > .mcAvatar {
+    width: 114px !important;
+    height: 114px !important;
+    filter: drop-shadow(0 0 18px rgba(255, 212, 90, 0.4)) !important;
+  }
+  .missionCosmos.mc-page-overview .mcHeroOrbit {
+    width: 122px !important;
+    height: 122px !important;
+    top: calc(50% - 69px) !important;
+    left: calc(50% - 61px) !important;
+    border-color: rgba(255, 212, 90, 0.35) !important;
+  }
+  .missionCosmos.mc-page-overview .mcHeroCaption h2 {
+    font-size: 14px !important;
+    letter-spacing: 3.5px !important;
+    margin: 3px 0 0 !important;
+    color: #ffd45a !important;
+    text-shadow: 0 0 10px rgba(255, 212, 90, 0.5) !important;
+  }
+  .missionCosmos.mc-page-overview .mcHeroCaption > span,
+  .missionCosmos.mc-page-overview .mcHeroCaption small,
+  .missionCosmos.mc-page-overview .mcHeroCoordinates {
+    display: none !important;
+  }
+
+  /* 2. GÜÇLENDİRİLMİŞ KOMUT ALANI (COMPOSER) */
+  .missionCosmos.mc-page-overview .mcComposer {
+    padding: 12px 16px !important;
+    border-radius: 12px !important;
+    background: rgba(14, 21, 37, 0.85) !important;
+    border: 1px solid rgba(75, 120, 200, 0.28) !important;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3) !important;
+  }
+  .missionCosmos.mc-page-overview .mcComposer .mcSectionTitle {
+    margin-bottom: 8px !important;
+  }
+  .missionCosmos.mc-page-overview .mcComposer .mcSectionTitle h2 {
+    font-size: 11px !important;
+    letter-spacing: 1.5px !important;
+    color: rgba(180, 205, 245, 0.9) !important;
+  }
+  .missionCosmos.mc-page-overview .mcComposer form {
+    padding: 5px 8px !important;
+    min-height: 48px !important;
+    gap: 10px !important;
+    background: rgba(8, 12, 22, 0.9) !important;
+    border-radius: 10px !important;
+    border: 1px solid rgba(255, 212, 90, 0.22) !important;
+    transition: all 0.25s ease !important;
+  }
+  .missionCosmos.mc-page-overview .mcComposer form:focus-within {
+    border-color: #ffd45a !important;
+    box-shadow: 0 0 16px rgba(255, 212, 90, 0.25), inset 0 0 8px rgba(255, 212, 90, 0.05) !important;
+  }
+  .missionCosmos.mc-page-overview .mcComposer input {
+    padding: 8px 10px !important;
+    font-size: 14.5px !important;
+    color: #ffffff !important;
+  }
+  .missionCosmos.mc-page-overview .mcComposer input::placeholder {
+    color: rgba(170, 195, 235, 0.55) !important;
+  }
+  /* Belirgin Altın Mikrofon Butonu */
+  .missionCosmos.mc-page-overview .mcComposer .mcMic {
+    width: 38px !important;
+    height: 38px !important;
+    background: rgba(255, 212, 90, 0.12) !important;
+    border: 1px solid rgba(255, 212, 90, 0.4) !important;
+    border-radius: 8px !important;
+    color: #ffd45a !important;
+    transition: all 0.2s ease !important;
+  }
+  .missionCosmos.mc-page-overview .mcComposer .mcMic:hover {
+    background: rgba(255, 212, 90, 0.25) !important;
+    box-shadow: 0 0 14px rgba(255, 212, 90, 0.45) !important;
+    transform: scale(1.04) !important;
+  }
+  .missionCosmos.mc-page-overview .mcComposer .mcSend {
+    width: 38px !important;
+    height: 38px !important;
+    background: linear-gradient(135deg, #ffd45a, #d4a625) !important;
+    color: #0b0f19 !important;
+    border-radius: 8px !important;
+    font-weight: bold !important;
+    box-shadow: 0 2px 10px rgba(255, 212, 90, 0.3) !important;
+  }
+  .missionCosmos.mc-page-overview .mcQuickActions {
+    margin-top: 8px !important;
+    gap: 8px !important;
+  }
+  .missionCosmos.mc-page-overview .mcQuickActions button {
+    min-height: 29px !important;
+    padding: 5px 11px !important;
+    font-size: 11px !important;
+    line-height: 1.3 !important;
+    border-radius: 6px !important;
+    background: rgba(25, 36, 62, 0.5) !important;
+    border: 1px solid rgba(90, 135, 220, 0.25) !important;
+    color: rgba(220, 235, 255, 0.85) !important;
+  }
+  .missionCosmos.mc-page-overview .mcQuickActions button:hover {
+    background: rgba(35, 50, 85, 0.8) !important;
+    border-color: rgba(255, 212, 90, 0.4) !important;
+    color: #ffd45a !important;
+  }
+
+  /* 3. AJAN KARTLARI (DİLAN, LARA, VERA) */
+  .missionCosmos.mc-page-overview .mcAgentSection > .mcSectionTitle {
+    margin-bottom: 7px !important;
+  }
+  .missionCosmos.mc-page-overview .mcAgentSection > .mcSectionTitle h2 {
+    font-size: 11px !important;
+    letter-spacing: 1.5px !important;
+  }
+  .missionCosmos.mc-page-overview .mcAgentGrid {
+    gap: 10px !important;
+  }
+  .missionCosmos.mc-page-overview .mcAgentCard {
+    padding: 10px 12px 8px !important;
+    border-radius: 11px !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+  }
+  .missionCosmos.mc-page-overview .mcAgentCard:hover {
+    transform: translateY(-2px) !important;
+  }
+  .missionCosmos.mc-page-overview .mcAgentTop {
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 9px !important;
+  }
+  .missionCosmos.mc-page-overview .mcAgentTop > .mcAvatar {
+    width: 46px !important;
+    height: 46px !important;
+  }
+  .missionCosmos.mc-page-overview .mcAgentTop h3 {
+    font-size: 14.5px !important;
+  }
+  .missionCosmos.mc-page-overview .mcAgentTop small {
+    font-size: 8.5px !important;
+    letter-spacing: 0.6px !important;
+    color: rgba(200, 215, 240, 0.7) !important;
+  }
+  .missionCosmos.mc-page-overview .mcAgentBadge {
+    font-size: 9px !important;
+    margin-top: 3px !important;
+  }
+  .missionCosmos.mc-page-overview .mcAgentCard > p {
+    min-height: 0 !important;
+    margin-top: 6px !important;
+    font-size: 10.5px !important;
+    line-height: 1.45 !important;
+    color: rgba(190, 210, 240, 0.75) !important;
+  }
+  .missionCosmos.mc-page-overview .mcCardAction {
+    margin-top: 7px !important;
+    font-size: 8.5px !important;
+    letter-spacing: 0.8px !important;
+    font-weight: 600 !important;
+  }
+
+  /* 4. ALT DURUM KUTULARI (STAT GRID) */
+  .missionCosmos.mc-page-overview .mcStatsHeading {
+    margin: 0 !important;
+    height: 14px !important;
+  }
+  .missionCosmos.mc-page-overview .mcStatsHeading h2 {
+    font-size: 10px !important;
+    letter-spacing: 1.5px !important;
+  }
+  .missionCosmos.mc-page-overview .mcStatGrid {
+    height: 56px !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+  }
+  .missionCosmos.mc-page-overview .mcStatGrid > button {
+    padding: 8px 12px !important;
+    border-radius: 9px !important;
+    background: rgba(14, 21, 37, 0.7) !important;
+    border: 1px solid rgba(80, 120, 200, 0.2) !important;
+  }
+  .missionCosmos.mc-page-overview .mcStatGrid strong {
+    font-size: 18px !important;
+    color: #ffffff !important;
+  }
+  .missionCosmos.mc-page-overview .mcStatGrid span {
+    font-size: 9.5px !important;
+    line-height: 1.3 !important;
+    color: rgba(180, 200, 235, 0.7) !important;
+  }
+
+  /* 5. SAĞ PANEL (SİSTEM DURUMU & AKTİF ASİSTAN) */
+  .missionCosmos.mc-page-overview .mcRail {
+    padding-top: 10px !important;
+    gap: 10px !important;
+  }
+  .missionCosmos.mc-page-overview .mcRail .mcPanel {
+    padding: 12px !important;
+    border-radius: 12px !important;
+  }
+  .missionCosmos.mc-page-overview .mcRail .mcSectionTitle {
+    margin-bottom: 10px !important;
+  }
+  .missionCosmos.mc-page-overview .mcRail .mcSectionTitle h2 {
+    font-size: 11px !important;
+    letter-spacing: 1.5px !important;
+  }
+  .missionCosmos.mc-page-overview .mcStatusList {
+    gap: 7px !important;
+  }
+  .missionCosmos.mc-page-overview .mcStatusList article {
+    padding: 9px 11px !important;
+    font-size: 11px !important;
+    border-radius: 8px !important;
+  }
+  .missionCosmos.mc-page-overview .mcFootnote {
+    font-size: 9px !important;
+    line-height: 1.4 !important;
+    margin-top: 8px !important;
+    color: rgba(160, 185, 220, 0.6) !important;
+  }
+  .missionCosmos.mc-page-overview .mcActiveCore {
+    padding: 6px !important;
+  }
+  .missionCosmos.mc-page-overview .mcActiveCore > .mcAvatar {
+    width: 90px !important;
+    height: 90px !important;
+    filter: drop-shadow(0 0 16px rgba(255, 212, 90, 0.35)) !important;
+  }
+  .missionCosmos.mc-page-overview .mcActiveCore h3 {
+    font-size: 15px !important;
+    letter-spacing: 2px !important;
+    margin-top: 4px !important;
+    color: #ffd45a !important;
+  }
+  .missionCosmos.mc-page-overview .mcActiveCore p {
+    margin-top: 4px !important;
+    font-size: 11px !important;
+  }
+  .missionCosmos.mc-page-overview .mcRail .mcPrimary {
+    margin-top: 10px !important;
+    padding: 9px !important;
+    font-size: 12px !important;
+    border-radius: 8px !important;
+    letter-spacing: 1px !important;
+  }
+
+  /* Gizlenmesi Gereken Taşma Elemanları */
+  .missionCosmos.mc-page-overview .mcTasksPanel,
+  .missionCosmos.mc-page-overview .mcRecentPanel,
+  .missionCosmos.mc-page-overview .mcActivityPanel,
+  .missionCosmos.mc-page-overview .mcSmallNote {
+    display: none !important;
+  }
+}

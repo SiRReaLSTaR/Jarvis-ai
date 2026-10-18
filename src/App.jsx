@@ -1,8 +1,10 @@
+import RecoveryNotice from './components/RecoveryNotice';
 import { useEffect, useRef, useState } from 'react';
 import './App.css';
 import './styles/upgrade.css';
 import ChatPanel from './ChatPanel';
 import VoiceOrb from './components/VoiceOrb';
+import MissionControl from './components/MissionControl';
 import { AGENTS, VOICES, defaultSettings } from '../lib/settings.js';
 import { usePerformance } from './hooks/usePerformance';
 import { useLiveVoice } from './hooks/useLiveVoice';
@@ -18,6 +20,7 @@ import { createAppActions } from './core/appActions.js';
 import { useSession } from './hooks/useSession.js';
 
 export default function App() {
+  const [screen, setScreen] = useState('hud');
   const [time, setTime] = useState(() => new Date());
   const [settingsToast, setSettingsToast] = useState(0);
   useEffect(() => {
@@ -98,13 +101,15 @@ export default function App() {
   const phase = live.active || live.phase === 'error' ? live.phase : listening ? 'listening' : loading ? 'thinking' : speaking ? 'speaking' : 'idle';
   const names = Object.fromEntries(Object.entries(settings.profiles).map(([id,p]) => [id,p.name]));
   async function chooseAgent(id) { live.stop(); voice.stopVoice(); await saveSettings({ selectedAgent: id }); agentDialog.current?.close(); }
-  return <main className={`jarvis v8 theme-hacker theme-${selected} state-${phase} quality-${performance.effective}`} style={{'--voice-accent': AGENTS[selected].color}}>
+  return <main className={`jarvis v8 theme-hacker theme-${selected} state-${phase} quality-${performance.effective} ${screen === 'dashboard' ? 'missionMode' : ''}`} style={{'--voice-accent': AGENTS[selected].color}}>
     <div className="spaceBackdrop" aria-hidden="true"><div className="nebula nebulaA"/><div className="nebula nebulaB"/><div className="stars starsFar"/><div className="stars starsNear"/></div>
     <div className="bg-grid"/><div className="scan"/>
+    <RecoveryNotice recovery={saved?.recovery} onRefresh={session.refresh}/>
+    {screen === 'dashboard' ? <MissionControl state={saved} system={system} connected={session.connected} selected={selected} phase={phase} time={time} busy={loading} liveActive={live.active} error={session.error || live.error || notice} onSelect={chooseAgent} onHud={() => setScreen('hud')} onSettings={() => settingsDialog.current?.showModal()} onSend={text => { askJarvis(text); setScreen('hud'); }} onVoice={() => { setScreen('hud'); voice.stopVoice(); if (!live.active && !loading && !image) live.start(); }} onCancel={cancelTask} onExport={exportMemory}/> : <>
     <header className="topbar glass">
       <div className="hudBrand"><b>JARVIS</b><small>KİŞİSEL YAPAY ZEKA</small></div>
       <nav className="hudAgentTabs" aria-label="Asistan seçimi">{Object.entries(AGENTS).map(([id,a]) => <button type="button" key={id} style={{'--tab-color':a.color}} className={id === selected ? 'selected' : ''} aria-pressed={id === selected} onClick={() => chooseAgent(id)}><span className="hudTabRing" aria-hidden="true"/>{settings.profiles[id].name}</button>)}</nav>
-      <div className="headerActions"><span className={`connectionDot ${session.connected ? 'online' : ''}`} aria-hidden="true"/><span className="hudConnection">{session.connected ? 'Bağlı' : 'Bağlanıyor'}</span><button type="button" onClick={() => settingsDialog.current?.showModal()} aria-label="Ayarları aç"><svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden="true"><path d="m9 3 1-1h4l1 3 3 1 3 1v4l-2 2-1 3v3l-4 2-3-1-3-1-3-1v-4l-2-2 1-4 3-1Z"/><circle cx="12" cy="12" r="3.5"/></svg></button></div>
+      <div className="headerActions"><button type="button" className="hudDashboardButton" onClick={() => setScreen('dashboard')} aria-label="Tablet dashboard görünümünü aç">Dashboard</button><span className={`connectionDot ${session.connected ? 'online' : ''}`} aria-hidden="true"/><span className="hudConnection">{session.connected ? 'Bağlı' : 'Bağlanıyor'}</span><button type="button" onClick={() => settingsDialog.current?.showModal()} aria-label="Ayarları aç"><svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden="true"><path d="m9 3 1-1h4l1 3 3 1 3 1v4l-2 2-1 3v3l-4 2-3-1-3-1-3-1v-4l-2-2 1-4 3-1Z"/><circle cx="12" cy="12" r="3.5"/></svg></button></div>
     </header>
     <aside className="leftRail glass"><h3>HIZLI ERİŞİM</h3>
       {QUICK.map(([icon, label, url]) => <button key={label} className="hudButton" onClick={() => { const app = actions.appByName(label); if (app) actions.launchApp(app, url); else actions.openExternal(url); }}><span>{icon}</span><b>{label}</b></button>)}
@@ -130,6 +135,7 @@ export default function App() {
       {saved && <details className="dailyTools"><summary>Günlük pano · hava, döviz ve haberler</summary><Dashboard city={settings.city} ready={Boolean(saved)}/></details>}
       </div>
     </section>
+    </>}
     <dialog className="settingsSheet" ref={settingsDialog} onClick={e => { if (e.target === e.currentTarget) e.currentTarget.close(); }}>
       <header className="sheetHeader"><h2>Ayarlar</h2><button onClick={() => settingsDialog.current?.close()}>Bitti</button></header>
       <aside className="rightRail">

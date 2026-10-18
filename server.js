@@ -15,6 +15,8 @@ import { createDashboard } from './lib/dashboard.js';
 import { createHome } from './lib/home.js';
 import { AGENTS, mergeSettings } from './lib/settings.js';
 import { createLiveService } from './lib/live/service.js';
+import { publicProviderError } from './lib/provider-errors.js';
+import { SCHEMA_VERSION } from './lib/state-schema.js';
 import { clockSnapshot } from './lib/clock.js';
 
 dotenv.config();
@@ -34,13 +36,16 @@ export function createApp({ store = createStore(process.env.JARVIS_DATA_DIR || '
   const live = createLiveService({ tokenClient: tokenClient || new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || 'not-configured', apiVersion: 'v1alpha', httpOptions: { timeout: 15_000 } }), state: store.state, save: store.save, publish: hub.publish, providers, context });
   const jobs = createJobs({ store, context, publish: hub.publish, orchestrate: (message, memory) => context.getStore()?.image ? providers.askJarvis(message, memory).then(reply => ({ reply, speaker: 'jarvis', route: 'vision', agents: ['jarvis'] })) : context.getStore()?.agent && context.getStore().agent !== 'jarvis' ? (context.getStore().agent === 'atlas' ? providers.askAtlas : providers.askNexus)(message, memory).then(reply => ({ reply, speaker: context.getStore().agent, route: 'selected-agent', agents: [context.getStore().agent] })) : agentOrchestrate(message, memory) });
   const status = () => ({ online: true, agentStates: providers.agentStates, lastSuccess: store.state.lastSuccess, screens: hub.size, active: jobs.active,
-    agents: { jarvis: { name: 'DİLAN', configured: Boolean(process.env.GEMINI_API_KEY) }, atlas: { name: 'LARA', configured: Boolean(process.env.GEMINI_API_KEY) }, nexus: { name: 'VERA', configured: Boolean(process.env.OPENROUTER_API_KEY) } }, executionEnabled: false, liveEnabled: Boolean(process.env.GEMINI_API_KEY) });
+    dataSchemaVersion: SCHEMA_VERSION, recovery: store.state.recovery, usageMode: 'single-user',
+    agents: { jarvis: { name: store.state.settings.profiles.jarvis.name, configured: Boolean(process.env.GEMINI_API_KEY) }, atlas: { name: store.state.settings.profiles.atlas.name, configured: Boolean(process.env.GEMINI_API_KEY) }, nexus: { name: store.state.settings.profiles.nexus.name, configured: Boolean(process.env.OPENROUTER_API_KEY) } }, executionEnabled: false, liveEnabled: Boolean(process.env.GEMINI_API_KEY) });
   app.get('/api/status', (_req, res) => res.json(status()));
   app.get('/api/events', hub.connect);
   app.get('/api/state', (_req, res) => res.json({ ...store.state, active: jobs.active }));
+  app.post('/api/recovery/ack', (_req,res) => {store.acknowledgeRecovery();hub.publish('state',store.state);res.json({ok:true});});
   app.put('/api/memory', (req, res) => {
     if (!validMemory(req.body.memory) || !Number.isSafeInteger(req.body.revision)) return res.status(400).json({ error: 'Geçersiz hafıza.' });
     if (req.body.revision !== store.state.revision) return res.status(409).json({ error: 'Hafıza başka bir ekranda değişti. Güncel kayıtları yükleyip tekrar deneyin.', state: store.state });
+    store.checkpoint();
     store.state.memory = req.body.memory; store.state.revision++; store.save(); hub.publish('state', store.state); res.json({ revision: store.state.revision });
   });
   app.patch('/api/settings', (req, res) => {
@@ -76,15 +81,15 @@ export function createApp({ store = createStore(process.env.JARVIS_DATA_DIR || '
     try {
       const data = await live.start({ agent: req.body.agent || store.state.settings.selectedAgent, owner: req.body.client, timeZone: req.body.timeZone || 'Europe/Istanbul' });
       res.set('Cache-Control', 'no-store'); res.json(data);
-    } catch { res.status(502).json({ error: 'Canlı oturum açılamadı. Gemini Live model erişimini, kotayı ve saat dilimini kontrol edin.' }); }
+    } catch (error) { const failure=publicProviderError(error);res.status(failure.code==='QUOTA'?429:502).json({error:failure.code==='PROVIDER_ERROR'?'Canlı oturum açılamadı. Model erişimini ve oturum ayarlarını kontrol edin.':failure.message,code:failure.code}); }
   });
   app.post('/api/live/:id/stop', (req, res) => {
     try { live.stop(req.params.id, req.body.client); res.json({ ok: true }); }
     catch { res.status(404).json({ error: 'Canlı oturum bulunamadı.' }); }
   });
   app.post('/api/live/:id/tool', async (req, res) => {
-    try { res.json(await live.tool(req.params.id, req.body.client, req.body.call)); }
-    catch { res.status(400).json({ error: 'Uzman aracı çalıştırılamadı veya oturum sona erdi.' }); }
+    try { res.json(await live.tool(req.params.id, req.body.client, req.body.call, req.body.turnId)); }
+    catch (error) {const failure=publicProviderError(error);res.status(failure.code==='PROVIDER_ERROR'?400:failure.code==='QUOTA'?429:502).json({error:failure.code==='PROVIDER_ERROR'?'Uzman aracı çalıştırılamadı veya oturum sona erdi.':failure.message,code:failure.code});}
   });
   app.post('/api/live/:id/turn', (req, res) => {
     try { res.json(live.turn(req.params.id, req.body.client, req.body)); }

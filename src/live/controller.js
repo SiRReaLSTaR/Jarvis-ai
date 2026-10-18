@@ -22,7 +22,7 @@ export function createLiveController({ api, onState, onTranscript, onSources = (
     if (!run.user && !run.assistant) return;
     const turn = { turnId: `${run.lease.id}-${run.turn++}`, user: run.user, assistant: run.assistant, interrupted };
     run.user = ''; run.assistant = '';
-    onTranscript({ user: '', assistant: '' });
+    onTranscript({ user: '', assistant: '' }); onSources([]);
     api(`/api/live/${run.lease.id}/turn`, { method: 'POST', body: JSON.stringify({ client, ...turn }), signal: run.abort.signal }).catch(() => { if (alive(run)) state('listening', 'Konuşma geçmişe kaydedilemedi.'); });
   }
   async function callTools(run, calls) {
@@ -32,13 +32,14 @@ export function createLiveController({ api, onState, onTranscript, onSources = (
       run.calls.add(call.id);
       if (run.calls.size > 40) { fail(run, 'Oturum araç sınırına ulaştı.'); return; }
       state('thinking');
+      const turnId = `${run.lease.id}-${run.turn}`;
       try {
-        const result = await api(`/api/live/${run.lease.id}/tool`, { method: 'POST', body: JSON.stringify({ client, call }), signal: run.abort.signal });
-        if (!alive(run) || run.cancelled.has(call.id)) continue;
+        const result = await api(`/api/live/${run.lease.id}/tool`, { method: 'POST', body: JSON.stringify({ client, call, turnId }), signal: run.abort.signal });
+        if (!alive(run) || run.cancelled.has(call.id) || turnId !== `${run.lease.id}-${run.turn}`) continue;
         if (result.sources) onSources(result.sources);
         run.session.sendToolResponse({ functionResponses: [{ id: call.id, name: call.name, response: result }] });
       } catch (e) {
-        if (alive(run) && !run.cancelled.has(call.id)) run.session.sendToolResponse({ functionResponses: [{ id: call.id, name: call.name, response: { error: 'İşlem tamamlanamadı. Başarılıymış gibi sunma.' } }] });
+        if (alive(run) && !run.cancelled.has(call.id) && turnId === `${run.lease.id}-${run.turn}`) run.session.sendToolResponse({ functionResponses: [{ id: call.id, name: call.name, response: { error: 'İşlem tamamlanamadı. Başarılıymış gibi sunma.' } }] });
       }
     }
   }
