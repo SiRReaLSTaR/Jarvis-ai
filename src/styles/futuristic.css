@@ -42,3 +42,8 @@ background:radial-gradient(ellipse at 50% 0%,rgba(139,92,246,.16),transparent 55
 /* Alt kenarda perspektif ızgara ufku: derinlik hissi verir, içeriğin altında kalır */
 .jarvis.future::before{content:"";position:absolute;left:-30%;right:-30%;bottom:-18%;height:55%;pointer-events:none;z-index:0;background:repeating-linear-gradient(90deg,rgba(34,230,255,.16) 0 1px,transparent 1px 84px),linear-gradient(to top,rgba(34,230,255,.1),transparent 70%);transform:perspective(420px) rotateX(68deg);transform-origin:50% 100%;opacity:.55}
 .quality-performance.future::before{display:none}
+
+/* Sohbet yazıları daha kompakt: mesaj balonları ekranı kaplamasın */
+.jarvis.future .chatMessage{font-size:13px;line-height:1.55;padding:10px 14px}
+.jarvis.future .chatWorkspace,.jarvis.future .conversationColumn{font-size:13px}
+.jarvis.future .chatWorkspace{max-height:52vh}

@@ -1,78 +1,93 @@
-/* Komuta merkezi: tam ekran hacker panosu. Veri yalnızca uygulamanın bildiği durumdan gelir. */
-.jarvis dialog.commandCenter {
-width:100vw;max-width:100vw;height:100dvh;max-height:100dvh;margin:0;padding:14px;border:0;border-radius:0;background:radial-gradient(circle at 50% 0%,var(--soft),transparent 45%),#020603;color:var(--text);overflow-y:auto
-}
-.jarvis dialog.commandCenter::backdrop{background:#000}
-.cc{position:relative;min-height:100%;display:flex;flex-direction:column;gap:12px;font-family:var(--mono)}
-.cc::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;background-image:repeating-linear-gradient(0deg,transparent 0 3px,rgba(0,0,0,.35) 4px);z-index:0}
-.cc>*{position:relative;z-index:1}
+/* Ana sayfa komuta merkezi. Veri yalnızca uygulamanın bildiği durumdan gelir. */
+.jarvis .cc{position:relative;width:100%;height:100%;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding:16px;font-family:var(--font);color:var(--text);text-align:left}
+.jarvis .cc::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 20% 0%,rgba(34,230,255,.08),transparent 40%),radial-gradient(circle at 90% 100%,rgba(139,92,246,.08),transparent 40%);z-index:0}
+.jarvis .cc>*{position:relative;z-index:1}
+.jarvis .cc h3{margin:0;font:600 10px/1 var(--mono);letter-spacing:3px;color:var(--a);text-transform:uppercase}
+.ccMuted{margin:0;font-size:11px;line-height:1.5;color:var(--muted)}
 
-.ccHeader{display:flex;align-items:center;gap:14px;padding:10px 14px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
-.ccTitle{display:grid;gap:2px;margin-right:auto}
-.ccTitle b{font-size:18px;letter-spacing:4px;color:var(--a);text-shadow:0 0 12px var(--a)}
-.ccTitle small{font-size:10px;letter-spacing:2px;color:var(--muted)}
-.ccClock{font-size:20px;font-weight:600;color:var(--hot);font-variant-numeric:tabular-nums}
-.ccClose{border:1px solid var(--a);border-radius:8px;background:var(--soft);color:var(--a);padding:8px 12px;font:600 11px var(--mono);letter-spacing:2px;cursor:pointer}
+.ccHeader{display:flex;align-items:center;gap:14px;padding:4px 2px 2px}
+.ccTitle{display:grid;gap:4px;margin-right:auto}
+.ccTitle b{font-size:20px;letter-spacing:5px;background:linear-gradient(90deg,#fff,var(--a));-webkit-background-clip:text;background-clip:text;color:transparent}
+.ccTitle small{font:500 10px/1 var(--mono);letter-spacing:2px;color:var(--muted)}
+.ccClock{font:600 18px/1 var(--mono);color:var(--hot);font-variant-numeric:tabular-nums}
+.ccChatBtn{border:1px solid var(--a);border-radius:999px;background:var(--soft);color:var(--a);padding:9px 16px;font:600 11px var(--mono);letter-spacing:2px;cursor:pointer}
+.ccChatBtn:hover{box-shadow:0 0 18px rgba(34,230,255,.35)}
 
-.ccTiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
-.ccTile{padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--panel2);display:grid;gap:6px}
-.ccTile small{font-size:9px;letter-spacing:2px;color:var(--muted)}
-.ccTile strong{font-size:15px;color:var(--a);overflow-wrap:anywhere}
-.ccTile.ok strong{color:var(--ok,#39ff88);text-shadow:0 0 10px currentColor}
-.ccTile.warn strong{color:#ffb347}
+.ccHero{display:grid;grid-template-columns:minmax(200px,1fr) minmax(0,2fr) minmax(200px,1fr);gap:12px;align-items:stretch}
+.ccPanel{padding:14px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(150deg,var(--panel),rgba(4,8,20,.55));backdrop-filter:blur(12px);min-width:0;display:grid;gap:10px;align-content:start;position:relative;box-shadow:0 0 28px rgba(34,230,255,.06)}
+.ccPanel::before,.ccPanel::after{content:"";position:absolute;width:18px;height:18px;border:2px solid var(--a);pointer-events:none;opacity:.85}
+.ccPanel::before{top:-1px;left:-1px;border-right:0;border-bottom:0;border-top-left-radius:16px}
+.ccPanel::after{bottom:-1px;right:-1px;border-left:0;border-top:0;border-bottom-right-radius:16px}
 
-.ccGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-.ccPanel{padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--panel);min-width:0;display:grid;gap:10px;align-content:start}
-.ccPanel h3{margin:0;font-size:11px;letter-spacing:3px;color:var(--a);display:flex;align-items:center;gap:6px}
-.ccWide{grid-column:1/-1}
-.ccMuted{margin:0;font-size:11px;line-height:1.6;color:var(--muted)}
+.ccCore{justify-items:center;text-align:center}
+.ccGauge{width:min(200px,70%);height:auto}
+.ccGaugeTrack,.ccGaugeInner{fill:none;stroke:rgba(34,230,255,.12);stroke-width:12}
+.ccGaugeInner{fill:rgba(4,10,24,.8);stroke:none}
+.ccGaugeValue{fill:none;stroke:var(--a);stroke-width:12;stroke-linecap:round;transform:rotate(-90deg);transform-origin:100px 100px;transition:stroke-dashoffset .8s ease;filter:drop-shadow(0 0 8px var(--a))}
+.ccGaugeText{font:700 30px var(--mono);fill:var(--hot)}
+.ccGaugeLabel{font:600 9px var(--mono);letter-spacing:3px;fill:var(--muted)}
 
-.ccAgent{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:8px;border:1px solid transparent;border-radius:10px}
-.ccAgent.selected{border-color:var(--agent);background:color-mix(in srgb,var(--agent) 10%,transparent)}
-.ccBadge{display:grid;place-items:center;width:36px;height:36px;border-radius:50%;border:1px solid var(--agent);color:var(--agent);font-weight:700}
-.ccAgent b{display:block;font-size:13px;color:var(--agent)}
-.ccAgent small{display:block;font-size:10px;color:var(--muted)}
-.ccState{font-size:9px;letter-spacing:1.5px;color:var(--muted)}
+.ccTiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.ccTile{position:relative;padding:14px;border:1px solid var(--line);border-radius:14px;background:var(--panel2);display:grid;gap:8px;overflow:hidden}
+.ccTile small{font:600 9px var(--mono);letter-spacing:2px;color:var(--muted)}
+.ccTile strong{font:700 18px var(--mono);color:var(--a);overflow-wrap:anywhere}
+.ccTile i{position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,transparent,var(--a),transparent);opacity:.6}
+.ccTile.ok strong{color:#5cffb0;text-shadow:0 0 12px rgba(92,255,176,.5)}
+.ccTile.ok i{background:linear-gradient(90deg,transparent,#5cffb0,transparent)}
+.ccTile.warn strong{color:#ffc24d}
 
-.ccStats{margin:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-.ccStats div{padding:10px;border:1px solid var(--line);border-radius:8px}
-.ccStats dt{font-size:9px;letter-spacing:1.5px;color:var(--muted)}
-.ccStats dd{margin:4px 0 0;font-size:22px;color:var(--hot);font-variant-numeric:tabular-nums}
+.ccBars{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.ccBars li{display:grid;grid-template-columns:70px 1fr 34px;gap:10px;align-items:center;font:500 11px var(--mono);color:var(--muted)}
+.ccBars b{text-align:right;color:var(--hot);font-variant-numeric:tabular-nums}
+.ccBarTrack{height:10px;border-radius:999px;background:rgba(34,230,255,.08);overflow:hidden;border:1px solid rgba(34,230,255,.15)}
+.ccBarFill{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,transparent,var(--bar));box-shadow:0 0 12px var(--bar);transition:width .6s ease}
 
-.ccLog{grid-column:span 2}
+.ccRow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:12px}
+.ccAgent{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:10px;border:1px solid transparent;border-radius:12px;background:transparent;color:inherit;font:inherit;text-align:left;cursor:pointer;width:100%}
+.ccAgent:hover{border-color:var(--agent)}
+.ccAgent.selected{border-color:var(--agent);background:color-mix(in srgb,var(--agent) 12%,transparent);box-shadow:0 0 20px color-mix(in srgb,var(--agent) 25%,transparent)}
+.ccBadge{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;border:1px solid var(--agent);color:var(--agent);font-weight:700;box-shadow:0 0 14px color-mix(in srgb,var(--agent) 35%,transparent)}
+.ccAgentText b{display:block;font-size:13px;color:var(--agent)}
+.ccAgentText small{display:block;font-size:10px;color:var(--muted)}
+.ccState{font:600 9px var(--mono);letter-spacing:1.5px;color:var(--muted)}
+
+.ccLog{grid-column:auto}
 .ccCursor{animation:ccBlink 1s steps(2,start) infinite;color:var(--a)}
-.ccLines{list-style:none;margin:0;padding:0;display:grid;gap:6px;max-height:260px;overflow-y:auto;font-size:12px}
-.ccLines li{display:flex;flex-wrap:wrap;gap:8px;align-items:baseline;padding:6px 8px;border-left:2px solid var(--line);background:rgba(0,0,0,.25)}
+.ccLines{list-style:none;margin:0;padding:0;display:grid;gap:6px;max-height:230px;overflow-y:auto;font:500 11px/1.4 var(--mono)}
+.ccLines li{display:flex;flex-wrap:wrap;gap:8px;align-items:baseline;padding:7px 10px;border-left:2px solid var(--a);background:rgba(0,0,0,.25);border-radius:0 8px 8px 0}
 .ccLines time{color:var(--muted)}
-.ccStatus{font-weight:600;color:var(--a)}
+.ccStatus{font-weight:700;color:var(--a)}
 .ccStatus.s-failed,.ccStatus.s-interrupted{color:#ff5c7a}
-.ccStatus.s-running{color:#ffb347}
-.ccMsg{flex:1;min-width:0;overflow-wrap:anywhere;color:var(--text)}
+.ccStatus.s-running{color:#ffc24d}
+.ccMsg{flex:1;min-width:0;overflow-wrap:anywhere;font:500 12px/1.4 var(--font);color:var(--text)}
 .ccErr{width:100%;color:#ff5c7a;overflow-wrap:anywhere}
 
-/* Mevcut bilgi panosunun kartlarını komuta merkezi renklerine uyarla */
+.ccWide{grid-column:1/-1}
 .ccWide .dailyDashboard{border-top:0;padding-top:0}
 .ccWide .dailyDashboard h2{color:var(--a)}
 
-/* Ağır efektleri performans modunda ve hareket azaltma tercihinde kapat */
-.quality-performance .ccCursor,
-.quality-performance .cc::before{animation:none;display:none}
-@media (prefers-reduced-motion: reduce){
-.ccCursor{animation:none}
-}
+.ccCursor,.ccGaugeValue,.ccBarFill{will-change:auto}
+.quality-performance .ccCursor{animation:none}
+.quality-performance .ccGaugeValue{filter:none}
+@media (prefers-reduced-motion: reduce){.ccCursor{animation:none}}
 @keyframes ccBlink{to{visibility:hidden}}
 
-@media (max-width:900px){
-.ccGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
-.ccLog{grid-column:1/-1}
+@media (max-width:1100px){
+.ccHero{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.ccCore{grid-column:1/-1}
 }
-@media (max-width:600px){
-.jarvis dialog.commandCenter{padding:10px}
-.ccHeader{flex-wrap:wrap;gap:10px}
+@media (max-width:760px){
+.jarvis .cc{padding:10px;gap:10px}
+.ccHero,.ccRow{grid-template-columns:1fr}
 .ccTiles{grid-template-columns:repeat(2,minmax(0,1fr))}
-.ccGrid{grid-template-columns:1fr}
-.ccTitle b{font-size:15px;letter-spacing:2px}
-.ccClock{font-size:16px}
+.ccTitle b{font-size:15px;letter-spacing:3px}
+.ccClock{font-size:14px}
 }
 
-.jarvis .commandToggle{border:1px solid var(--a);border-radius:8px;background:var(--soft);color:var(--a);padding:7px 11px;font:600 11px var(--mono);letter-spacing:2px;margin-right:8px}
+/* Görünüm geçişi: ana sayfa panel, sohbet görünümü ses ve yazı alanı */
+.jarvis.view-home .stage>:not(.cc){display:none!important}
+.jarvis.view-chat .cc{display:none}
+
+.jarvis .commandToggle{border:1px solid var(--a);border-radius:999px;background:var(--soft);color:var(--a);padding:7px 12px;font:600 10px var(--mono);letter-spacing:2px;margin-right:8px;cursor:pointer;white-space:nowrap}
+.jarvis.view-home .stage{display:block;padding:0}
+.jarvis .stage>.cc{width:100%;height:100%;min-height:0;grid-column:auto}
