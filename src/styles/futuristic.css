@@ -47,3 +47,13 @@ background:radial-gradient(ellipse at 50% 0%,rgba(139,92,246,.16),transparent 55
 .jarvis.future .chatMessage{font-size:13px;line-height:1.55;padding:10px 14px}
 .jarvis.future .chatWorkspace,.jarvis.future .conversationColumn{font-size:13px}
 .jarvis.future .chatWorkspace{max-height:52vh}
+
+/* Sohbet görünümü: ortada holografik bir küre, okunabilir mesaj paneli */
+.jarvis.future.view-chat .conversationColumn{position:relative;isolation:isolate;border-radius:24px;border:1px solid var(--line);background:linear-gradient(180deg,rgba(6,12,28,.74),rgba(3,6,16,.88));box-shadow:inset 0 0 60px rgba(34,230,255,.05),0 0 40px rgba(34,230,255,.06);overflow:hidden}
+.jarvis.future.view-chat .conversationColumn::before{content:"";position:absolute;left:50%;top:44%;width:min(340px,70%);aspect-ratio:1/1;height:auto;transform:translate(-50%,-50%);border-radius:50%!important;background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.28),transparent 28%),radial-gradient(circle,rgba(34,230,255,.34),rgba(139,92,246,.26) 50%,rgba(139,92,246,.06) 68%,transparent 72%);box-shadow:0 0 70px rgba(34,230,255,.28),inset 0 0 50px rgba(139,92,246,.35);opacity:.7;pointer-events:none;z-index:0;animation:futureOrb 7s ease-in-out infinite}
+.jarvis.future.view-chat .conversationColumn>*{position:relative;z-index:1}
+.jarvis.future.view-chat .chatMessage{background:rgba(6,12,28,.84);border:1px solid rgba(34,230,255,.14);color:var(--text)}
+@keyframes futureOrb{0%,100%{opacity:.4;transform:translate(-50%,-50%) scale(1)}50%{opacity:.6;transform:translate(-50%,-50%) scale(1.04)}}
+.quality-performance.future.view-chat .conversationColumn::before{animation:none;opacity:.3;box-shadow:none}
+@media (prefers-reduced-motion: reduce){.jarvis.future.view-chat .conversationColumn::before{animation:none}}
+@media (max-width:760px){.jarvis.future.view-chat .conversationColumn::before{width:220px;opacity:.3}}
