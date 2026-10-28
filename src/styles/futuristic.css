@@ -57,3 +57,14 @@ background:radial-gradient(ellipse at 50% 0%,rgba(139,92,246,.16),transparent 55
 .quality-performance.future.view-chat .conversationColumn::before{animation:none;opacity:.3;box-shadow:none}
 @media (prefers-reduced-motion: reduce){.jarvis.future.view-chat .conversationColumn::before{animation:none}}
 @media (max-width:760px){.jarvis.future.view-chat .conversationColumn::before{width:220px;opacity:.3}}
+
+/* Sohbet görünümü yan panelleri: gerçek durum, üç kutu */
+.sysPanels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0 0 10px}
+.sysPanel{padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:rgba(6,12,28,.7);min-width:0}
+.sysPanel h4{margin:0 0 6px;font:600 9px/1 var(--mono);letter-spacing:2px;color:var(--a)}
+.sysPanel p{margin:3px 0;font:500 11px/1.4 var(--font);color:var(--muted);overflow-wrap:anywhere}
+.sysPanel b{color:var(--hot);font-weight:600}
+.sysDot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#ff5c7a;margin-right:6px;vertical-align:middle}
+.sysDot.on{background:#5cffb0;box-shadow:0 0 8px #5cffb0}
+.jarvis.future:not(.view-chat) .sysPanels{display:none}
+@media (max-width:620px){.sysPanels{gap:6px}.sysPanel{padding:7px 8px}.sysPanel h4{font-size:8px;letter-spacing:1px}.sysPanel p{font-size:9.5px;line-height:1.35}}

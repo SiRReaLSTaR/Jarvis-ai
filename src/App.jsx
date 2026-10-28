@@ -12,6 +12,7 @@ import PhotoInput from './components/PhotoInput';
 import HomePanel from './components/HomePanel';
 import CommandCenter from './components/CommandCenter';
 import TaskPulse from './components/TaskPulse';
+import SystemPanels from './components/SystemPanels';
 import './styles/futuristic.css';
 import { QUICK, hasOpenIntent } from './core/commands.js';
 import { api, memoryBridge } from './core/api.js';
@@ -119,6 +120,7 @@ export default function App() {
       <VoiceOrb phase={phase} name={profile.name} role={AGENTS[selected].role}/>
       <div className="conversationColumn"><header className="conversationHeading"><b>KONUŞMA</b><small>{profile.name}</small></header>
       <TaskPulse tasks={saved?.tasks} phase={phase} connected={session.connected}/>
+      <SystemPanels state={saved} system={system} connected={session.connected} liveActive={live.active} activeTask={active}/>
       {live.error && <p className="sessionMessage" role="alert">{live.error}</p>}
       {live.active && <p className="liveNotice">Canlı mikrofon açık · Sözünü kesebilirsin · Kapatmak için mikrofon düğmesine bas</p>}
       {settingsToast > 0 && <div className="liveNotice" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12 }}><span role="status">Ayarlar kaydedildi.</span><button type="button" aria-label="Bildirimi kapat" onClick={() => setSettingsToast(0)}>×</button></div>}
