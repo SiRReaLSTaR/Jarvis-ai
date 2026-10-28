@@ -31,7 +31,7 @@ if (env.CODESPACE_NAME) {
   const origin = `https://${env.CODESPACE_NAME}-5173.app.github.dev`;
   const origins = (env.ALLOWED_ORIGINS || 'http://localhost:5173,http://127.0.0.1:5173')
     .split(',').map(value => value.trim()).filter(Boolean);
-  env.ALLOWED_ORIGINS = [...new Set([...origins, origin])].join(',');
+  env.ALLOWED_ORIGINS = [...new Set([...origins, origin, "https://localhost:5173"])].join(",");
 }
 
 const children = [];
