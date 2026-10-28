@@ -38,7 +38,7 @@ test('Live config includes correct local clock, actual abilities, selected voice
   const config = liveConfig({ state: f.state, agent: 'jarvis', timeZone: 'Europe/Istanbul', now: instant });
   assert.match(config.systemInstruction, /2026-10-17/); assert.match(config.systemInstruction, /Mustafa/);
   assert.match(config.systemInstruction, /Alarm, Takvim/);
-  assert.equal(config.speechConfig.voiceConfig.prebuiltVoiceConfig.voiceName, 'Charon');
+  assert.equal(config.speechConfig.voiceConfig.prebuiltVoiceConfig.voiceName, 'Kore');
   assert.deepEqual(config.tools[0].functionDeclarations.map(x => x.name), ['get_clock', 'ask_expert']);
 });
 test('Ephemeral credentials are one-use, expire, and constrain the model and config', async () => {
