@@ -10,6 +10,7 @@ import './styles/voice.css';
 import Dashboard from './components/Dashboard';
 import PhotoInput from './components/PhotoInput';
 import HomePanel from './components/HomePanel';
+import CommandCenter from './components/CommandCenter';
 import { QUICK, hasOpenIntent } from './core/commands.js';
 import { api, memoryBridge } from './core/api.js';
 import { JARVIS_MEMORY_KEY, loadJarvisMemory } from './core/memory.js';
@@ -30,7 +31,7 @@ export default function App() {
   const [listening, setListening] = useState(false), [speaking, setSpeaking] = useState(false), [, setActiveSpeaker] = useState(null);
   const [image, setImage] = useState(null), [city, setCity] = useState('');
   const recognitionRef = useRef(null), conversationModeRef = useRef(false), voiceGeneration = useRef(0), lastLaunchRef = useRef({ target: '', time: 0 });
-  const voiceRef = useRef(null), settingsDialog = useRef(null), agentDialog = useRef(null);
+  const voiceRef = useRef(null), settingsDialog = useRef(null), agentDialog = useRef(null), commandDialog = useRef(null);
   const performance = usePerformance();
   const session = useSession(data => {
     setNotice('');
@@ -104,7 +105,7 @@ export default function App() {
     <header className="topbar glass">
       <div className="hudBrand"><b>JARVIS</b><small>KİŞİSEL YAPAY ZEKA</small></div>
       <nav className="hudAgentTabs" aria-label="Asistan seçimi">{Object.entries(AGENTS).map(([id,a]) => <button type="button" key={id} style={{'--tab-color':a.color}} className={id === selected ? 'selected' : ''} aria-pressed={id === selected} onClick={() => chooseAgent(id)}><span className="hudTabRing" aria-hidden="true"/>{settings.profiles[id].name}</button>)}</nav>
-      <div className="headerActions"><span className={`connectionDot ${session.connected ? 'online' : ''}`} aria-hidden="true"/><span className="hudConnection">{session.connected ? 'Bağlı' : 'Bağlanıyor'}</span><button type="button" onClick={() => settingsDialog.current?.showModal()} aria-label="Ayarları aç"><svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden="true"><path d="m9 3 1-1h4l1 3 3 1 3 1v4l-2 2-1 3v3l-4 2-3-1-3-1-3-1v-4l-2-2 1-4 3-1Z"/><circle cx="12" cy="12" r="3.5"/></svg></button></div>
+      <div className="headerActions"><span className={`connectionDot ${session.connected ? 'online' : ''}`} aria-hidden="true"/><span className="hudConnection">{session.connected ? 'Bağlı' : 'Bağlanıyor'}</span><button type="button" className="commandToggle" onClick={() => commandDialog.current?.showModal()} aria-label="Komuta merkezini aç">KOMUTA</button><button type="button" onClick={() => settingsDialog.current?.showModal()} aria-label="Ayarları aç"><svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden="true"><path d="m9 3 1-1h4l1 3 3 1 3 1v4l-2 2-1 3v3l-4 2-3-1-3-1-3-1v-4l-2-2 1-4 3-1Z"/><circle cx="12" cy="12" r="3.5"/></svg></button></div>
     </header>
     <aside className="leftRail glass"><h3>HIZLI ERİŞİM</h3>
       {QUICK.map(([icon, label, url]) => <button key={label} className="hudButton" onClick={() => { const app = actions.appByName(label); if (app) actions.launchApp(app, url); else actions.openExternal(url); }}><span>{icon}</span><b>{label}</b></button>)}
@@ -162,6 +163,9 @@ export default function App() {
         <p className="railHint">VERA kod önerir; dosya veya terminal işlemi yapmaz. AI yanıtlarını önemli kararlardan önce doğrula.</p>
       </div>
       </aside>
+    </dialog>
+    <dialog className="commandCenter" ref={commandDialog} onClick={e => { if (e.target === e.currentTarget) e.currentTarget.close(); }}>
+      <CommandCenter state={saved} system={system} connected={session.connected} liveActive={live.active} loading={loading} selected={selected} profiles={settings.profiles} city={settings.city} ready={Boolean(saved)} onClose={() => commandDialog.current?.close()}/>
     </dialog>
     <dialog className="agentSheet" ref={agentDialog}>
       <header className="sheetHeader"><h2>Ajan seç</h2><button onClick={() => agentDialog.current?.close()}>Bitti</button></header>
