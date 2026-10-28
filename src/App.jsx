@@ -115,7 +115,7 @@ export default function App() {
       <p className="railHint">DİLAN koordinasyon · LARA kaynaklı araştırma · VERA teknik taslak</p>
     </aside>
     <section className="stage glass">
-      <CommandCenter state={saved} system={system} connected={session.connected} liveActive={live.active} loading={loading} selected={selected} profiles={settings.profiles} city={settings.city} ready={Boolean(saved)} onOpenChat={() => setView('chat')} onSelectAgent={id => { chooseAgent(id); setView('chat'); }}/>
+      <CommandCenter state={saved} system={system} connected={session.connected} liveActive={live.active} liveEnabled={system?.liveEnabled} screens={system?.screens} loading={loading} selected={selected} profiles={settings.profiles} city={settings.city} ready={Boolean(saved)} onOpenChat={() => setView('chat')} onSelectAgent={id => { chooseAgent(id); setView('chat'); }} onToggleLive={() => { voice.stopVoice(); if (live.active) live.stop(); else live.start(); }}/>
       <VoiceOrb phase={phase} name={profile.name} role={AGENTS[selected].role}/>
       <div className="conversationColumn"><header className="conversationHeading"><b>KONUŞMA</b><small>{profile.name}</small></header>
       <TaskPulse tasks={saved?.tasks} phase={phase} connected={session.connected}/>
