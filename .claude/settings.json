@@ -35,7 +35,10 @@
       "Write(./data/**)",
       "Bash(git push --force:*)",
       "Bash(git push origin main:*)",
-      "Bash(rm -rf:*)"
+      "Bash(rm -rf:*)",
+      "Read(./node_modules/**)",
+      "Read(./dist/**)",
+      "Read(./package-lock.json)"
     ]
   },
   "hooks": {
