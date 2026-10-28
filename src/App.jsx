@@ -11,6 +11,8 @@ import Dashboard from './components/Dashboard';
 import PhotoInput from './components/PhotoInput';
 import HomePanel from './components/HomePanel';
 import CommandCenter from './components/CommandCenter';
+import TaskPulse from './components/TaskPulse';
+import './styles/futuristic.css';
 import { QUICK, hasOpenIntent } from './core/commands.js';
 import { api, memoryBridge } from './core/api.js';
 import { JARVIS_MEMORY_KEY, loadJarvisMemory } from './core/memory.js';
@@ -99,7 +101,7 @@ export default function App() {
   const phase = live.active || live.phase === 'error' ? live.phase : listening ? 'listening' : loading ? 'thinking' : speaking ? 'speaking' : 'idle';
   const names = Object.fromEntries(Object.entries(settings.profiles).map(([id,p]) => [id,p.name]));
   async function chooseAgent(id) { live.stop(); voice.stopVoice(); await saveSettings({ selectedAgent: id }); agentDialog.current?.close(); }
-  return <main className={`jarvis v8 theme-hacker theme-${selected} state-${phase} quality-${performance.effective}`} style={{'--voice-accent': AGENTS[selected].color}}>
+  return <main className={`jarvis v8 future theme-hacker theme-${selected} state-${phase} quality-${performance.effective}`} style={{'--voice-accent': AGENTS[selected].color}}>
     <div className="spaceBackdrop" aria-hidden="true"><div className="nebula nebulaA"/><div className="nebula nebulaB"/><div className="stars starsFar"/><div className="stars starsNear"/></div>
     <div className="bg-grid"/><div className="scan"/>
     <header className="topbar glass">
@@ -115,6 +117,7 @@ export default function App() {
     <section className="stage glass">
       <VoiceOrb phase={phase} name={profile.name} role={AGENTS[selected].role}/>
       <div className="conversationColumn"><header className="conversationHeading"><b>KONUŞMA</b><small>{profile.name}</small></header>
+      <TaskPulse tasks={saved?.tasks} phase={phase} connected={session.connected}/>
       {live.error && <p className="sessionMessage" role="alert">{live.error}</p>}
       {live.active && <p className="liveNotice">Canlı mikrofon açık · Sözünü kesebilirsin · Kapatmak için mikrofon düğmesine bas</p>}
       {settingsToast > 0 && <div className="liveNotice" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12 }}><span role="status">Ayarlar kaydedildi.</span><button type="button" aria-label="Bildirimi kapat" onClick={() => setSettingsToast(0)}>×</button></div>}

@@ -1,0 +1,44 @@
+/* Fütüristik tema: ana katman. Yüklendiği için mevcut tema kurallarının üzerine yazar. */
+.jarvis.future {
+--a:#22e6ff;--a2:#8b5cf6;--hot:#b8f7ff;--line:rgba(34,230,255,.28);--soft:rgba(34,230,255,.08);--panel:rgba(8,16,36,.7);--panel2:rgba(10,20,44,.55);--text:#e6f7ff;--muted:#7fa6c4;--font:'Exo 2',system-ui,sans-serif;--mono:'JetBrains Mono',ui-monospace,monospace;
+background:radial-gradient(ellipse at 50% 0%,rgba(139,92,246,.16),transparent 55%),radial-gradient(ellipse at 50% 100%,rgba(34,230,255,.12),transparent 50%),#03050d
+}
+.jarvis.future .bg-grid{opacity:.5;background-image:linear-gradient(rgba(34,230,255,.5) 1px,transparent 1px),linear-gradient(90deg,rgba(34,230,255,.5) 1px,transparent 1px);background-size:56px 56px;mask-image:linear-gradient(to bottom,transparent,#000 40%,#000 70%,transparent);animation:futureGrid 18s linear infinite}
+.jarvis.future .scan{background:linear-gradient(transparent 48%,rgba(34,230,255,.10) 50%,transparent 52%);opacity:.5}
+.jarvis.future .glass{background:linear-gradient(150deg,var(--panel),rgba(4,8,20,.55));border:1px solid var(--line);border-radius:16px;box-shadow:0 0 28px rgba(34,230,255,.07),inset 0 0 40px rgba(34,230,255,.03);backdrop-filter:blur(14px);position:relative}
+.jarvis.future .glass::before,.jarvis.future .glass::after{content:"";position:absolute;width:22px;height:22px;border:2px solid var(--a);pointer-events:none;opacity:.9}
+.jarvis.future .glass::before{top:-1px;left:-1px;border-right:0;border-bottom:0;border-top-left-radius:16px}
+.jarvis.future .glass::after{bottom:-1px;right:-1px;border-left:0;border-top:0;border-bottom-right-radius:16px}
+.jarvis.future .hudBrand b{background:linear-gradient(90deg,#ffffff,var(--a) 70%,var(--a2));-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:0 0 18px rgba(34,230,255,.35)}
+.jarvis.future .hudAgentTabs button{border-radius:999px;backdrop-filter:blur(8px)}
+.jarvis.future button{border-radius:10px;transition:box-shadow .25s ease,border-color .25s ease,background .25s ease}
+.jarvis.future button:hover:not(:disabled){box-shadow:0 0 18px rgba(34,230,255,.35)}
+.jarvis.future .commandBar{border-radius:18px;box-shadow:0 0 30px rgba(34,230,255,.1)}
+.jarvis.future .commandInput:focus{outline:none}
+.jarvis.future .commandBar:focus-within{border-color:var(--a);box-shadow:0 0 30px rgba(34,230,255,.22)}
+
+/* Nabız şeridi: yalnızca gerçek durum ve son görevi gösterir */
+.taskPulse{display:flex;align-items:center;gap:8px;min-width:0;margin:-2px 0 10px;padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:rgba(34,230,255,.04);justify-content:flex-start;font:600 10px/1 var(--mono);letter-spacing:1.6px;color:var(--muted);text-transform:uppercase;white-space:nowrap;overflow:hidden}
+.taskPulse .pulseSep{color:var(--a);opacity:.6}
+.taskPulse .pulseDot{width:7px;height:7px;border-radius:50%;background:#ff5c7a;box-shadow:0 0 8px #ff5c7a;flex:none}
+.taskPulse .pulseDot.on{background:#5cffb0;box-shadow:0 0 10px #5cffb0;animation:futurePulse 2.4s ease-in-out infinite}
+.taskPulse .pulseMsg{overflow:hidden;text-overflow:ellipsis;color:var(--text);text-transform:none;letter-spacing:.2px;font:500 12px/1 var(--font);max-width:34ch}
+.taskPulse .pulseStatus{color:var(--a)}
+.taskPulse .pulseStatus.s-failed,.taskPulse .pulseStatus.s-interrupted{color:#ff5c7a}
+.taskPulse .pulseStatus.s-running{color:#ffc24d}
+@media (max-width:820px){.taskPulse{font-size:9px}.taskPulse .pulseMsg{max-width:18ch}}
+
+@keyframes futureGrid{from{background-position:0 0,0 0}to{background-position:0 56px,56px 0}}
+@keyframes futurePulse{0%,100%{opacity:1}50%{opacity:.45}}
+
+/* Performans modu ve hareket azaltma: ağır efektleri kapat */
+.quality-performance.future .bg-grid,
+.quality-performance.future .taskPulse .pulseDot.on{animation:none}
+.quality-performance.future .glass{backdrop-filter:none}
+@media (prefers-reduced-motion: reduce){
+.jarvis.future .bg-grid,.taskPulse .pulseDot.on{animation:none}
+}
+
+/* Alt kenarda perspektif ızgara ufku: derinlik hissi verir, içeriğin altında kalır */
+.jarvis.future::before{content:"";position:absolute;left:-30%;right:-30%;bottom:-18%;height:55%;pointer-events:none;z-index:0;background:repeating-linear-gradient(90deg,rgba(34,230,255,.16) 0 1px,transparent 1px 84px),linear-gradient(to top,rgba(34,230,255,.1),transparent 70%);transform:perspective(420px) rotateX(68deg);transform-origin:50% 100%;opacity:.55}
+.quality-performance.future::before{display:none}
